@@ -56,6 +56,8 @@
   width: 100%;
   padding-top: 36px;
   padding-bottom: var(--space-3);
+  position: relative;
+  z-index: 999;
 }
 
 .char-name-display {

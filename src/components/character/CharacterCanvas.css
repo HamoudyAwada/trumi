@@ -102,7 +102,61 @@
 }
 
 .cc-hair--fem-1 {
-  top: -23px;
-  left: -31px;
+  top: -15px;
+  left: -33px;
   width: 255px;
+}
+
+.cc-hair--fem-2 {
+  top: -60px;
+  left: 5px;
+  width: 177px;
+}
+
+.cc-hair--fem-4 {
+  top: -25px;
+  left: -63px;
+  width: 320px;
+  height: 309px;
+}
+
+.cc-hair--fem-4 img {
+  height: 100%;
+  width: 100%;
+}
+
+.cc-hair--fem-5 {
+  top: -18px;
+  left: 8px;
+  width: 174px;
+}
+
+.cc-hair--fem-6 {
+  top: -15px;
+  left: -33px;
+  width: 276px;
+  height: 295px;
+}
+
+.cc-hair--fem-6 img {
+  width: 100%;
+  height: 100%;
+}
+
+.cc-hair--fem-7 {
+  top: -18px;
+  left: -49px;
+  width: 285px;
+  height: 262px;
+}
+
+.cc-hair--fem-7 img {
+  width: 100%;
+  height: 100%;
+}
+
+.cc-hair--fem-8 {
+  top: -22px;
+  left: 2px;
+  width: 185px;
 }

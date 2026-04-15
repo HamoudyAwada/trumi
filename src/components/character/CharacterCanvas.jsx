@@ -49,7 +49,7 @@ export default function CharacterCanvas({ selections, skinTone, browColor }) {
 
         {/* Full-zone overlays — same coordinate space as face SVG */}
         {noseSrc && (
-          <img className="cc-overlay" src={noseSrc} alt="" draggable="false" />
+          <img className="cc-overlay cc-nose" src={noseSrc} alt="" draggable="false" />
         )}
         {eyesSrc && (
           <img className="cc-overlay" src={eyesSrc} alt="" draggable="false" />
@@ -60,7 +60,7 @@ export default function CharacterCanvas({ selections, skinTone, browColor }) {
 
         {/* Lips — inset position from Figma */}
         {lipsSrc && (
-          <div className="cc-lips">
+          <div className={`cc-lips cc-lips--${selections.lips}`}>
             <img src={lipsSrc} alt="" draggable="false" />
           </div>
         )}

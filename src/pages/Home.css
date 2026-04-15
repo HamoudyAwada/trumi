@@ -1,0 +1,55 @@
+/* ─────────────────────────────────────────────
+   Home Page
+   Dark full-screen layout with bottom nav bar.
+   Matches Figma node 313:2337.
+───────────────────────────────────────────── */
+
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  background-color: var(--color-tranquil-night);
+  box-sizing: border-box;
+}
+
+/* ── Main content ────────────────────────────── */
+
+.home-content {
+  flex: 1;
+}
+
+/* ── Bottom nav bar ──────────────────────────── */
+
+.home-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+  width: 100%;
+  padding: 20px 24px;
+  background-color: var(--color-horizon-violet-200);
+  border-top: 2px solid #0a0a14;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.home-nav__item {
+  color: var(--color-tranquil-night);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: opacity var(--duration-base) var(--easing-out);
+  text-decoration: none;
+}
+
+.home-nav__item--active,
+.home-nav__item:hover {
+  opacity: 1;
+}

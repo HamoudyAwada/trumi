@@ -61,11 +61,15 @@
   pointer-events: none;
 }
 
+.cc-nose {
+  top: -4px;
+}
+
 /* ── Lips ─────────────────────────────────────── */
 /* Inset percentages from Figma, applied to 139×139 zone */
 .cc-lips {
   position: absolute;
-  top: 75.65%;
+  top: calc(75.65% - 4px);
   left: 30.84%;
   right: 30.71%;
   bottom: 10.37%;
@@ -77,6 +81,12 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.cc-lips--lip-5,
+.cc-lips--lip-6 {
+  transform: scale(0.8);
+  transform-origin: center center;
 }
 
 /* ── Hair ─────────────────────────────────────── */

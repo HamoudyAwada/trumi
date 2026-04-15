@@ -1,0 +1,50 @@
+@import './tokens.css';
+
+/* ─────────────────────────────────────────────
+   Global reset and base styles
+───────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-book);
+  font-size: var(--font-size-paragraph);
+  line-height: var(--line-height-paragraph);
+  background-color: var(--color-cloud);
+  color: var(--color-tranquil-night);
+  min-height: 100dvh;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  background: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

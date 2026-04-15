@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ─────────────────────────────────────────────
+   Trumi Design Tokens
+   Source of truth for all colours, typography,
+   spacing, and motion values.
+   Never hardcode values — always use these vars.
+───────────────────────────────────────────── */
+
+:root {
+  /* ── Colours ─────────────────────────────── */
+
+  /* Primary */
+  --color-horizon-violet: #6666cc;
+  --color-cloud: #fffcfa;
+
+  /* Secondary */
+  --color-tranquil-night: #0f1c3f;
+  --color-fogstone: #66747f;
+
+  /* Accent */
+  --color-lucent-green: #cdff6d;
+  --color-liminal-blue: #aff4e1;
+
+  /* ── Typography ──────────────────────────── */
+
+  /*
+    Primary font: RuckSack (load from /public/assets/fonts when available)
+    Web fallback:  Lexend (Google Fonts — loaded above)
+  */
+  --font-primary: 'Lexend', sans-serif;
+
+  /* Roles */
+  --font-weight-black:   900;
+  --font-weight-bold:    700;
+  --font-weight-demi:    600;
+  --font-weight-book:    400;
+  --font-weight-medium:  500;
+
+  /* Sizes */
+  --font-size-title:     120px;
+  --font-size-subtitle:   80px;
+  --font-size-heading:    73px;
+  --font-size-paragraph:  33px;
+  --font-size-fine:       27px;
+
+  /* Line heights */
+  --line-height-title:     144px;
+  --line-height-subtitle:   96px;
+  --line-height-heading:    88px;
+  --line-height-paragraph:  40px;
+  --line-height-fine:       33px;
+
+  /* ── Spacing ─────────────────────────────── */
+
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+
+  /* ── Border radius ───────────────────────── */
+
+  --radius-sm:   8px;
+  --radius-md:  16px;
+  --radius-lg:  24px;
+  --radius-xl:  32px;
+  --radius-full: 9999px;
+
+  /* ── Motion ──────────────────────────────── */
+
+  --duration-fast:   150ms;
+  --duration-base:   200ms;
+  --duration-slow:   300ms;
+  --easing-default:  ease;
+  --easing-in-out:   ease-in-out;
+  --easing-out:      ease-out;
+
+  /* ── Shadows ─────────────────────────────── */
+
+  --shadow-sm:  0 1px 4px rgba(15, 28, 63, 0.06);
+  --shadow-md:  0 4px 16px rgba(15, 28, 63, 0.08);
+  --shadow-lg:  0 8px 32px rgba(15, 28, 63, 0.10);
+}

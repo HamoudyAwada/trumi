@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Nose" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f5b893;
+      }
+    </style>
+  </defs>
+  <ellipse class="cls-1" cx="505.4" cy="735.63" rx="9.63" ry="20.43"/>
+  <ellipse class="cls-1" cx="574.6" cy="735.63" rx="9.63" ry="20.43"/>
+</svg>

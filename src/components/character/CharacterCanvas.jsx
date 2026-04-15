@@ -67,7 +67,7 @@ export default function CharacterCanvas({ selections, skinTone, browColor }) {
 
         {/* Hair — top layer, overflows above face zone */}
         {hairSrc && (
-          <div className="cc-hair">
+          <div className={`cc-hair${selections.hair?.startsWith('fem-') ? ` cc-hair--fem cc-hair--${selections.hair}` : ''}`}>
             <img src={hairSrc} alt="" draggable="false" />
           </div>
         )}

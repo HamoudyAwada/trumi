@@ -1,7 +1,7 @@
 /* ─────────────────────────────────────────────
    Character Customization Page
-   Matches the Figma "Initial Onboarding Screen"
-   design. Dark background, centered mobile layout.
+   Matches Figma node 286:2084.
+   Dark background, mobile-first column layout.
 ───────────────────────────────────────────── */
 
 .char-page {
@@ -23,10 +23,9 @@
 .char-header {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-1);
   width: 100%;
-  text-align: center;
 }
 
 .char-header__title {
@@ -48,30 +47,21 @@
   margin: 0;
 }
 
-/* ── Generic section wrapper ─────────────────── */
-
-.char-section {
-  width: 100%;
-}
-
-.char-section--options {
-  padding-top: var(--space-2);
-}
-
-/* ── Character name row ──────────────────────── */
+/* ── Name row ────────────────────────────────── */
 
 .char-name-row {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: var(--space-4) 0 0;
+  padding-top: 36px;
+  padding-bottom: var(--space-3);
 }
 
 .char-name-display {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-5);
   background: none;
   border: none;
   cursor: pointer;
@@ -89,7 +79,7 @@
   font-size: var(--font-size-ui-md);
   font-weight: var(--font-weight-book);
   color: rgba(255, 255, 255, 0.9);
-  line-height: 1;
+  line-height: 1.2;
 }
 
 .char-name-display__icon {
@@ -108,7 +98,7 @@
   outline: none;
   text-align: center;
   padding: var(--space-1) var(--space-2);
-  width: 200px;
+  width: 220px;
   caret-color: var(--color-horizon-violet-300);
 }
 
@@ -123,7 +113,14 @@
   align-items: flex-end;
   justify-content: center;
   width: 100%;
-  padding: var(--space-2) 0;
+  height: 275px;
+}
+
+/* ── Options section ─────────────────────────── */
+
+.char-options {
+  width: 100%;
+  padding-top: var(--space-2);
 }
 
 /* ── CTA button ──────────────────────────────── */

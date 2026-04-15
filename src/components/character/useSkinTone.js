@@ -1,64 +1,46 @@
 import { useState, useEffect } from 'react'
-import { DEFAULT_SKIN_MAIN, DEFAULT_SKIN_SHADOW, getSkinShadow } from './characterAssets'
+import { DEFAULT_SKIN_MAIN, DEFAULT_SKIN_SHADOW } from './characterAssets'
 
-/**
- * In-memory cache: "path::skinTone" → data URL
- * Persists for the session — avoids re-fetching the same combination twice.
- */
 const cache = new Map()
 
 /**
- * Returns a src string for an SVG, optionally with skin colors swapped.
- *
- * @param {string} path     - Public path to the SVG file
- * @param {string} skinTone - Hex skin tone to apply (e.g. "#ffe1cf")
- * @param {boolean} hasSkin - Set true for face/neck SVGs that have baked-in skin colors
- * @returns {string|null}   - Data URL (or raw path if hasSkin=false), null while loading
+ * Returns an SVG src with skin fill colors replaced.
+ * factor=1.0 makes cls-3 and cls-1 the exact same color — no two-tone halo.
+ * Also replaces cls-4 (#f3c0a1) used in the neck SVG.
  */
+function getSkinShadow(hex) {
+  // factor 1.0 = identical shadow, eliminates visible two-tone on face oval
+  return hex
+}
+
 export function useSkinTone(path, skinTone, hasSkin = false) {
   const [src, setSrc] = useState(() => {
     if (!hasSkin) return path
-    const key = `${path}::${skinTone}`
-    return cache.get(key) ?? null
+    return cache.get(`${path}::${skinTone}`) ?? null
   })
 
   useEffect(() => {
-    if (!hasSkin) {
-      setSrc(path)
-      return
-    }
+    if (!hasSkin) { setSrc(path); return }
 
     const key = `${path}::${skinTone}`
-
-    if (cache.has(key)) {
-      setSrc(cache.get(key))
-      return
-    }
+    if (cache.has(key)) { setSrc(cache.get(key)); return }
 
     let cancelled = false
 
     fetch(path)
-      .then(r => {
-        if (!r.ok) throw new Error(`Failed to load ${path}`)
-        return r.text()
-      })
+      .then(r => { if (!r.ok) throw new Error(`Failed: ${path}`); return r.text() })
       .then(svgText => {
         if (cancelled) return
-
         const shadow = getSkinShadow(skinTone)
-
-        // Case-insensitive replacement of both skin fill values
         const recolored = svgText
           .replace(new RegExp(DEFAULT_SKIN_MAIN,   'gi'), skinTone)
           .replace(new RegExp(DEFAULT_SKIN_SHADOW, 'gi'), shadow)
-
+          .replace(/#f3c0a1/gi, shadow)
         const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(recolored)}`
         cache.set(key, dataUrl)
         setSrc(dataUrl)
       })
-      .catch(err => {
-        if (!cancelled) console.warn('[useSkinTone] Could not load SVG:', err)
-      })
+      .catch(err => { if (!cancelled) console.warn('[useSkinTone]', err) })
 
     return () => { cancelled = true }
   }, [path, skinTone, hasSkin])

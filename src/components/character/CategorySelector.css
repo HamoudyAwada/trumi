@@ -1,12 +1,13 @@
 /* ─────────────────────────────────────────────
    CategorySelector
    3×2 grid of category tabs.
+   Figma: 106×61px tiles, 16px col gap, 14px row gap.
 ───────────────────────────────────────────── */
 
 .cat-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-4) var(--space-4);
+  gap: 14px 16px;
   width: 100%;
 }
 
@@ -15,34 +16,29 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-1);
-  padding: var(--space-2) var(--space-2);
-  background-color: rgba(163, 163, 224, 0.35); /* horizon-violet-300 at low opacity */
+  gap: 4px;
+  height: 61px;
+  background-color: rgba(163, 163, 224, 0.25); /* dim violet */
   border: none;
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
   cursor: pointer;
   transition:
     background-color var(--duration-base) var(--easing-out),
-    box-shadow       var(--duration-base) var(--easing-out);
-  min-height: 64px;
-  overflow: hidden;
+    transform        var(--duration-fast) var(--easing-out);
 }
 
 .cat-tab--active {
   background-color: var(--color-horizon-violet-300);
-  box-shadow: var(--shadow-card);
 }
 
 .cat-tab:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
-.cat-tab__preview {
-  display: block;
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-  flex-shrink: 0;
+.cat-tab__icon {
+  font-size: 18px;
+  line-height: 1;
 }
 
 .cat-tab__label {
@@ -51,5 +47,4 @@
   font-weight: var(--font-weight-medium);
   color: #fff;
   line-height: 1;
-  white-space: nowrap;
 }

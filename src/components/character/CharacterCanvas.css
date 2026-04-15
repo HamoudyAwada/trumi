@@ -1,29 +1,26 @@
 /* ─────────────────────────────────────────────
    CharacterCanvas
-   Layered SVG character renderer.
-
-   Canvas is ~280×285px (matches Figma proportions).
-   Face zone occupies the top 76% of the canvas width,
-   centered. All 1080×1080 feature SVGs overlay exactly.
+   Canvas 291 × 245px.
+   Face zone 139 × 139px (natural 1:1 SVG ratio — no distortion).
+   Neck starts at 100px (72% of face height).
 ───────────────────────────────────────────── */
 
 .cc-canvas {
   position: relative;
-  width: 280px;
-  height: 285px;
+  width: 291px;
+  height: 275px;
   flex-shrink: 0;
 }
 
 /* ── Neck / Shirt ────────────────────────────── */
-/* Starts at 52% down, full width, z-index 1 */
+/* Starts at 72% of face height so chin covers the neck seam */
 .cc-neck {
   position: absolute;
-  top: 52%;
+  top: 140px;
   left: 0;
   width: 100%;
   z-index: 1;
 }
-
 .cc-neck img {
   display: block;
   width: 100%;
@@ -31,49 +28,49 @@
 }
 
 /* ── Face zone ───────────────────────────────── */
-/* 77% wide, centered (11.5% margin each side), starts at top */
+/* Square — matches SVG natural 1:1 aspect ratio */
 .cc-face-zone {
   position: absolute;
   top: 0;
-  left: 11.5%;
-  width: 77%;
+  left: 48px;
+  width: 195px;
+  height: 195px;
   z-index: 2;
-  overflow: visible; /* allow hair to extend above */
+  overflow: visible;
 }
 
-/* Face base — establishes the height of the zone (1:1 SVG aspect ratio) */
+/* Face base — natural size, no distortion */
 .cc-face-base {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   position: relative;
   z-index: 1;
 }
 
-/* ── 1080×1080 overlays (eyes, eyebrows, nose) ── */
-/* Absolute, fill exact same bounding box as the face */
+/* ── Full-zone overlays (eyes, eyebrows, nose) ── */
+/* Same 1080×1080 coordinate space — fill exact face zone */
 .cc-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
   z-index: 3;
   pointer-events: none;
 }
 
 /* ── Lips ─────────────────────────────────────── */
-/* Positioned at ~77% down the face, centered (from Figma inset data) */
+/* Inset percentages from Figma, applied to 139×139 zone */
 .cc-lips {
   position: absolute;
-  top: 77%;
-  left: 40%;
-  right: 40%;
-  bottom: 11%;
+  top: 75.65%;
+  left: 30.84%;
+  right: 30.71%;
+  bottom: 10.37%;
   z-index: 4;
   pointer-events: none;
 }
-
 .cc-lips img {
   display: block;
   width: 100%;
@@ -82,16 +79,16 @@
 }
 
 /* ── Hair ─────────────────────────────────────── */
-/* Overflows 8% above face zone, inset ~8% horizontally */
+/* Slightly wider than face zone, extends above */
 .cc-hair {
   position: absolute;
-  top: -8%;
-  left: 7.5%;
-  right: 7.5%;
+  top: -42px;
+  left: -4px;
+  width: 203px;
+  height: auto;
   z-index: 6;
   pointer-events: none;
 }
-
 .cc-hair img {
   display: block;
   width: 100%;

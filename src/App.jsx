@@ -2,8 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 // Pages (to be built out)
 import Home from './pages/Home'
-import Goals from './pages/Goals'
 import Character from './pages/Character'
+import Goals from './pages/Goals'
 import Achievements from './pages/Achievements'
 import Onboarding from './pages/Onboarding'
 import NotFound from './pages/NotFound'

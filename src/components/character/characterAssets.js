@@ -7,7 +7,6 @@
 const BASE = '/assets/character/Customizable Characters'
 
 // ── Skin tones ────────────────────────────────────────────────────────────────
-// Default fill colors baked into the face/neck SVG files
 export const DEFAULT_SKIN_MAIN   = '#ffd1b5'
 export const DEFAULT_SKIN_SHADOW = '#ffd8c1'
 
@@ -20,24 +19,23 @@ export const SKIN_TONES = [
   '#220e00',
 ]
 
-/**
- * Compute a slightly lighter variant of a hex color (used for SVG skin shadows).
- */
-export function getSkinShadow(hex) {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  const f = 1.08
-  const lr = Math.min(255, Math.round(r * f))
-  const lg = Math.min(255, Math.round(g * f))
-  const lb = Math.min(255, Math.round(b * f))
-  return `#${lr.toString(16).padStart(2, '0')}${lg.toString(16).padStart(2, '0')}${lb.toString(16).padStart(2, '0')}`
+// ── Eyebrow colors ────────────────────────────────────────────────────────────
+export const DEFAULT_BROW_COLOR = '#9e1f63'  // original SVG fill
+
+export const BROW_COLORS = [
+  { label: 'Brown', value: '#59320c' },
+  { label: 'Black', value: '#1c1c1c' },
+  { label: 'Blonde', value: '#c8a044' },
+]
+
+function f(folder, name) {
+  return `${BASE}/${folder}/${name}.svg`
 }
 
 // ── Category definitions (order = tab order in UI) ────────────────────────────
 export const CATEGORIES = [
-  { id: 'face',      label: 'Face'      },
   { id: 'hair',      label: 'Hair'      },
+  { id: 'face',      label: 'Face'      },
   { id: 'eyes',      label: 'Eyes'      },
   { id: 'eyebrows',  label: 'Eyebrows'  },
   { id: 'nose',      label: 'Nose'      },
@@ -45,39 +43,33 @@ export const CATEGORIES = [
 ]
 
 // ── Asset lists per category ───────────────────────────────────────────────────
-
-function f(folder, name) {
-  return `${BASE}/${folder}/${name}.svg`
-}
-
 export const ASSETS = {
   face: [
-    { id: 'fem-oval',            label: 'F · Oval',            path: f('Faces', 'Feminine - Oval'),              hasSkin: true },
-    { id: 'fem-round',           label: 'F · Round',           path: f('Faces', 'Feminine - Round'),             hasSkin: true },
-    { id: 'fem-heart',           label: 'F · Heart',           path: f('Faces', 'Feminine - Heart'),             hasSkin: true },
-    { id: 'fem-square',          label: 'F · Square',          path: f('Faces', 'Feminine - Square'),            hasSkin: true },
-    { id: 'fem-diamond',         label: 'F · Diamond',         path: f('Faces', 'Feminine - Diamond'),           hasSkin: true },
-    { id: 'fem-rectangle',       label: 'F · Rectangle',       path: f('Faces', 'Feminine - Rectangle'),         hasSkin: true },
-    { id: 'fem-triangle',        label: 'F · Triangle',        path: f('Faces', 'Feminine - Triangle'),          hasSkin: true },
-    { id: 'fem-oval-beard',      label: 'F · Oval + Beard',    path: f('Faces', 'Feminine - Oval - Beard'),      hasSkin: true },
-    { id: 'fem-round-beard',     label: 'F · Round + Beard',   path: f('Faces', 'Feminine - Round - Beard'),     hasSkin: true },
-    { id: 'fem-heart-beard',     label: 'F · Heart + Beard',   path: f('Faces', 'Feminine - Heart - Beard'),     hasSkin: true },
-    { id: 'fem-square-beard',    label: 'F · Square + Beard',  path: f('Faces', 'Feminine - Square - Beard'),    hasSkin: true },
-    { id: 'fem-diamond-beard',   label: 'F · Diamond + Beard', path: f('Faces', 'Feminine - Diamond - Beard'),   hasSkin: true },
-    { id: 'fem-rect-beard',      label: 'F · Rect + Beard',    path: f('Faces', 'Feminine - Rectangle - Beard'), hasSkin: true },
-    { id: 'fem-tri-beard',       label: 'F · Tri + Beard',     path: f('Faces', 'Feminine - Triangle - Beard'),  hasSkin: true },
-    { id: 'masc-oval',           label: 'M · Oval',            path: f('Faces', 'Masculine - Oval'),             hasSkin: true },
-    { id: 'masc-round',          label: 'M · Round',           path: f('Faces', 'Masculine - Round'),            hasSkin: true },
-    { id: 'masc-heart',          label: 'M · Heart',           path: f('Faces', 'Masculine - Heart'),            hasSkin: true },
-    { id: 'masc-square',         label: 'M · Square',          path: f('Faces', 'Masculine - Square'),           hasSkin: true },
-    { id: 'masc-diamond',        label: 'M · Diamond',         path: f('Faces', 'Masculine - Diamond'),          hasSkin: true },
-    { id: 'masc-rectangle',      label: 'M · Rectangle',       path: f('Faces', 'Masculine - Rectangle'),        hasSkin: true },
-    { id: 'masc-triangle',       label: 'M · Triangle',        path: f('Faces', 'Masculine - Triangle'),         hasSkin: true },
-    { id: 'masc-oval-beard',     label: 'M · Oval + Beard',    path: f('Faces', 'Masculine - Oval - Beard'),     hasSkin: true },
-    { id: 'masc-round-beard',    label: 'M · Round + Beard',   path: f('Faces', 'Masculine - Round - Beard'),    hasSkin: true },
-    { id: 'masc-heart-beard',    label: 'M · Heart + Beard',   path: f('Faces', 'Masculine - Heart - Beard'),    hasSkin: true },
-    { id: 'masc-square-beard',   label: 'M · Square + Beard',  path: f('Faces', 'Masculine - Square - Beard'),   hasSkin: true },
-    { id: 'masc-diamond-beard',  label: 'M · Diamond + Beard', path: f('Faces', 'Masculine - Diamond - Beard'),  hasSkin: true },
+    { id: 'fem-oval',           label: 'F · Oval',            path: f('Faces', 'Feminine - Oval'),              hasSkin: true },
+    { id: 'fem-round',          label: 'F · Round',           path: f('Faces', 'Feminine - Round'),             hasSkin: true },
+    { id: 'fem-heart',          label: 'F · Heart',           path: f('Faces', 'Feminine - Heart'),             hasSkin: true },
+    { id: 'fem-square',         label: 'F · Square',          path: f('Faces', 'Feminine - Square'),            hasSkin: true },
+    { id: 'fem-diamond',        label: 'F · Diamond',         path: f('Faces', 'Feminine - Diamond'),           hasSkin: true },
+    { id: 'fem-rectangle',      label: 'F · Rectangle',       path: f('Faces', 'Feminine - Rectangle'),         hasSkin: true },
+    { id: 'fem-triangle',       label: 'F · Triangle',        path: f('Faces', 'Feminine - Triangle'),          hasSkin: true },
+    { id: 'fem-oval-beard',     label: 'F · Oval + Beard',    path: f('Faces', 'Feminine - Oval - Beard'),      hasSkin: true },
+    { id: 'fem-round-beard',    label: 'F · Round + Beard',   path: f('Faces', 'Feminine - Round - Beard'),     hasSkin: true },
+    { id: 'fem-heart-beard',    label: 'F · Heart + Beard',   path: f('Faces', 'Feminine - Heart - Beard'),     hasSkin: true },
+    { id: 'fem-square-beard',   label: 'F · Square + Beard',  path: f('Faces', 'Feminine - Square - Beard'),    hasSkin: true },
+    { id: 'fem-diamond-beard',  label: 'F · Diamond + Beard', path: f('Faces', 'Feminine - Diamond - Beard'),   hasSkin: true },
+    { id: 'fem-rect-beard',     label: 'F · Rect + Beard',    path: f('Faces', 'Feminine - Rectangle - Beard'), hasSkin: true },
+    { id: 'fem-tri-beard',      label: 'F · Tri + Beard',     path: f('Faces', 'Feminine - Triangle - Beard'),  hasSkin: true },
+    { id: 'masc-oval',          label: 'M · Oval',            path: f('Faces', 'Masculine - Oval'),             hasSkin: true },
+    { id: 'masc-round',         label: 'M · Round',           path: f('Faces', 'Masculine - Round'),            hasSkin: true },
+    { id: 'masc-heart',         label: 'M · Heart',           path: f('Faces', 'Masculine - Heart'),            hasSkin: true },
+    { id: 'masc-square',        label: 'M · Square',          path: f('Faces', 'Masculine - Square'),           hasSkin: true },
+    { id: 'masc-diamond',       label: 'M · Diamond',         path: f('Faces', 'Masculine - Diamond'),          hasSkin: true },
+    { id: 'masc-rectangle',     label: 'M · Rectangle',       path: f('Faces', 'Masculine - Rectangle'),        hasSkin: true },
+    { id: 'masc-oval-beard',    label: 'M · Oval + Beard',    path: f('Faces', 'Masculine - Oval - Beard'),     hasSkin: true },
+    { id: 'masc-round-beard',   label: 'M · Round + Beard',   path: f('Faces', 'Masculine - Round - Beard'),    hasSkin: true },
+    { id: 'masc-heart-beard',   label: 'M · Heart + Beard',   path: f('Faces', 'Masculine - Heart - Beard'),    hasSkin: true },
+    { id: 'masc-square-beard',  label: 'M · Square + Beard',  path: f('Faces', 'Masculine - Square - Beard'),   hasSkin: true },
+    { id: 'masc-diamond-beard', label: 'M · Diamond + Beard', path: f('Faces', 'Masculine - Diamond - Beard'),  hasSkin: true },
   ],
 
   hair: [
@@ -99,22 +91,22 @@ export const ASSETS = {
   ],
 
   eyes: [
-    { id: 'almond',           label: 'Almond',           path: f('Eyes', 'Eyes - Almond')              },
-    { id: 'almond-lashes',    label: 'Almond + Lashes',  path: f('Eyes', 'Eyes - Almond - Lashes')     },
-    { id: 'cartoon-long',     label: 'Cartoon Long',     path: f('Eyes', 'Eyes - Cartoon - Long')      },
-    { id: 'cartoon-short',    label: 'Cartoon Short',    path: f('Eyes', 'Eyes - Cartoon - Short')     },
-    { id: 'chibi',            label: 'Chibi',            path: f('Eyes', 'Eyes - Chibi')               },
-    { id: 'chibi-lashes',     label: 'Chibi + Lashes',   path: f('Eyes', 'Eyes - Chibi - Lashes')      },
-    { id: 'chibi-neutral',    label: 'Chibi Neutral',    path: f('Eyes', 'Eyes - Chibi - Neutral')     },
-    { id: 'downturned',       label: 'Downturned',       path: f('Eyes', 'Eyes - Downturned')          },
-    { id: 'downturned-lashes',label: 'Downturned + Lashes', path: f('Eyes', 'Eyes - Downturned - Lashes') },
-    { id: 'hooded',           label: 'Hooded',           path: f('Eyes', 'Eyes - Hooded')              },
-    { id: 'hooded-lashes',    label: 'Hooded + Lashes',  path: f('Eyes', 'Eyes - Hooded - Lashes')     },
-    { id: 'monolid',          label: 'Monolid',          path: f('Eyes', 'Eyes - Monolid')             },
-    { id: 'monolid-lashes',   label: 'Monolid + Lashes', path: f('Eyes', 'Eyes - Monolid - Lashes')    },
-    { id: 'simple',           label: 'Simple',           path: f('Eyes', 'Eyes - Simple')              },
-    { id: 'wide',             label: 'Wide',             path: f('Eyes', 'Eyes - Wide')                },
-    { id: 'wide-lashes',      label: 'Wide + Lashes',    path: f('Eyes', 'Eyes - Wide - Lashes')       },
+    { id: 'almond',            label: 'Almond',           path: f('Eyes', 'Eyes - Almond')              },
+    { id: 'almond-lashes',     label: 'Almond + Lashes',  path: f('Eyes', 'Eyes - Almond - Lashes')     },
+    { id: 'cartoon-long',      label: 'Cartoon Long',     path: f('Eyes', 'Eyes - Cartoon - Long')      },
+    { id: 'cartoon-short',     label: 'Cartoon Short',    path: f('Eyes', 'Eyes - Cartoon - Short')     },
+    { id: 'chibi',             label: 'Chibi',            path: f('Eyes', 'Eyes - Chibi')               },
+    { id: 'chibi-lashes',      label: 'Chibi + Lashes',   path: f('Eyes', 'Eyes - Chibi - Lashes')      },
+    { id: 'chibi-neutral',     label: 'Chibi Neutral',    path: f('Eyes', 'Eyes - Chibi - Neutral')     },
+    { id: 'downturned',        label: 'Downturned',       path: f('Eyes', 'Eyes - Downturned')          },
+    { id: 'downturned-lashes', label: 'Downturned + Lashes', path: f('Eyes', 'Eyes - Downturned - Lashes') },
+    { id: 'hooded',            label: 'Hooded',           path: f('Eyes', 'Eyes - Hooded')              },
+    { id: 'hooded-lashes',     label: 'Hooded + Lashes',  path: f('Eyes', 'Eyes - Hooded - Lashes')     },
+    { id: 'monolid',           label: 'Monolid',          path: f('Eyes', 'Eyes - Monolid')             },
+    { id: 'monolid-lashes',    label: 'Monolid + Lashes', path: f('Eyes', 'Eyes - Monolid - Lashes')    },
+    { id: 'simple',            label: 'Simple',           path: f('Eyes', 'Eyes - Simple')              },
+    { id: 'wide',              label: 'Wide',             path: f('Eyes', 'Eyes - Wide')                },
+    { id: 'wide-lashes',       label: 'Wide + Lashes',    path: f('Eyes', 'Eyes - Wide - Lashes')       },
   ],
 
   eyebrows: [
@@ -129,13 +121,13 @@ export const ASSETS = {
   ],
 
   nose: [
-    { id: 'nose-1',   label: 'Style 1',  path: f('Noses', 'Nose - 1')   },
-    { id: 'nose-2',   label: 'Style 2',  path: f('Noses', 'Nose - 2')   },
-    { id: 'nose-3',   label: 'Style 3',  path: f('Noses', 'Nose - 3')   },
-    { id: 'nose-4',   label: 'Style 4',  path: f('Noses', 'Nose - 4')   },
-    { id: 'nose-4b',  label: 'Style 4b', path: f('Noses', 'Nose - 4_1') },
-    { id: 'nose-5',   label: 'Style 5',  path: f('Noses', 'Nose - 5')   },
-    { id: 'nose-6',   label: 'Style 6',  path: f('Noses', 'Nose - 6')   },
+    { id: 'nose-1',  label: 'Style 1',  path: f('Noses', 'Nose - 1')   },
+    { id: 'nose-2',  label: 'Style 2',  path: f('Noses', 'Nose - 2')   },
+    { id: 'nose-3',  label: 'Style 3',  path: f('Noses', 'Nose - 3')   },
+    { id: 'nose-4',  label: 'Style 4',  path: f('Noses', 'Nose - 4')   },
+    { id: 'nose-4b', label: 'Style 4b', path: f('Noses', 'Nose - 4_1') },
+    { id: 'nose-5',  label: 'Style 5',  path: f('Noses', 'Nose - 5')   },
+    { id: 'nose-6',  label: 'Style 6',  path: f('Noses', 'Nose - 6')   },
   ],
 
   lips: [
@@ -151,22 +143,20 @@ export const ASSETS = {
 
 // ── Defaults ──────────────────────────────────────────────────────────────────
 export const DEFAULT_CHARACTER = {
-  face:     'masc-oval',
+  face:     'masc-oval-beard',
   hair:     'masc-idk',
   eyes:     'wide',
   eyebrows: 'brow-2',
   nose:     'nose-1',
   lips:     'lip-1',
-  skinTone: '#ffe1cf',
-  name:     '',
+  skinTone:  '#ffe1cf',
+  browColor: '#59320c',
+  name:      '',
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-
-/** Find an asset object by category and id */
 export function findAsset(category, id) {
   return ASSETS[category]?.find(a => a.id === id) ?? null
 }
 
-/** The neck/shirt SVG path — always rendered, skin tone applied */
 export const NECK_SHIRT_PATH = `${BASE}/Neck and Shirt/Neck Shirt.svg`

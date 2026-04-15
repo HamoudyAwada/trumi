@@ -1,9 +1,9 @@
 /* ─────────────────────────────────────────────
-   SkinToneSelector
-   Row of 6 color swatches. Figma: 32px circles, 16px gap.
+   BrowColorSelector
+   Label + 3 color swatches in a row.
 ───────────────────────────────────────────── */
 
-.skin-row {
+.brow-row {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,9 +11,23 @@
   width: 100%;
 }
 
-.skin-swatch {
-  width: 32px;
-  height: 32px;
+.brow-row__label {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-ui-sm);
+  font-weight: var(--font-weight-book);
+  color: rgba(255, 255, 255, 0.65);
+  flex-shrink: 0;
+}
+
+.brow-row__swatches {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brow-swatch {
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius-full);
   border: 2px solid transparent;
   cursor: pointer;
@@ -23,10 +37,10 @@
     transform    var(--duration-fast) var(--easing-out);
 }
 
-.skin-swatch--active {
+.brow-swatch--active {
   border-color: var(--color-horizon-violet);
 }
 
-.skin-swatch:active {
+.brow-swatch:active {
   transform: scale(0.9);
 }

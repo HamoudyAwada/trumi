@@ -1,23 +1,20 @@
 import { useSkinTone } from './useSkinTone'
-import { NECK_SHIRT_PATH, findAsset } from './characterAssets'
+import { useRecolor } from './useRecolor'
+import { NECK_SHIRT_PATH, findAsset, DEFAULT_BROW_COLOR } from './characterAssets'
 import './CharacterCanvas.css'
 
 /**
  * CharacterCanvas
  *
- * Renders the layered SVG character. Layer order (bottom → top):
- *   1. Neck & Shirt  (skin tone applied)
- *   2. Face          (skin tone applied)
- *   3. Nose          (1080×1080 overlay)
- *   4. Lips          (positioned within face zone)
- *   5. Eyes          (1080×1080 overlay)
- *   6. Eyebrows      (1080×1080 overlay)
- *   7. Hair          (on top of all features)
+ * Pixel dimensions match Figma node 302:2941 exactly:
+ *   Canvas       291 × 302 px
+ *   Face zone    left 76px, top 0, width 139px, height 224px
+ *   Neck/shirt   top 162px, full width
+ *   Hair         top −11px (above face), centered, width 145px
  *
- * @param {Object} selections - { face, hair, eyes, eyebrows, nose, lips }
- * @param {string} skinTone   - Hex color for skin tone
+ * Layer order (bottom → top): neck → face → nose → lips → eyes → eyebrows → hair
  */
-export default function CharacterCanvas({ selections, skinTone }) {
+export default function CharacterCanvas({ selections, skinTone, browColor }) {
   const faceAsset     = findAsset('face',     selections.face)
   const hairAsset     = findAsset('hair',     selections.hair)
   const eyesAsset     = findAsset('eyes',     selections.eyes)
@@ -25,25 +22,24 @@ export default function CharacterCanvas({ selections, skinTone }) {
   const noseAsset     = findAsset('nose',     selections.nose)
   const lipsAsset     = findAsset('lips',     selections.lips)
 
-  // Skin-tone-swapped sources for face/neck layers
-  const neckSrc     = useSkinTone(NECK_SHIRT_PATH,       skinTone, true)
-  const faceSrc     = useSkinTone(faceAsset?.path ?? '', skinTone, true)
+  const neckSrc = useSkinTone(NECK_SHIRT_PATH,       skinTone, true)
+  const faceSrc = useSkinTone(faceAsset?.path ?? '', skinTone, true)
 
-  // Non-skin layers — served directly
-  const eyesSrc     = eyesAsset?.path     ?? ''
-  const eyebrowsSrc = eyebrowsAsset?.path ?? ''
-  const noseSrc     = noseAsset?.path     ?? ''
+  const eyesSrc     = eyesAsset?.path ?? ''
+  const eyebrowsSrc = useRecolor(eyebrowsAsset?.path ?? '', DEFAULT_BROW_COLOR, browColor ?? '#59320c')
+  const noseSrc     = noseAsset?.path ?? ''
   const lipsSrc     = lipsAsset?.path     ?? ''
   const hairSrc     = hairAsset?.path     ?? ''
 
   return (
     <div className="cc-canvas">
-      {/* ── Neck / Shirt ─────────────────────────── */}
+
+      {/* Neck / Shirt — behind everything */}
       <div className="cc-neck">
         {neckSrc && <img src={neckSrc} alt="" draggable="false" />}
       </div>
 
-      {/* ── Face zone — all face-relative layers ─── */}
+      {/* Face zone — all face-relative layers */}
       <div className="cc-face-zone">
 
         {/* Base face shape */}
@@ -51,7 +47,7 @@ export default function CharacterCanvas({ selections, skinTone }) {
           <img className="cc-face-base" src={faceSrc} alt="" draggable="false" />
         )}
 
-        {/* 1080×1080 overlays — sit in exact same coordinate space as face */}
+        {/* Full-zone overlays — same coordinate space as face SVG */}
         {noseSrc && (
           <img className="cc-overlay" src={noseSrc} alt="" draggable="false" />
         )}
@@ -62,19 +58,20 @@ export default function CharacterCanvas({ selections, skinTone }) {
           <img className="cc-overlay" src={eyebrowsSrc} alt="" draggable="false" />
         )}
 
-        {/* Lips — positioned within lower face */}
+        {/* Lips — inset position from Figma */}
         {lipsSrc && (
           <div className="cc-lips">
             <img src={lipsSrc} alt="" draggable="false" />
           </div>
         )}
 
-        {/* Hair — top layer, overflows above face */}
+        {/* Hair — top layer, overflows above face zone */}
         {hairSrc && (
           <div className="cc-hair">
             <img src={hairSrc} alt="" draggable="false" />
           </div>
         )}
+
       </div>
     </div>
   )

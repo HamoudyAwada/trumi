@@ -11,7 +11,9 @@
   /* ── Colours ─────────────────────────────── */
 
   /* Primary */
-  --color-horizon-violet: #6666cc;
+  --color-horizon-violet:     #6666cc;  /* 500 */
+  --color-horizon-violet-300: #a3a3e0;  /* active state, selected tabs */
+  --color-horizon-violet-200: #c2c2eb;  /* option tile backgrounds */
   --color-cloud: #fffcfa;
 
   /* Secondary */
@@ -21,6 +23,14 @@
   /* Accent */
   --color-lucent-green: #cdff6d;
   --color-liminal-blue: #aff4e1;
+
+  /* Skin tones (character customization) */
+  --skin-1: #ffe1cf;
+  --skin-2: #d3b7a6;
+  --skin-3: #a78d7c;
+  --skin-4: #7a6253;
+  --skin-5: #4e3829;
+  --skin-6: #220e00;
 
   /* ── Typography ──────────────────────────── */
 
@@ -37,19 +47,26 @@
   --font-weight-book:    400;
   --font-weight-medium:  500;
 
-  /* Sizes */
+  /* Sizes — print/large screen scale (from brand spec) */
   --font-size-title:     120px;
   --font-size-subtitle:   80px;
   --font-size-heading:    73px;
   --font-size-paragraph:  33px;
   --font-size-fine:       27px;
 
-  /* Line heights */
+  /* Line heights — print/large screen scale */
   --line-height-title:     144px;
   --line-height-subtitle:   96px;
   --line-height-heading:    88px;
   --line-height-paragraph:  40px;
   --line-height-fine:       33px;
+
+  /* Sizes — mobile UI scale (from Figma) */
+  --font-size-ui-xs:   12px;
+  --font-size-ui-sm:   14px;
+  --font-size-ui-md:   20px;
+  --font-size-ui-h4:   32px;
+  --line-height-ui:    1.2;
 
   /* ── Spacing ─────────────────────────────── */
 
@@ -83,7 +100,8 @@
 
   /* ── Shadows ─────────────────────────────── */
 
-  --shadow-sm:  0 1px 4px rgba(15, 28, 63, 0.06);
-  --shadow-md:  0 4px 16px rgba(15, 28, 63, 0.08);
-  --shadow-lg:  0 8px 32px rgba(15, 28, 63, 0.10);
+  --shadow-sm:       0 1px 4px rgba(15, 28, 63, 0.06);
+  --shadow-md:       0 4px 16px rgba(15, 28, 63, 0.08);
+  --shadow-lg:       0 8px 32px rgba(15, 28, 63, 0.10);
+  --shadow-card:     0 0 5px 2px rgba(0, 0, 0, 0.30); /* Figma card shadow */
 }

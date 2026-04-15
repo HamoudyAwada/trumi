@@ -1,0 +1,77 @@
+/* ─────────────────────────────────────────────
+   OptionGrid
+   Scrollable 4-column grid of SVG option tiles.
+   Shows 2 rows (~152px) before scrolling.
+───────────────────────────────────────────── */
+
+/* Scroll container — fixed height shows 2 rows + gaps */
+.opt-scroll {
+  width: 100%;
+  max-height: 160px; /* 2 × 64px tiles + 2 × 16px gaps ≈ 160px */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Subtle scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-horizon-violet-300) transparent;
+}
+
+.opt-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.opt-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.opt-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-horizon-violet-300);
+  border-radius: var(--radius-full);
+}
+
+/* 4-column grid */
+.opt-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 64px);
+  gap: var(--space-4);
+  justify-content: center;
+  padding: var(--space-1) var(--space-2) var(--space-2);
+}
+
+/* Individual tile */
+.opt-tile {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  background-color: var(--color-horizon-violet-200);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
+  overflow: hidden;
+  transition:
+    background-color var(--duration-base) var(--easing-out),
+    border-color     var(--duration-base) var(--easing-out),
+    transform        var(--duration-base) var(--easing-out);
+}
+
+.opt-tile--active {
+  border-color: var(--color-horizon-violet);
+  background-color: var(--color-horizon-violet-300);
+}
+
+.opt-tile:active {
+  transform: scale(0.95);
+}
+
+/* SVG thumbnail inside tile */
+.opt-tile__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

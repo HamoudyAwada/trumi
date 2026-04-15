@@ -1,0 +1,166 @@
+/* ─────────────────────────────────────────────
+   Character Customization Page
+   Matches the Figma "Initial Onboarding Screen"
+   design. Dark background, centered mobile layout.
+───────────────────────────────────────────── */
+
+.char-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-5) var(--space-8);
+  min-height: 100dvh;
+  background-color: var(--color-tranquil-night);
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ── Header ──────────────────────────────────── */
+
+.char-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  width: 100%;
+  text-align: center;
+}
+
+.char-header__title {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-ui-h4);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui);
+  color: #fff;
+  text-decoration: underline;
+  margin: 0;
+}
+
+.char-header__subtitle {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-ui-sm);
+  font-weight: var(--font-weight-book);
+  line-height: var(--line-height-ui);
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+/* ── Generic section wrapper ─────────────────── */
+
+.char-section {
+  width: 100%;
+}
+
+.char-section--options {
+  padding-top: var(--space-2);
+}
+
+/* ── Character name row ──────────────────────── */
+
+.char-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-4) 0 0;
+}
+
+.char-name-display {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  transition: background-color var(--duration-base) var(--easing-out);
+}
+
+.char-name-display:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.char-name-display__text {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-ui-md);
+  font-weight: var(--font-weight-book);
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1;
+}
+
+.char-name-display__icon {
+  color: rgba(255, 255, 255, 0.65);
+  flex-shrink: 0;
+}
+
+.char-name-input {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-ui-md);
+  font-weight: var(--font-weight-book);
+  color: #fff;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-horizon-violet-300);
+  outline: none;
+  text-align: center;
+  padding: var(--space-1) var(--space-2);
+  width: 200px;
+  caret-color: var(--color-horizon-violet-300);
+}
+
+.char-name-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Character preview ───────────────────────── */
+
+.char-preview {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-2) 0;
+}
+
+/* ── CTA button ──────────────────────────────── */
+
+.char-cta {
+  width: 100%;
+  padding-top: var(--space-4);
+}
+
+.char-cta__btn {
+  display: block;
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--color-horizon-violet);
+  color: #fff;
+  font-family: var(--font-primary);
+  font-size: var(--font-size-ui-sm);
+  font-weight: var(--font-weight-demi);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-align: center;
+  transition:
+    background-color var(--duration-base) var(--easing-out),
+    opacity          var(--duration-base) var(--easing-out),
+    transform        var(--duration-base) var(--easing-out);
+}
+
+.char-cta__btn:hover:not(:disabled) {
+  background-color: var(--color-horizon-violet-300);
+}
+
+.char-cta__btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.char-cta__btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

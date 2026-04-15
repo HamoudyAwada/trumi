@@ -47,11 +47,26 @@ export default function Character() {
         <p className="char-header__subtitle">Make your Tru-mi feel like you</p>
       </header>
 
-      {/* ── Category tabs (3×2 grid) ─────────────── */}
-      <CategorySelector
-        activeCategory={activeCategory}
-        onChange={setActiveCategory}
+      {/* ── Skin tone selector ────────────────────── */}
+      <SkinToneSelector
+        selected={selections.skinTone}
+        onChange={handleSkinChange}
       />
+
+      {/* ── Eyebrow color selector ────────────────── */}
+      <BrowColorSelector
+        selected={selections.browColor}
+        onChange={handleBrowChange}
+      />
+
+      {/* ── Character preview ─────────────────────── */}
+      <section className="char-preview">
+        <CharacterCanvas
+          selections={selections}
+          skinTone={selections.skinTone}
+          browColor={selections.browColor}
+        />
+      </section>
 
       {/* ── Character name ────────────────────────── */}
       <div className="char-name-row">
@@ -80,25 +95,10 @@ export default function Character() {
         )}
       </div>
 
-      {/* ── Character preview ─────────────────────── */}
-      <section className="char-preview">
-        <CharacterCanvas
-          selections={selections}
-          skinTone={selections.skinTone}
-          browColor={selections.browColor}
-        />
-      </section>
-
-      {/* ── Skin tone selector ────────────────────── */}
-      <SkinToneSelector
-        selected={selections.skinTone}
-        onChange={handleSkinChange}
-      />
-
-      {/* ── Eyebrow color selector ────────────────── */}
-      <BrowColorSelector
-        selected={selections.browColor}
-        onChange={handleBrowChange}
+      {/* ── Category tabs (3×2 grid) ─────────────── */}
+      <CategorySelector
+        activeCategory={activeCategory}
+        onChange={setActiveCategory}
       />
 
       {/* ── Option grid ───────────────────────────── */}

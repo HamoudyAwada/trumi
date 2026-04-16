@@ -46,26 +46,13 @@
 }
 
 .goals-header__values-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  background: #ffffff;
+  background: none;
   border: none;
-  border-radius: var(--radius-full);
-  width: 44px;
-  padding: 6px 4px 4px;
+  padding: 0;
   cursor: pointer;
-  color: var(--color-horizon-violet-700);
-  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
   transition: opacity var(--duration-fast);
-}
-
-.goals-header__values-btn span {
-  font-family: var(--font-primary);
-  font-size: 9px;
-  font-weight: var(--font-weight-demi);
-  white-space: nowrap;
 }
 
 .goals-header__values-btn:hover { opacity: 0.75; }

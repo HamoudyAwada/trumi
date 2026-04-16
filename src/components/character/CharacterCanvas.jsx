@@ -2,8 +2,14 @@ import { useSkinTone } from './useSkinTone'
 import { useRecolor } from './useRecolor'
 import { useHairRecolor } from './useHairRecolor'
 import { useNoseRecolor } from './useNoseRecolor'
-import { NECK_SHIRT_PATH, findAsset, DEFAULT_BROW_COLOR, DEFAULT_EYE_COLOR, DEFAULT_LIP_COLOR } from './characterAssets'
+import { NECK_SHIRT_PATH, findAsset, DEFAULT_BROW_COLOR, DEFAULT_EYE_COLOR, DEFAULT_LIP_COLOR, COLOURED_LIPS } from './characterAssets'
 import './CharacterCanvas.css'
+
+// All blue iris fills used across eye SVGs — all must change together
+const EYE_IRIS_COLORS = ['#27aae1', '#62d6ff']
+
+// Actual lip fill color used in the lip-5/6/7 SVGs
+const LIP_SVG_BASE_COLOR = '#ff9fac'
 
 /**
  * CharacterCanvas
@@ -27,10 +33,20 @@ export default function CharacterCanvas({ selections, skinTone, browColor, eyeCo
   const neckSrc = useSkinTone(NECK_SHIRT_PATH,       skinTone, true)
   const faceSrc = useSkinTone(faceAsset?.path ?? '', skinTone, true)
 
-  const eyesSrc     = useRecolor(eyesAsset?.path ?? '',     DEFAULT_EYE_COLOR,  eyeColor  ?? DEFAULT_EYE_COLOR)
+  // Eyes: replace the iris ring (#2192c8) + main iris fill (#27aae1) + chibi iris (#62d6ff)
+  const eyesSrc     = useRecolor(eyesAsset?.path ?? '', DEFAULT_EYE_COLOR, eyeColor ?? DEFAULT_EYE_COLOR, EYE_IRIS_COLORS)
   const eyebrowsSrc = useRecolor(eyebrowsAsset?.path ?? '', DEFAULT_BROW_COLOR, browColor ?? '#59320c')
   const noseSrc     = useNoseRecolor(noseAsset?.path ?? '', skinTone)
-  const lipsSrc     = useRecolor(lipsAsset?.path ?? '',     DEFAULT_LIP_COLOR,  lipColor  ?? DEFAULT_LIP_COLOR)
+
+  // Lips: lip-5/6/7 use #ff9fac as their fill — replace that with the chosen color.
+  // Lips 1–4 are line-art (black outline) with no fill to recolor — skip replacement.
+  const isColouredLip = COLOURED_LIPS.has(selections.lips)
+  const lipsSrc = useRecolor(
+    lipsAsset?.path ?? '',
+    isColouredLip ? LIP_SVG_BASE_COLOR : '',
+    isColouredLip ? (lipColor ?? DEFAULT_LIP_COLOR) : '',
+  )
+
   const hairSrc     = useHairRecolor(hairAsset?.path ?? '', hairColor ?? DEFAULT_HAIR_COLOR)
 
   return (

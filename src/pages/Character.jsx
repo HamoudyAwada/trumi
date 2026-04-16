@@ -182,16 +182,6 @@ export default function Character() {
             />
           </div>
 
-          {/* ── CTA ───────────────────────────── */}
-          <div className="char-cta">
-            <button
-              className="char-cta__btn"
-              disabled={!selections.name.trim()}
-              aria-label="Save your Tru-mi"
-            >
-              {selections.name.trim() ? `This is ${selections.name}!` : 'Name your Tru-mi to continue'}
-            </button>
-          </div>
         </>
       ) : (
         /* ── Chat preview (view mode) ──────────── */

@@ -1,6 +1,6 @@
 /* ─────────────────────────────────────────────
    CategorySelector
-   3×2 grid of category tabs.
+   3×2 grid of icon-only category tiles.
    Figma: 106×61px tiles, 16px col gap, 14px row gap.
 ───────────────────────────────────────────── */
 
@@ -13,19 +13,17 @@
 
 .cat-tab {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
   height: 61px;
   background-color: #292952;
   border: none;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  border-radius: 24px;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition:
-    background-color var(--duration-base) var(--easing-out),
-    transform        var(--duration-fast) var(--easing-out);
+    background-color 200ms ease-out,
+    transform        120ms ease-out;
 }
 
 .cat-tab--active {
@@ -34,17 +32,4 @@
 
 .cat-tab:active {
   transform: scale(0.96);
-}
-
-.cat-tab__icon {
-  font-size: 18px;
-  line-height: 1;
-}
-
-.cat-tab__label {
-  font-family: var(--font-primary);
-  font-size: var(--font-size-ui-xs);
-  font-weight: var(--font-weight-medium);
-  color: #fff;
-  line-height: 1;
 }

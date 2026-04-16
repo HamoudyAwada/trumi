@@ -1,0 +1,300 @@
+/* ─────────────────────────────────────────────
+   My Values Page
+   Matches Figma node 396:9591
+───────────────────────────────────────────── */
+
+.values-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100%;
+  margin: 0 auto;
+  background-color: var(--color-cloud);
+  box-sizing: border-box;
+}
+
+/* ── App header ────────────────────────────── */
+
+.values-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 4px;
+  flex-shrink: 0;
+}
+
+.values-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.values-header__logo-mark {
+  width: 28px;
+  height: 28px;
+}
+
+.values-header__wordmark {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-horizon-violet);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+/* Goals nav button — white circle, mirrors the diamond Values btn */
+.values-header__goals-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: #ffffff;
+  border: none;
+  border-radius: var(--radius-full);
+  width: 44px;
+  padding: 5px 4px 3px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: opacity var(--duration-fast);
+}
+
+.values-header__goals-btn:hover { opacity: 0.75; }
+
+.values-header__goals-label {
+  font-family: var(--font-primary);
+  font-size: 9px;
+  font-weight: var(--font-weight-demi);
+  color: var(--color-horizon-violet-700);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* ── Scrollable body ───────────────────────── */
+
+.values-scroll {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-horizon-violet-300) transparent;
+}
+
+.values-scroll::-webkit-scrollbar { width: 4px; }
+.values-scroll::-webkit-scrollbar-track { background: transparent; }
+.values-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-horizon-violet-300);
+  border-radius: var(--radius-full);
+}
+
+/* ── Hero: diamond + title ─────────────────── */
+
+.values-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding-top: 12px;
+  padding-bottom: 4px;
+  width: 100%;
+}
+
+.values-hero__diamond-wrap {
+  position: relative;
+  width: 240px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.values-hero__gem {
+  width: 108px;
+  height: 62px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Sparkle positioning */
+.values-hero__sparkle {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.values-hero__sparkle--left       { left: 8px;  top: 40px; }
+.values-hero__sparkle--right      { right: 16px; top: 20px; }
+.values-hero__sparkle--top-right-sm { right: 50px; top: 8px;  }
+.values-hero__sparkle--left-sm    { left: 44px;  top: 12px; }
+
+.values-title {
+  font-family: var(--font-primary);
+  font-size: 32px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-horizon-violet-800);
+  margin: 0;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* ── Values cloud ──────────────────────────── */
+
+.values-cloud {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  max-width: 353px;
+  padding: 10px 0 18px;
+}
+
+.values-cloud__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Priority chips — filled violet, larger text */
+.values-chip--priority {
+  background-color: var(--color-horizon-violet);
+  color: var(--color-cloud);
+  font-size: 20px;
+  padding: 2px 10px;
+}
+
+/* Standard chips — light violet, smaller text */
+.values-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-horizon-violet-100);
+  color: var(--color-tranquil-night);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  line-height: 1.6;
+}
+
+/* ── Alignment heading ─────────────────────── */
+
+.values-alignment-heading {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet-800);
+  text-decoration: underline;
+  text-align: center;
+  margin: 0 0 16px;
+  line-height: 1.4;
+}
+
+/* ── Value rows list ───────────────────────── */
+
+.values-list {
+  width: 100%;
+  max-width: 369px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.values-list__section {
+  display: flex;
+  flex-direction: column;
+}
+
+.values-list__divider {
+  width: 347px;
+  height: 1px;
+  background-color: var(--color-horizon-violet-200);
+  margin: 20px auto;
+  align-self: center;
+}
+
+/* ── Individual value row ──────────────────── */
+
+.values-row {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.values-row__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 4px 8px;
+  background: #ffffff;
+  border: 1px solid var(--color-horizon-violet-200);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--duration-fast);
+}
+
+.values-row__head:hover {
+  background-color: var(--color-horizon-violet-50);
+}
+
+.values-row__name {
+  font-family: var(--font-primary);
+  font-size: 17px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-tranquil-night);
+  line-height: 1.6;
+  flex: 0 0 140px;
+  text-align: left;
+}
+
+.values-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.values-row__label {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet-700);
+  white-space: nowrap;
+}
+
+.values-row__chevron {
+  flex-shrink: 0;
+  transition: transform 200ms ease-out;
+  color: var(--color-horizon-violet);
+}
+
+.values-row__chevron--open {
+  transform: rotate(180deg);
+}
+
+/* Expanded body — content fills in per the upcoming design */
+.values-row__body {
+  background-color: var(--color-horizon-violet-50);
+  border: 1px solid var(--color-horizon-violet-200);
+  border-top: none;
+  padding: 12px 12px;
+  min-height: 40px;
+}
+
+/* ── Bottom spacer ─────────────────────────── */
+
+.values-bottom-spacer {
+  height: 24px;
+  flex-shrink: 0;
+}

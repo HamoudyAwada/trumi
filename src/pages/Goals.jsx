@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import GoalCard from '../components/goals/GoalCard'
 import './Goals.css'
 
@@ -91,6 +92,7 @@ const TERMS = [
 ]
 
 export default function Goals() {
+  const navigate = useNavigate()
   const [termFilter,   setTermFilter]   = useState('short')
   const [statusFilter, setStatusFilter] = useState('active')
 
@@ -112,7 +114,7 @@ export default function Goals() {
           <TrumiLogo />
           <span className="goals-header__wordmark">trumi</span>
         </div>
-        <button className="goals-header__values-btn" aria-label="Your Values">
+        <button className="goals-header__values-btn" aria-label="Your Values" onClick={() => navigate('/values')}>
           <svg width="33" height="39" viewBox="0 0 33 39" fill="none" aria-hidden="true">
             <rect width="33" height="33" rx="16.5" fill="white"/>
             <path d="M10.0172 7.07129H22.9581L29.0716 13.8808L16.5004 27.4999L3.92871 13.8808L10.0172 7.07129Z" fill="#E0E0F5" stroke="#6666CC" strokeWidth="1.17857" strokeLinecap="round" strokeLinejoin="round"/>

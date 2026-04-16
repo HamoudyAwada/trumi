@@ -6,6 +6,7 @@ import MainLayout        from './components/ui/MainLayout'
 import Home              from './pages/Home'
 import Character         from './pages/Character'
 import Goals             from './pages/Goals'
+import Values            from './pages/Values'
 import AddGoal           from './pages/AddGoal'
 import Achievements      from './pages/Achievements'
 import Chat              from './pages/Chat'
@@ -60,6 +61,7 @@ export default function App() {
         <Route element={<MainLayout />}>
           <Route path="/"             element={<HomeGuard />} />
           <Route path="/goals"        element={<Goals />} />
+          <Route path="/values"       element={<Values />} />
           <Route path="/add-goal"     element={<AddGoal />} />
           <Route path="/achievements" element={<Achievements />} />
           <Route path="/character"    element={<Character />} />

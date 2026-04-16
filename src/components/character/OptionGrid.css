@@ -31,7 +31,7 @@
   width: 64px;
   height: 64px;
   flex-shrink: 0;
-  background-color: var(--color-horizon-violet-200);
+  background-color: #5252a3;
   border: 2px solid transparent;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
@@ -48,8 +48,8 @@
 }
 
 .opt-tile--active {
-  border-color: var(--color-horizon-violet);
-  background-color: var(--color-horizon-violet-300);
+  border-color: transparent;
+  background-color: #8585d6;
 }
 
 .opt-tile:active {

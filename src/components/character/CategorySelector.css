@@ -18,7 +18,7 @@
   justify-content: center;
   gap: 4px;
   height: 61px;
-  background-color: rgba(163, 163, 224, 0.25); /* dim violet */
+  background-color: #292952;
   border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
@@ -29,7 +29,7 @@
 }
 
 .cat-tab--active {
-  background-color: var(--color-horizon-violet-300);
+  background-color: #8585d6;
 }
 
 .cat-tab:active {

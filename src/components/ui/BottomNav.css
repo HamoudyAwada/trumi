@@ -1,0 +1,50 @@
+/* ─────────────────────────────────────────────
+   BottomNav
+   Fixed bottom navigation bar. 5 tabs.
+   Matches Figma node 402:4551.
+───────────────────────────────────────────── */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  height: 72px;
+  background-color: #fffffe;
+  border-top: 1px solid var(--color-horizon-violet, #6666cc);
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.bottom-nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  height: 100%;
+  padding: 0 8px;
+}
+
+.bottom-nav__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-tranquil-night, #0f1c3f);
+  text-decoration: none;
+  flex-shrink: 0;
+  opacity: 0.45;
+  transition:
+    opacity  var(--duration-base) var(--easing-out),
+    color    var(--duration-base) var(--easing-out);
+}
+
+.bottom-nav__link--active {
+  color: var(--color-horizon-violet, #6666cc);
+  opacity: 1;
+}
+
+.bottom-nav__link:hover:not(.bottom-nav__link--active) {
+  opacity: 0.75;
+}

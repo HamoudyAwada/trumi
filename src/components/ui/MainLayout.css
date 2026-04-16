@@ -1,18 +1,12 @@
 /* ─────────────────────────────────────────────
-   Home Page
+   MainLayout
+   Wraps all main-nav pages. Adds bottom padding
+   so page content clears the fixed BottomNav.
 ───────────────────────────────────────────── */
 
-.home-page {
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100dvh - 72px);
+.main-layout {
   width: 100%;
-  max-width: 430px;
-  margin: 0 auto;
-  background-color: var(--color-tranquil-night);
+  min-height: 100dvh;
+  padding-bottom: 72px;
   box-sizing: border-box;
-}
-
-.home-content {
-  flex: 1;
 }

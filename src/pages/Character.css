@@ -9,7 +9,7 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-5) var(--space-5) var(--space-8);
+  padding: var(--space-5) var(--space-5) calc(var(--space-8) + 72px);
   min-height: 100dvh;
   background-color: var(--color-cloud, #fffcfa);
   width: 100%;

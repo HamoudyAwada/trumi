@@ -1,16 +1,16 @@
 /**
  * Vercel Serverless Function — /api/chat
- * Proxies chat messages to Gemini so the API key never reaches the browser.
+ * Proxies chat messages to Groq so the API key never reaches the browser.
  *
  * Expects POST body: { message: string, history: Array, characterName: string }
  * Returns:          { reply: string }
  */
 
-const { GoogleGenerativeAI } = await import('@google/generative-ai')
+import Groq from 'groq-sdk'
 
-const genAI = new GoogleGenerativeAI(process.env.VITE_GEMINI_API_KEY)
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-function buildSystemInstruction(characterName) {
+function buildSystemPrompt(characterName) {
   return `You are ${characterName}, the user's personal Tru-mi — a custom character they built inside the Trumi app. You are not a generic AI assistant. You are THEIR companion, shaped by who they are.
 
 Trumi is a self-discovery and personal growth app for young adults. It helps people understand their values and move toward goals that genuinely reflect who they are — not who they feel pressured to become. The emotional core of Trumi is: reflection before action, growth without guilt, progress without pressure.
@@ -32,7 +32,7 @@ THINGS YOU NEVER DO:
 - Never give generic motivational quotes or clichés
 - Never respond with more than one question at a time
 - Never use the word "boundaries"
-- Never sound like a chatbot
+- Never sound like a chatbot or an AI assistant
 
 HOW YOU RESPOND TO DIFFERENT SITUATIONS:
 - If they share something hard: acknowledge it fully first. One sentence of pure reflection before anything else. Then one gentle question.
@@ -63,28 +63,30 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message is required' })
   }
 
+  // Convert history from Gemini format { role, parts: [{ text }] }
+  // to OpenAI/Groq format { role, content }
+  const messages = [
+    { role: 'system', content: buildSystemPrompt(characterName) },
+    ...history.map(turn => ({
+      role: turn.role === 'model' ? 'assistant' : 'user',
+      content: turn.parts?.[0]?.text ?? '',
+    })),
+    { role: 'user', content: message },
+  ]
+
   try {
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
-      systemInstruction: { parts: [{ text: buildSystemInstruction(characterName) }] },
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.1-8b-instant',
+      messages,
+      max_tokens: 200,
+      temperature: 0.9,
     })
 
-    const chat = model.startChat({
-      generationConfig: {
-        maxOutputTokens: 200,
-        temperature: 0.9,
-        thinkingConfig: { thinkingBudget: 0 },
-      },
-      history,
-    })
-
-    const result = await chat.sendMessage(message)
-    const reply = result.response.text()
-
+    const reply = completion.choices[0]?.message?.content ?? ''
     res.status(200).json({ reply })
   } catch (err) {
     console.error('[/api/chat]', err)
-    const isQuota = err?.message?.includes('429') || err?.message?.includes('quota') || err?.status === 429
+    const isQuota = err?.status === 429
     res.status(isQuota ? 429 : 500).json({ error: isQuota ? 'Rate limit reached' : 'Failed to get response' })
   }
 }

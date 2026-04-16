@@ -85,6 +85,7 @@ export default function GoalCard({
   onLogSetback,
   onUnpause,
   onSettings,
+  onClick,
 }) {
   const isActive = status === 'active'
   const isPaused = status === 'paused'
@@ -92,7 +93,8 @@ export default function GoalCard({
 
   return (
     <article
-      className={`goal-card goal-card--${status}${isActive && pressed ? ' goal-card--pressed' : ''}`}
+      className={`goal-card goal-card--${status}${isActive && pressed ? ' goal-card--pressed' : ''}${onClick ? ' goal-card--clickable' : ''}`}
+      onClick={onClick}
       onPointerDown={() => isActive && setPressed(true)}
       onPointerUp={() => setPressed(false)}
       onPointerCancel={() => setPressed(false)}
@@ -108,7 +110,7 @@ export default function GoalCard({
       {/* ── Settings / 3-dot button (absolute, top-right) ── */}
       <button
         className="goal-card__settings-btn"
-        onClick={onSettings}
+        onClick={e => { e.stopPropagation(); onSettings?.() }}
         aria-label="Goal options"
       >
         <ThreeDotsIcon />
@@ -158,15 +160,15 @@ export default function GoalCard({
         <div className="goal-card__action-block">
           {isActive ? (
             <>
-              <button className="goal-card__action-btn" onClick={onLogProgress}>
+              <button className="goal-card__action-btn" onClick={e => { e.stopPropagation(); onLogProgress?.() }}>
                 Log Progress
               </button>
-              <button className="goal-card__setback-link" onClick={onLogSetback}>
+              <button className="goal-card__setback-link" onClick={e => { e.stopPropagation(); onLogSetback?.() }}>
                 Log Setback
               </button>
             </>
           ) : (
-            <button className="goal-card__unpause-btn" onClick={onUnpause}>
+            <button className="goal-card__unpause-btn" onClick={e => { e.stopPropagation(); onUnpause?.() }}>
               Unpause
             </button>
           )}

@@ -1,0 +1,372 @@
+/* ─────────────────────────────────────────────
+   GoalDetail Page
+   Full-screen expanded view of a single goal.
+   Route: /goal/:id
+───────────────────────────────────────────── */
+
+.gd-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background-color: var(--color-cloud);
+  box-sizing: border-box;
+}
+
+/* ── Not-found state ──────────────────────── */
+
+.gd-page--not-found {
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 24px;
+}
+
+.gd-not-found__text {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  color: var(--color-horizon-violet-700);
+  text-align: center;
+  margin: 0;
+}
+
+.gd-not-found__btn {
+  background: var(--color-horizon-violet);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  padding: 10px 28px;
+  cursor: pointer;
+}
+
+/* ── Header ────────────────────────────────── */
+
+.gd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px 8px;
+  flex-shrink: 0;
+}
+
+.gd-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gd-header__logo-mark {
+  width: 28px;
+  height: 28px;
+}
+
+.gd-header__wordmark {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-horizon-violet);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.gd-header__term-label {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet);
+}
+
+/* ── Back button ─────────────────────────── */
+
+.gd-back-btn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-horizon-violet-700);
+  padding: 4px 16px 8px;
+  flex-shrink: 0;
+  transition: opacity var(--duration-fast);
+}
+
+.gd-back-btn:hover { opacity: 0.65; }
+
+/* ── Scrollable body ─────────────────────── */
+
+.gd-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-horizon-violet-300) transparent;
+}
+
+.gd-body::-webkit-scrollbar { width: 4px; }
+.gd-body::-webkit-scrollbar-track { background: transparent; }
+.gd-body::-webkit-scrollbar-thumb {
+  background-color: var(--color-horizon-violet-300);
+  border-radius: var(--radius-full);
+}
+
+/* ── Title section ───────────────────────── */
+
+.gd-title-section {
+  background-color: var(--color-horizon-violet-300);
+  border-radius: var(--radius-md);
+  padding: 14px 16px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gd-title {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-tranquil-night);
+  text-decoration: underline;
+  margin: 0;
+  line-height: 1.3;
+  flex: 1;
+}
+
+.gd-title--paused {
+  color: var(--color-fogstone);
+}
+
+.gd-intensity {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex-shrink: 0;
+}
+
+/* ── Generic section card ────────────────── */
+
+.gd-section {
+  background-color: var(--color-horizon-violet-50);
+  border: 1.5px solid var(--color-horizon-violet-200);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gd-section--last {
+  margin-bottom: 4px;
+}
+
+.gd-section-label {
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: var(--font-weight-demi);
+  color: var(--color-horizon-violet-700);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* ── Progress ────────────────────────────── */
+
+.gd-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gd-progress-pct {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-horizon-violet);
+  line-height: 1;
+}
+
+.gd-progress-track {
+  height: 14px;
+  background-color: var(--color-horizon-violet-200);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  width: 100%;
+}
+
+.gd-progress-fill {
+  height: 100%;
+  background-color: var(--color-horizon-violet);
+  border-radius: var(--radius-full);
+  transition: width var(--duration-base) var(--easing-out);
+}
+
+.gd-progress-fill--paused {
+  background-color: var(--color-fogstone-400);
+}
+
+/* ── Dates ───────────────────────────────── */
+
+.gd-dates {
+  gap: 6px;
+}
+
+.gd-date-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gd-date-label {
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: var(--font-weight-demi);
+  color: var(--color-horizon-violet-700);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.gd-date-value {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-tranquil-night);
+}
+
+/* ── Value chips ─────────────────────────── */
+
+.gd-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gd-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 4px;
+  background-color: var(--color-horizon-violet);
+  color: #ffffff;
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.gd-chips--friction .gd-chip--friction {
+  background-color: var(--color-horizon-violet-200);
+  color: var(--color-horizon-violet-800);
+}
+
+/* ── Detail text ─────────────────────────── */
+
+.gd-detail-text {
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-tranquil-night);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.gd-detail-text--quoted {
+  font-style: italic;
+  color: var(--color-horizon-violet-800);
+  padding-left: 4px;
+  border-left: 3px solid var(--color-horizon-violet-300);
+}
+
+/* ── Perceived difficulty ────────────────── */
+
+.gd-difficulty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gd-difficulty__flames {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex-shrink: 0;
+}
+
+.gd-difficulty__label {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet-800);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── Footer ──────────────────────────────── */
+
+.gd-footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px 28px;
+  background-color: var(--color-cloud);
+  border-top: 1.5px solid var(--color-horizon-violet-100);
+}
+
+.gd-footer__primary {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-tranquil-night);
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  background-color: var(--color-horizon-violet-600);
+  color: var(--color-lucent-green);
+  box-shadow: 0 3px 6px rgba(15, 28, 63, 0.18);
+  transition: opacity var(--duration-fast);
+}
+
+.gd-footer__primary:hover { opacity: 0.88; }
+
+.gd-footer__setback {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-tranquil-night);
+  text-decoration: underline;
+  padding: 2px 0;
+  transition: opacity var(--duration-fast);
+}
+
+.gd-footer__setback:hover { opacity: 0.65; }
+
+.gd-footer__pause {
+  background: none;
+  border: 1.5px solid var(--color-horizon-violet-300);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet-700);
+  padding: 6px 20px;
+  transition: opacity var(--duration-fast);
+}
+
+.gd-footer__pause:hover { opacity: 0.75; }

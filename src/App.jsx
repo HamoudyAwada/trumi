@@ -8,6 +8,7 @@ import Character         from './pages/Character'
 import Goals             from './pages/Goals'
 import Values            from './pages/Values'
 import AddGoal           from './pages/AddGoal'
+import GoalDetail        from './pages/GoalDetail'
 import Achievements      from './pages/Achievements'
 import Chat              from './pages/Chat'
 import Onboarding        from './pages/Onboarding'
@@ -57,6 +58,7 @@ export default function App() {
         <Route path="/onboarding/goals"  element={<OnboardingGoals />} />
         <Route path="/chat"              element={<Chat />} />
         <Route path="/add-goal"        element={<AddGoal />} />
+        <Route path="/goal/:id"        element={<GoalDetail />} />
 
         {/* All main app pages share the BottomNav layout */}
         <Route element={<MainLayout />}>

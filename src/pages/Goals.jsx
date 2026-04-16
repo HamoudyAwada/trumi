@@ -151,6 +151,7 @@ export default function Goals() {
                 <li key={goal.id}>
                   <GoalCard
                     {...goal}
+                    onClick={() => navigate(`/goal/${goal.id}`)}
                     onLogProgress={() => {}}
                     onLogSetback={() => {}}
                     onUnpause={() => {}}

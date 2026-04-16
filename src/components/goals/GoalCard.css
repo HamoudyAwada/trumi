@@ -16,6 +16,9 @@
   font-family: var(--font-primary);
 }
 
+/* ── Clickable variant ─────────────────────── */
+.goal-card--clickable { cursor: pointer; }
+
 /* ── State backgrounds ─────────────────────── */
 
 /* Default (resting) active state: violet theme */

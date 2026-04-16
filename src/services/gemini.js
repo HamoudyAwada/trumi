@@ -21,16 +21,27 @@ export function createChatSession(characterName = 'Your Tru-mi') {
   const history = []
 
   async function sendMessage(userText, attempt = 1) {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 20000)
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userText, history, characterName }),
+        signal: controller.signal,
       })
 
+      clearTimeout(timeout)
+
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        throw new Error(err.error ?? `Server error ${res.status}`)
+        const errBody = await res.json().catch(() => ({}))
+        const isRateLimit = res.status === 429
+        if (isRateLimit && attempt < 4) {
+          await new Promise(r => setTimeout(r, attempt * 6000))
+          return sendMessage(userText, attempt + 1)
+        }
+        throw new Error(errBody.error ?? `Server error ${res.status}`)
       }
 
       const { reply } = await res.json()
@@ -43,11 +54,9 @@ export function createChatSession(characterName = 'Your Tru-mi') {
 
       return reply
     } catch (err) {
-      const isRateLimit = err?.message?.includes('429') || err?.message?.includes('quota') || err?.message?.includes('Rate limit')
-      const isServerError = err?.message?.includes('500') || err?.message?.includes('Server error')
-      if ((isRateLimit || isServerError) && attempt < 4) {
-        await new Promise(res => setTimeout(res, attempt * 4000))
-        return sendMessage(userText, attempt + 1)
+      clearTimeout(timeout)
+      if (err.name === 'AbortError') {
+        throw new Error('Response timed out — try again')
       }
       throw err
     }

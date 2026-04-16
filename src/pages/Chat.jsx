@@ -252,7 +252,7 @@ export default function Chat() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Message your Tru-mi\u2026"
+            placeholder={`Message ${characterName}…`}
             aria-label="Type a message"
             disabled={sending}
           />
@@ -304,7 +304,7 @@ export default function Chat() {
           {sessionsLoading && (
             <div className="chat-history-panel__loading">
               <div className="chat-history-panel__spinner" aria-hidden="true" />
-              <p>Loading your chats\u2026</p>
+              <p>Loading your chats…</p>
             </div>
           )}
 

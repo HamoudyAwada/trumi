@@ -1,7 +1,7 @@
 /**
- * Gemini API service — frontend only.
- * All Gemini calls go through /api/chat (Vercel serverless function).
- * The API key never touches the browser.
+ * AI service — frontend only.
+ * All AI calls proxy through Vercel serverless functions (/api/chat, /api/suggest-goals).
+ * The Groq API key never touches the browser.
  *
  * All prompts follow Trumi's brand voice:
  * - Second person ("you", "your")
@@ -9,13 +9,6 @@
  * - Never: "must", "should", "failed", "missed"
  */
 
-/**
- * Creates a stateful multi-turn chat session with the character.
- * The returned sendMessage function maintains conversation history automatically.
- *
- * @param {string} characterName - The user's character name (shown in header)
- * @returns {{ sendMessage: (text: string) => Promise<string> }}
- */
 /**
  * @param {string}   characterName  - The name shown in the header
  * @param {Array}    initialHistory - Pre-seeded history when resuming a saved chat.

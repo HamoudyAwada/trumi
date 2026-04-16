@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { suggestGoals } from '../services/gemini'
+import { suggestGoals } from '../services/ai'
 import { saveOnboardingResponses } from '../services/supabase'
 import './Onboarding.css'
 import './OnboardingGoals.css'

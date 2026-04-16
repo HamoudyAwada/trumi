@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { createChatSession } from '../services/gemini'
+import { createChatSession } from '../services/ai'
 import {
   startChatSession,
   appendChatMessage,

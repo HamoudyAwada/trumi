@@ -19,9 +19,10 @@ Rules:
 - Ground every goal in something they specifically said in their survey. Reference their actual values.
 - Frame goals as personal possibilities, never obligations. Avoid "you must", "you should", "you need to".
 - Keep each goal title short (under 8 words).
-- The "why" field should feel personal — like you read their answers carefully and saw something in them.
-- The "description" should be 1–2 sentences expanding on the goal in a warm, encouraging tone.
-- Each goal should have 2–3 concrete sub-goals (small, specific actions or milestones).
+- The "why" field should speak directly to the user in second person ("you", "your") — like you read their answers carefully and saw something in them. Never use "they", "their", or "them".
+- The "description" should be 1–2 sentences in second person, expanding on the goal in a warm, encouraging tone.
+- The "values" field should list 1–3 of the user's own values (from their survey) that this goal directly connects to.
+- Each goal should have 2–3 concrete sub-goals (small, specific actions or milestones), written in second person.
 - Focus on the values that seem most out of alignment — those are where growth matters most right now.
 - Return ONLY valid JSON. No markdown fences, no extra text.
 
@@ -29,8 +30,9 @@ Output format (strict JSON array):
 [
   {
     "title": "Short goal title",
-    "why": "One sentence — why this goal matters for this specific person based on their survey.",
-    "description": "1–2 sentences expanding on what this could look like for them.",
+    "values": ["Value Name 1", "Value Name 2"],
+    "why": "One sentence in second person — why this goal resonates with you based on what you shared.",
+    "description": "1–2 sentences in second person expanding on what this could look like for you.",
     "subGoals": ["Specific sub-goal 1", "Specific sub-goal 2", "Specific sub-goal 3"]
   }
 ]`

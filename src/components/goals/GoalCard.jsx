@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './GoalCard.css'
 
 /* ── Flame icon — two states: active (filled) vs inactive (ghost) ── */
@@ -87,9 +88,16 @@ export default function GoalCard({
 }) {
   const isActive = status === 'active'
   const isPaused = status === 'paused'
+  const [pressed, setPressed] = useState(false)
 
   return (
-    <article className={`goal-card goal-card--${status}`}>
+    <article
+      className={`goal-card goal-card--${status}${isActive && pressed ? ' goal-card--pressed' : ''}`}
+      onPointerDown={() => isActive && setPressed(true)}
+      onPointerUp={() => setPressed(false)}
+      onPointerCancel={() => setPressed(false)}
+      onPointerLeave={() => setPressed(false)}
+    >
 
       {/* ── Header strip: title + intensity ── */}
       <div className="goal-card__header">

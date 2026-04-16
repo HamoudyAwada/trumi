@@ -101,8 +101,15 @@
 .ob-goals__card {
   background-color: #fff;
   border-radius: var(--radius-lg, 24px);
+  border: 2px solid transparent;
   box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.06);
   overflow: hidden;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+
+.ob-goals__card--added {
+  border-color: var(--color-lucent-green, #cdff6d);
+  background-color: var(--color-lucent-green-50, #fafff0);
 }
 
 .ob-goals__card-header {
@@ -130,9 +137,29 @@
   line-height: 1.3;
 }
 
+.ob-goals__card-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.ob-goals__added-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--color-lucent-green, #cdff6d);
+  color: var(--color-tranquil-night, #0f1c3f);
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-primary);
+}
+
 .ob-goals__card-chevron {
   color: var(--color-horizon-violet, #6666cc);
-  flex-shrink: 0;
   transition: transform 200ms ease-out;
 }
 
@@ -148,6 +175,115 @@
   flex-direction: column;
   gap: var(--space-3);
 }
+
+/* ── Values chips ────────────────────────── */
+
+.ob-goals__card-values {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ob-goals__card-values-label {
+  font-family: var(--font-primary);
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fogstone, #66747f);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ob-goals__card-values-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.ob-goals__card-value-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-horizon-violet-100, #e0e0f5);
+  color: var(--color-horizon-violet-700, #3d3d7a);
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+/* ── Add to goals button ─────────────────── */
+
+.ob-goals__add-btn {
+  align-self: flex-start;
+  height: 36px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-horizon-violet, #6666cc);
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet, #6666cc);
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+.ob-goals__add-btn:hover {
+  background-color: var(--color-horizon-violet-50, #f0f0fa);
+}
+
+.ob-goals__add-btn--added {
+  background-color: var(--color-lucent-green, #cdff6d);
+  border-color: var(--color-lucent-green, #cdff6d);
+  color: var(--color-tranquil-night, #0f1c3f);
+}
+
+.ob-goals__add-btn--added:hover {
+  background-color: var(--color-lucent-green-400, #d7ff8a);
+}
+
+/* ── Regenerate row ─────────────────────── */
+
+.ob-goals__regen-row {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-2) 0 var(--space-1);
+}
+
+.ob-goals__regen-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: 1.5px solid var(--color-horizon-violet-200, #c2c2eb);
+  border-radius: var(--radius-full);
+  padding: 0 var(--space-4);
+  height: 36px;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet, #6666cc);
+  transition: opacity 200ms ease;
+}
+
+.ob-goals__regen-btn:hover { opacity: 0.75; }
+.ob-goals__regen-btn:disabled { opacity: 0.4; cursor: default; }
+
+.ob-goals__regen-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(102, 102, 204, 0.25);
+  border-top-color: var(--color-horizon-violet, #6666cc);
+  border-radius: 50%;
+  animation: ob-spin 0.9s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── Why / explanation ───────────────────── */
 
 .ob-goals__card-why {
   font-family: var(--font-primary);

@@ -10,46 +10,62 @@ export default function OnboardingGoals() {
   const { state } = useLocation()
   const { top10 = [], top3 = [], valueLooks = {}, tradeoffs = {}, alignment = {}, obstacles = {} } = state ?? {}
 
-  const [goals, setGoals]         = useState([])
-  const [loading, setLoading]     = useState(true)
-  const [error, setError]         = useState(null)
-  const [saving, setSaving]       = useState(false)
-  const [saveError, setSaveError] = useState(null)
-  const [expanded, setExpanded]   = useState(null)   // index of expanded goal card
+  const [goals, setGoals]           = useState([])
+  const [loading, setLoading]       = useState(true)
+  const [regenerating, setRegenerating] = useState(false)
+  const [error, setError]           = useState(null)
+  const [saving, setSaving]         = useState(false)
+  const [saveError, setSaveError]   = useState(null)
+  const [expanded, setExpanded]     = useState(null)   // index of expanded goal card
+  const [added, setAdded]           = useState(new Set()) // indices of added goals
 
-  useEffect(() => {
-    // If there's no survey data (e.g. navigated here directly), skip the API call
+  const surveyData = { top10, top3, valueLooks, tradeoffs, alignment, obstacles }
+
+  async function fetchGoals({ initial = false } = {}) {
     if (top3.length === 0 && top10.length === 0) {
       setError('No survey data found. Head back through the onboarding steps to get personalised goal suggestions.')
       setLoading(false)
       return
     }
 
-    let cancelled = false
+    if (initial) setLoading(true)
+    else setRegenerating(true)
 
-    suggestGoals({ top10, top3, valueLooks, tradeoffs, alignment, obstacles })
-      .then(result => {
-        if (!cancelled) {
-          setGoals(Array.isArray(result) ? result : [])
-          setLoading(false)
-        }
-      })
-      .catch(err => {
-        if (!cancelled) {
-          console.error('[OnboardingGoals]', err)
-          setError('We had trouble generating your goals. You can still continue — you can set goals any time inside the app.')
-          setLoading(false)
-        }
-      })
+    setError(null)
 
-    return () => { cancelled = true }
+    try {
+      const result = await suggestGoals(surveyData)
+      setGoals(Array.isArray(result) ? result : [])
+      setAdded(new Set()) // reset added when goals change
+      setExpanded(null)
+    } catch (err) {
+      console.error('[OnboardingGoals]', err)
+      setError('We had trouble generating your goals. You can still continue — you can set goals any time inside the app.')
+    } finally {
+      if (initial) setLoading(false)
+      else setRegenerating(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchGoals({ initial: true })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  function toggleAdd(i) {
+    setAdded(prev => {
+      const next = new Set(prev)
+      if (next.has(i)) next.delete(i)
+      else next.add(i)
+      return next
+    })
+  }
 
   async function handleContinue() {
     setSaving(true)
     setSaveError(null)
     try {
-      await saveOnboardingResponses({ top10, top3, valueLooks, tradeoffs, alignment, obstacles })
+      await saveOnboardingResponses(surveyData)
+      // TODO: save added goals to Supabase goals table once schema is ready
       localStorage.setItem('trumi_onboarded', 'true')
       navigate('/')
     } catch (err) {
@@ -59,6 +75,8 @@ export default function OnboardingGoals() {
     }
   }
 
+  const addedGoals = goals.filter((_, i) => added.has(i))
+
   return (
     <div className="ob-page">
 
@@ -66,7 +84,7 @@ export default function OnboardingGoals() {
       <div className="ob-header">
         <button
           className="ob-back-btn"
-          onClick={() => navigate('/onboarding/step/5', { state: { top10, top3, valueLooks, tradeoffs, alignment, obstacles } })}
+          onClick={() => navigate('/onboarding/step/5', { state: surveyData })}
           aria-label="Go back"
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -102,44 +120,108 @@ export default function OnboardingGoals() {
         )}
 
         {!loading && goals.length > 0 && (
-          <ul className="ob-goals__list">
-            {goals.map((goal, i) => (
-              <li key={i} className="ob-goals__card">
-                <button
-                  className="ob-goals__card-header"
-                  onClick={() => setExpanded(expanded === i ? null : i)}
-                  aria-expanded={expanded === i}
-                >
-                  <span className="ob-goals__card-title">{goal.title}</span>
-                  <svg
-                    className={`ob-goals__card-chevron${expanded === i ? ' ob-goals__card-chevron--open' : ''}`}
-                    width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"
-                  >
-                    <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
+          <>
+            <ul className="ob-goals__list">
+              {goals.map((goal, i) => {
+                const isExpanded = expanded === i
+                const isAdded    = added.has(i)
+                return (
+                  <li key={i} className={`ob-goals__card${isAdded ? ' ob-goals__card--added' : ''}`}>
 
-                {expanded === i && (
-                  <div className="ob-goals__card-body">
-                    <p className="ob-goals__card-why">{goal.why}</p>
-                    {goal.description && (
-                      <p className="ob-goals__card-description">{goal.description}</p>
+                    {/* Card header — toggle expand */}
+                    <button
+                      className="ob-goals__card-header"
+                      onClick={() => setExpanded(isExpanded ? null : i)}
+                      aria-expanded={isExpanded}
+                    >
+                      <span className="ob-goals__card-title">{goal.title}</span>
+                      <div className="ob-goals__card-header-right">
+                        {isAdded && (
+                          <span className="ob-goals__added-badge" aria-label="Added to your goals">✓</span>
+                        )}
+                        <svg
+                          className={`ob-goals__card-chevron${isExpanded ? ' ob-goals__card-chevron--open' : ''}`}
+                          width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"
+                        >
+                          <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                    </button>
+
+                    {/* Expanded body */}
+                    {isExpanded && (
+                      <div className="ob-goals__card-body">
+
+                        {/* Values chips */}
+                        {goal.values?.length > 0 && (
+                          <div className="ob-goals__card-values">
+                            <span className="ob-goals__card-values-label">Connects to your values:</span>
+                            <div className="ob-goals__card-values-chips">
+                              {goal.values.map(v => (
+                                <span key={v} className="ob-goals__card-value-chip">{v}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Why / explanation */}
+                        <p className="ob-goals__card-why">{goal.why}</p>
+
+                        {goal.description && (
+                          <p className="ob-goals__card-description">{goal.description}</p>
+                        )}
+
+                        {/* Sub-goals */}
+                        {goal.subGoals?.length > 0 && (
+                          <ul className="ob-goals__subgoals">
+                            {goal.subGoals.map((sg, j) => (
+                              <li key={j} className="ob-goals__subgoal">
+                                <span className="ob-goals__subgoal-dot" aria-hidden="true" />
+                                {sg}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+
+                        {/* Add / remove button */}
+                        <button
+                          className={`ob-goals__add-btn${isAdded ? ' ob-goals__add-btn--added' : ''}`}
+                          onClick={() => toggleAdd(i)}
+                        >
+                          {isAdded ? 'Remove from your goals' : 'Add to your goals'}
+                        </button>
+
+                      </div>
                     )}
-                    {goal.subGoals?.length > 0 && (
-                      <ul className="ob-goals__subgoals">
-                        {goal.subGoals.map((sg, j) => (
-                          <li key={j} className="ob-goals__subgoal">
-                            <span className="ob-goals__subgoal-dot" aria-hidden="true" />
-                            {sg}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
+                  </li>
+                )
+              })}
+            </ul>
+
+            {/* Regenerate */}
+            <div className="ob-goals__regen-row">
+              <button
+                className="ob-goals__regen-btn"
+                onClick={() => fetchGoals()}
+                disabled={regenerating || saving}
+              >
+                {regenerating ? (
+                  <>
+                    <span className="ob-goals__regen-spinner" aria-hidden="true" />
+                    Generating…
+                  </>
+                ) : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M13.65 2.35A8 8 0 1 0 14 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M14 2v4h-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Try different suggestions
+                  </>
                 )}
-              </li>
-            ))}
-          </ul>
+              </button>
+            </div>
+          </>
         )}
 
       </div>
@@ -156,7 +238,11 @@ export default function OnboardingGoals() {
           onClick={handleContinue}
           disabled={saving || loading}
         >
-          {saving ? 'Saving\u2026' : "Let's go"}
+          {saving
+            ? 'Saving\u2026'
+            : addedGoals.length > 0
+              ? `Let's go — ${addedGoals.length} goal${addedGoals.length > 1 ? 's' : ''} added`
+              : "Let's go"}
         </button>
 
         {saveError && (

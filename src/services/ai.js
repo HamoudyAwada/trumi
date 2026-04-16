@@ -70,7 +70,7 @@ export function createChatSession(characterName = 'Your Tru-mi', initialHistory 
 /**
  * Analyze onboarding survey responses and suggest aligned goals.
  * @param {{ top10, top3, valueLooks, tradeoffs, alignment, obstacles }} surveyResponses
- * @returns {Promise<Array<{ title, why, description, subGoals }>>}
+ * @returns {Promise<Array<{ title, values, why, description, subGoals }>>}
  */
 export async function suggestGoals(surveyResponses) {
   const res = await fetch('/api/suggest-goals', {

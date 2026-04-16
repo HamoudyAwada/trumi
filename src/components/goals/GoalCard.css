@@ -19,11 +19,11 @@
 /* ── State backgrounds ─────────────────────── */
 
 /* Default (resting) active state: violet theme */
-.goal-card--active { background-color: var(--color-horizon-violet-50); }
+.goal-card--active { background-color: var(--color-horizon-violet-50); transition: background-color 250ms ease; }
 .goal-card--paused { background-color: var(--color-fogstone-50); }
 
 /* Pressed active state: switch to lucent-green theme */
-.goal-card--active:active { background-color: var(--color-lucent-green-50); }
+.goal-card--active.goal-card--pressed { background-color: var(--color-lucent-green-50); }
 
 /* ── Header strip ──────────────────────────── */
 
@@ -37,9 +37,9 @@
   flex-shrink: 0;
 }
 
-.goal-card--active .goal-card__header { background-color: var(--color-horizon-violet-300); }
+.goal-card--active .goal-card__header { background-color: var(--color-horizon-violet-300); transition: background-color 250ms ease; }
 .goal-card--paused .goal-card__header { background-color: var(--color-fogstone-300); }
-.goal-card--active:active .goal-card__header { background-color: var(--color-lucent-green-300); }
+.goal-card--active.goal-card--pressed .goal-card__header { background-color: var(--color-lucent-green-300); }
 
 .goal-card__title {
   font-size: 22px;
@@ -86,7 +86,8 @@
 
 .goal-card__settings-btn:hover { opacity: 0.8; }
 
-.goal-card--active:active .goal-card__settings-btn {
+.goal-card--active .goal-card__settings-btn { transition: background-color 250ms ease; }
+.goal-card--active.goal-card--pressed .goal-card__settings-btn {
   background-color: var(--color-lucent-green);
 }
 
@@ -144,9 +145,9 @@
   margin-top: 8px;
 }
 
-.goal-card--active .goal-card__progress-section { background-color: var(--color-horizon-violet-100); }
+.goal-card--active .goal-card__progress-section { background-color: var(--color-horizon-violet-100); transition: background-color 250ms ease; }
 .goal-card--paused .goal-card__progress-section { background-color: var(--color-fogstone-100); }
-.goal-card--active:active .goal-card__progress-section { background-color: var(--color-lucent-green-100); }
+.goal-card--active.goal-card--pressed .goal-card__progress-section { background-color: var(--color-lucent-green-100); }
 
 .goal-card__progress-message {
   font-size: 12px;
@@ -169,10 +170,10 @@
   height: 100%;
   background-color: var(--color-horizon-violet-400);
   border-radius: 97px;
-  transition: width var(--duration-base) var(--easing-out);
 }
 
-.goal-card--active:active .goal-card__progress-fill {
+.goal-card--active .goal-card__progress-fill { transition: width var(--duration-base) var(--easing-out), background-color 250ms ease; }
+.goal-card--active.goal-card--pressed .goal-card__progress-fill {
   background-color: var(--color-lucent-green-400);
 }
 
@@ -213,9 +214,9 @@
   border-radius: var(--radius-sm);
 }
 
-.goal-card--active .goal-card__values-chips { background-color: var(--color-horizon-violet-200); }
+.goal-card--active .goal-card__values-chips { background-color: var(--color-horizon-violet-200); transition: background-color 250ms ease; }
 .goal-card--paused .goal-card__values-chips { background-color: var(--color-fogstone-200); }
-.goal-card--active:active .goal-card__values-chips { background-color: var(--color-lucent-green-200); }
+.goal-card--active.goal-card--pressed .goal-card__values-chips { background-color: var(--color-lucent-green-200); }
 
 .goal-card__value-chip {
   display: inline-flex;
@@ -231,6 +232,7 @@
 .goal-card--active .goal-card__value-chip {
   background-color: var(--color-horizon-violet-400);
   color: #ffffff;
+  transition: background-color 250ms ease, color 250ms ease;
 }
 
 .goal-card--paused .goal-card__value-chip {
@@ -238,7 +240,7 @@
   color: var(--color-horizon-violet-700);
 }
 
-.goal-card--active:active .goal-card__value-chip {
+.goal-card--active.goal-card--pressed .goal-card__value-chip {
   background-color: var(--color-lucent-green-400);
   color: var(--color-horizon-violet-700);
 }

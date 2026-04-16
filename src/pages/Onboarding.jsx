@@ -41,7 +41,7 @@ export default function Onboarding() {
 
       <p className="ob-intro__nudge">What you put in is what you get out:</p>
       <p className="ob-intro__timing">
-        This Questionnaire Takes about 10–15 minutes, depending on your amount of detail.
+        This Questionnaire Takes about 2–3 minutes, depending on your amount of detail.
       </p>
 
       {/* Privacy checkbox */}

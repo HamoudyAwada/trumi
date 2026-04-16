@@ -10,18 +10,36 @@
 :root {
   /* ── Colours ─────────────────────────────── */
 
-  /* Primary */
+  /* Primary — full scale */
+  --color-horizon-violet-50:  #f0f0fa;
+  --color-horizon-violet-100: #e0e0f5;
+  --color-horizon-violet-200: #c2c2eb;
+  --color-horizon-violet-300: #a3a3e0;
   --color-horizon-violet:     #6666cc;  /* 500 */
-  --color-horizon-violet-300: #a3a3e0;  /* active state, selected tabs */
-  --color-horizon-violet-200: #c2c2eb;  /* option tile backgrounds */
+  --color-horizon-violet-600: #5252a3;
+  --color-horizon-violet-700: #3d3d7a;
+  --color-horizon-violet-800: #292952;
+  --color-horizon-violet-900: #141429;
   --color-cloud: #fffcfa;
 
   /* Secondary */
   --color-tranquil-night: #0f1c3f;
   --color-fogstone: #66747f;
 
-  /* Accent */
-  --color-lucent-green: #cdff6d;
+  /* Fogstone scale */
+  --color-fogstone-50:  #f0f2f3;
+  --color-fogstone-100: #e2e5e7;
+  --color-fogstone-200: #c4cacf;
+  --color-fogstone-300: #a7b0b8;
+  --color-fogstone-400: #8995a0;
+
+  /* Accent — full scale */
+  --color-lucent-green-50:  #fafff0;
+  --color-lucent-green-100: #f5ffe2;
+  --color-lucent-green-200: #ebffc5;
+  --color-lucent-green-300: #e1ffa7;
+  --color-lucent-green-400: #d7ff8a;
+  --color-lucent-green:     #cdff6d;  /* 500 */
   --color-liminal-blue: #aff4e1;
 
   /* Skin tones (character customization) */

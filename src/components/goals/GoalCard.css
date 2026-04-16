@@ -1,0 +1,288 @@
+/* ─────────────────────────────────────────────
+   GoalCard
+   Two variants: active (lucent-green) and paused (fogstone/grey).
+   Matches Figma node 472:4268.
+───────────────────────────────────────────── */
+
+.goal-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-horizon-violet);
+  box-shadow: 0 4px 3.5px rgba(15, 28, 63, 0.19);
+  overflow: hidden;
+  font-family: var(--font-primary);
+}
+
+/* ── State backgrounds ─────────────────────── */
+
+.goal-card--active { background-color: var(--color-lucent-green-50); }
+.goal-card--paused { background-color: var(--color-fogstone-50); }
+
+/* ── Header strip ──────────────────────────── */
+
+.goal-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 50px;
+  padding: 4px 10px;
+  flex-shrink: 0;
+}
+
+.goal-card--active .goal-card__header { background-color: var(--color-lucent-green-300); }
+.goal-card--paused .goal-card__header { background-color: var(--color-fogstone-300); }
+
+.goal-card__title {
+  font-size: 22px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-tranquil-night);
+  text-decoration: underline;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.goal-card--paused .goal-card__title {
+  color: #3f4965;
+}
+
+/* ── Intensity flames ──────────────────────── */
+
+.goal-card__intensity {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0;
+}
+
+/* ── Settings / 3-dot button ───────────────── */
+
+.goal-card__settings-btn {
+  position: absolute;
+  top: 58px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 28px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-lucent-green);
+  transition: opacity var(--duration-fast);
+}
+
+.goal-card__settings-btn:hover { opacity: 0.8; }
+
+.goal-card--paused .goal-card__settings-btn {
+  background-color: var(--color-fogstone-200);
+}
+
+/* ── Dates ─────────────────────────────────── */
+
+.goal-card__meta {
+  padding: 5px 10px 0;
+}
+
+.goal-card__date {
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet-800);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Description ────────────────────────────── */
+
+.goal-card__description {
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet-800);
+  line-height: 1.4;
+  padding: 6px 48px 0 10px; /* right pad leaves room for 3-dot btn */
+  margin: 0;
+}
+
+/* ── AKA bullet ─────────────────────────────── */
+
+.goal-card__aka-list {
+  list-style: disc;
+  margin: 3px 0 0 26px;
+  padding: 0;
+}
+
+.goal-card__aka-list li {
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet-800);
+  line-height: 1.4;
+}
+
+/* ── Progress section ───────────────────────── */
+
+.goal-card__progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  margin-top: 8px;
+}
+
+.goal-card--active .goal-card__progress-section { background-color: var(--color-lucent-green-100); }
+.goal-card--paused .goal-card__progress-section { background-color: var(--color-fogstone-100); }
+
+.goal-card__progress-message {
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet-800);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.goal-card__progress-track {
+  height: 12px;
+  background-color: var(--color-horizon-violet-900);
+  border: 1px solid var(--color-horizon-violet-800);
+  border-radius: 97px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.goal-card__progress-fill {
+  height: 100%;
+  background-color: var(--color-lucent-green-400);
+  border-radius: 97px;
+  transition: width var(--duration-base) var(--easing-out);
+}
+
+.goal-card__progress-fill--paused {
+  background-color: var(--color-fogstone-400);
+}
+
+/* ── Bottom row ─────────────────────────────── */
+
+.goal-card__bottom {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px 14px;
+}
+
+/* Left: values block */
+.goal-card__values-block {
+  flex: 0 0 172px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.goal-card__values-label {
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-tranquil-night);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.goal-card__values-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 5px 4px;
+  border-radius: var(--radius-sm);
+}
+
+.goal-card--active .goal-card__values-chips { background-color: var(--color-lucent-green-200); }
+.goal-card--paused .goal-card__values-chips { background-color: var(--color-fogstone-200); }
+
+.goal-card__value-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.goal-card--active .goal-card__value-chip {
+  background-color: var(--color-lucent-green-400);
+  color: var(--color-horizon-violet-700);
+}
+
+.goal-card--paused .goal-card__value-chip {
+  background-color: var(--color-fogstone-400);
+  color: var(--color-horizon-violet-700);
+}
+
+/* Right: action block */
+.goal-card__action-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  padding-top: 20px;
+}
+
+/* "Log Progress" button — active state */
+.goal-card__action-btn {
+  width: 139px;
+  height: 35px;
+  border-radius: 60px;
+  border: 1px solid var(--color-tranquil-night);
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  background-color: var(--color-horizon-violet-600);
+  color: var(--color-lucent-green);
+  box-shadow: 0 3px 3.5px rgba(15, 28, 63, 0.15);
+  transition: opacity var(--duration-fast);
+}
+
+.goal-card__action-btn:hover { opacity: 0.85; }
+
+/* "Log Setback" text link — centered under the 139px button */
+.goal-card__setback-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-tranquil-night);
+  text-decoration: underline;
+  padding: 0;
+  width: 139px;
+  text-align: center;
+  transition: opacity var(--duration-fast);
+}
+
+.goal-card__setback-link:hover { opacity: 0.65; }
+
+/* "Unpause" button — paused state */
+.goal-card__unpause-btn {
+  width: 139px;
+  height: 35px;
+  border-radius: 60px;
+  border: 1px solid var(--color-tranquil-night);
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  background-color: var(--color-tranquil-night);
+  color: var(--color-fogstone-50);
+  box-shadow: 0 3px 3.5px rgba(15, 28, 63, 0.15);
+  transition: opacity var(--duration-fast);
+}
+
+.goal-card__unpause-btn:hover { opacity: 0.85; }

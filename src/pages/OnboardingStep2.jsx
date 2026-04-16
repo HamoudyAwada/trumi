@@ -138,12 +138,14 @@ export default function OnboardingStep2() {
                     {chip}
                   </button>
                 ))}
-                <button
-                  className="ob-card-chip"
-                  onClick={() => toggleChip(value, '+ Use My Own Words')}
-                >
-                  + Use My Own Words
-                </button>
+                {!chips.includes('+ Use My Own Words') && (
+                  <button
+                    className="ob-card-chip"
+                    onClick={() => toggleChip(value, '+ Use My Own Words')}
+                  >
+                    + Use My Own Words
+                  </button>
+                )}
                 {selected.filter(c => !chips.includes(c)).map(custom => (
                   <button
                     key={custom}

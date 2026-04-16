@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Onboarding.css'
 
+const MIN = 5
 const MAX = 10
 
 const VALUES_DATA = [
@@ -216,7 +217,7 @@ export default function OnboardingStep1() {
 
       <div className="ob-s1__scroll-area">
 
-        <h2 className="ob-s1__title">Pick {MAX} Values that Matter The Most to you</h2>
+        <h2 className="ob-s1__title">Pick {MIN}–{MAX} Values that Matter The Most to you</h2>
 
         {/* Popdown info */}
         <div className="ob-popdown">
@@ -262,7 +263,7 @@ export default function OnboardingStep1() {
         )}
 
         {/* Count badge */}
-        <p className="ob-count-badge">{totalSelected} / {MAX} selected</p>
+        <p className="ob-count-badge">{totalSelected} / {MAX} selected {totalSelected >= MIN && totalSelected < MAX ? '— you can keep going!' : ''}</p>
 
         {/* Custom values chip row */}
         {custom.length > 0 && (
@@ -331,7 +332,7 @@ export default function OnboardingStep1() {
       <div className="ob-footer">
         <button
           className="ob-btn"
-          disabled={totalSelected < MAX}
+          disabled={totalSelected < MIN}
           onClick={() => navigate('/onboarding/step/2', { state: { top10: selected } })}
         >
           Continue

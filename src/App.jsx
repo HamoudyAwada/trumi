@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { hasCompletedOnboarding } from './services/supabase'
 
 import MainLayout        from './components/ui/MainLayout'
 import Home              from './pages/Home'
@@ -15,6 +17,30 @@ import OnboardingStep4   from './pages/OnboardingStep4'
 import OnboardingStep5   from './pages/OnboardingStep5'
 import NotFound          from './pages/NotFound'
 
+// Checks Supabase (with localStorage as a fast-path cache) before rendering home
+function HomeGuard() {
+  const [status, setStatus] = useState(
+    localStorage.getItem('trumi_onboarded') ? 'done' : 'checking'
+  )
+
+  useEffect(() => {
+    if (status !== 'checking') return
+    hasCompletedOnboarding()
+      .then(completed => {
+        if (completed) localStorage.setItem('trumi_onboarded', 'true')
+        setStatus(completed ? 'done' : 'redirect')
+      })
+      .catch(() => {
+        // If Supabase is unreachable, fall back to localStorage flag
+        setStatus(localStorage.getItem('trumi_onboarded') ? 'done' : 'redirect')
+      })
+  }, [status])
+
+  if (status === 'checking') return null  // brief blank while we check
+  if (status === 'redirect') return <Navigate to="/onboarding" replace />
+  return <Home />
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -30,14 +56,7 @@ export default function App() {
 
         {/* All main app pages share the BottomNav layout */}
         <Route element={<MainLayout />}>
-          <Route
-            path="/"
-            element={
-              localStorage.getItem('trumi_onboarded')
-                ? <Home />
-                : <Navigate to="/onboarding" replace />
-            }
-          />
+          <Route path="/"             element={<HomeGuard />} />
           <Route path="/goals"        element={<Goals />} />
           <Route path="/add-goal"     element={<AddGoal />} />
           <Route path="/achievements" element={<Achievements />} />

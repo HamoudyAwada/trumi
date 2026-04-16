@@ -1,10 +1,15 @@
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { saveOnboardingResponses } from '../services/supabase'
 import './Onboarding.css'
 
 export default function OnboardingStep5() {
   const navigate = useNavigate()
   const { state } = useLocation()
   const { top10 = [], top3 = [], valueLooks = {}, tradeoffs = {}, alignment = {}, obstacles = {} } = state ?? {}
+
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState(null)
 
   // Find best and worst aligned value
   const sorted   = [...top3].sort((a, b) => (alignment[b] ?? 0) - (alignment[a] ?? 0))
@@ -85,13 +90,28 @@ export default function OnboardingStep5() {
       <div className="ob-footer" style={{ marginTop: 'auto' }}>
         <button
           className="ob-btn"
-          onClick={() => {
-            localStorage.setItem('trumi_onboarded', 'true')
-            navigate('/')
+          disabled={saving}
+          onClick={async () => {
+            setSaving(true)
+            setSaveError(null)
+            try {
+              await saveOnboardingResponses({ top10, top3, valueLooks, tradeoffs, alignment, obstacles })
+              localStorage.setItem('trumi_onboarded', 'true')
+              navigate('/')
+            } catch (err) {
+              console.error('Failed to save onboarding:', err)
+              setSaveError('Something went wrong saving your responses. Please try again.')
+              setSaving(false)
+            }
           }}
         >
-          Finish
+          {saving ? 'Saving…' : 'Finish'}
         </button>
+        {saveError && (
+          <p style={{ color: '#cc4444', fontSize: '13px', textAlign: 'center', marginTop: '8px' }}>
+            {saveError}
+          </p>
+        )}
         <p className="ob-step-label">Step 5 of 5</p>
       </div>
 

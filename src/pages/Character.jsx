@@ -211,7 +211,7 @@ export default function Character() {
           {/* Talk CTA */}
           <button
             className="char-view-profile__cta"
-            onClick={() => navigate('/chat', { state: { name: selections.name } })}
+            onClick={() => navigate('/chat', { state: { name: selections.name, character: selections } })}
           >
             Talk to {displayName}
           </button>

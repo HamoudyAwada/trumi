@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { createChatSession } from '../services/gemini'
+import CharacterCanvas from '../components/character/CharacterCanvas'
+import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
 import './Chat.css'
 
 const INITIAL_AI_MESSAGE = {
@@ -13,6 +15,7 @@ export default function Chat() {
   const location  = useLocation()
 
   const characterName = location.state?.name?.trim() || 'Your Tru-mi'
+  const character     = location.state?.character ?? DEFAULT_CHARACTER
 
   // Create one Gemini session per page mount — ref keeps it stable across renders
   const sessionRef = useRef(null)
@@ -69,10 +72,16 @@ export default function Chat() {
       <header className="chat-header">
         <div className="chat-header__left">
           <div className="chat-avatar" aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M5 20v-1a7 7 0 0 1 14 0v1" />
-            </svg>
+            <div className="chat-avatar__canvas-wrapper">
+              <CharacterCanvas
+                selections={character}
+                skinTone={character.skinTone}
+                browColor={character.browColor}
+                eyeColor={character.eyeColor}
+                lipColor={character.lipColor}
+                hairColor={character.hairColor}
+              />
+            </div>
           </div>
           <span className="chat-header__name">{characterName}</span>
         </div>
@@ -82,11 +91,9 @@ export default function Chat() {
           onClick={() => navigate('/character')}
           aria-label="Close chat"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M9 3H3v6" />
-            <path d="M15 21h6v-6" />
-            <path d="M3 9l6-6" />
-            <path d="M21 15l-6 6" />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </header>

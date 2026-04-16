@@ -35,17 +35,31 @@
   gap: var(--space-3);
 }
 
-/* Violet circle avatar */
+/* Violet circle avatar — clips scaled CharacterCanvas */
 .chat-avatar {
   width: 48px;
   height: 48px;
   border-radius: 50%;
   background-color: var(--color-horizon-violet, #6666cc);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
+  position: relative;
+}
+
+/*
+ * Scale CharacterCanvas (natural 291×275px) down to fill the 48px circle.
+ * scale(0.165) → visual width ≈ 48px.
+ * left: calc(50% - 145.5px) centres it (since transform-origin is top centre).
+ * top: 7px lets the hair show just at the circle edge.
+ */
+.chat-avatar__canvas-wrapper {
+  position: absolute;
+  width: 291px;
+  left: calc(50% - 145.5px);
+  top: 7px;
+  transform: scale(0.165);
+  transform-origin: top center;
+  pointer-events: none;
 }
 
 .chat-header__name {

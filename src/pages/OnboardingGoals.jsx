@@ -18,19 +18,26 @@ export default function OnboardingGoals() {
   const [expanded, setExpanded]   = useState(null)   // index of expanded goal card
 
   useEffect(() => {
+    // If there's no survey data (e.g. navigated here directly), skip the API call
+    if (top3.length === 0 && top10.length === 0) {
+      setError('No survey data found. Head back through the onboarding steps to get personalised goal suggestions.')
+      setLoading(false)
+      return
+    }
+
     let cancelled = false
 
     suggestGoals({ top10, top3, valueLooks, tradeoffs, alignment, obstacles })
       .then(result => {
         if (!cancelled) {
-          setGoals(result)
+          setGoals(Array.isArray(result) ? result : [])
           setLoading(false)
         }
       })
       .catch(err => {
         if (!cancelled) {
           console.error('[OnboardingGoals]', err)
-          setError('We had trouble generating your goals. You can skip this for now and set your own.')
+          setError('We had trouble generating your goals. You can still continue — you can set goals any time inside the app.')
           setLoading(false)
         }
       })
@@ -149,7 +156,7 @@ export default function OnboardingGoals() {
           onClick={handleContinue}
           disabled={saving || loading}
         >
-          {saving ? 'Saving…' : 'Let's go'}
+          {saving ? 'Saving\u2026' : "Let's go"}
         </button>
 
         {saveError && (

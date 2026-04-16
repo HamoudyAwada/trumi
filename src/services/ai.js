@@ -89,6 +89,30 @@ export async function suggestGoals(surveyResponses) {
 }
 
 /**
+ * Ask AI to suggest a single personalised goal based on the user's values.
+ * Used on the "What do you want to accomplish?" step of the goal creation flow.
+ * @param {{ top3: string[], top10: string[] }} userValues
+ * @returns {Promise<{ title: string, why: string }>}
+ */
+export async function suggestSingleGoal(userValues) {
+  const { top3 = [], top10 = [] } = userValues
+
+  const res = await fetch('/api/suggest-goal', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ top3, top10 }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error ?? `Server error ${res.status}`)
+  }
+
+  const { goal } = await res.json()
+  return goal
+}
+
+/**
  * Generate a reflective insight for a check-in.
  * @param {Object} checkinData
  * @param {'daily'|'weekly'|'monthly'} period

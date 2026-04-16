@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { suggestSingleGoal } from '../services/ai'
 import './AddGoal.css'
 
 /* ─── Constants ─────────────────────────────────────── */
@@ -11,34 +12,7 @@ const PEACE_ADJACENT = new Set([
   'Peace', 'Balance', 'Rest', 'Calm', 'Serenity', 'Harmony', 'Wellness', 'Mindfulness',
 ])
 
-// Goal suggestions keyed by value name
-const VALUE_SUGGESTIONS = {
-  'Health':           ['Exercise 3× a week', 'Cook at home 5 nights a week', 'Sleep 8 hours each night', 'Walk 30 minutes every day'],
-  'Growth':           ['Read 20 pages before bed', 'Journal for 10 minutes each morning', 'Complete one online course this month'],
-  'Creativity':       ['Sketch for 15 minutes each day', 'Write 300 words every morning', 'Learn one new song this month'],
-  'Connection':       ['Call a friend once a week', 'Plan a monthly get-together', 'Write one thoughtful message each day'],
-  'Family':           ['Have a family dinner every week', 'Call parents every Sunday', 'One screen-free evening per week'],
-  'Peace':            ['Meditate for 10 minutes daily', 'Take a 20-minute walk each day', 'Spend 30 minutes in nature weekly'],
-  'Adventure':        ['Try one new activity each month', 'Explore a new place every weekend'],
-  'Integrity':        ['Keep a daily commitment log', 'Follow through on one promise each week'],
-  'Responsibility':   ['Meal prep every Sunday', 'Set aside 30 minutes for weekly planning', 'Review finances once a month'],
-  'Friendship':       ['Reach out to one friend per week', 'Celebrate a friend\'s milestone monthly'],
-  'Leadership':       ['Mentor someone for 30 minutes a week', 'Give one thoughtful piece of feedback weekly'],
-  'Freedom':          ['Save 10% of income each month', 'Reduce one recurring obligation this month'],
-  'Balance':          ['Set a 9pm screen curfew', 'Take one full rest day each week'],
-  'Discipline':       ['Wake up at the same time each day', 'Complete one focused work session daily'],
-  'Perseverance':     ['Log progress every 3 days', 'Complete a 30-day challenge'],
-  'Courage':          ['Share one idea publicly each week', 'Have one honest conversation each month'],
-}
 
-const FALLBACK_SUGGESTIONS = [
-  'Meditate for 10 minutes each morning',
-  'Read 20 pages before bed',
-  'Exercise 3× a week',
-  'Journal every morning',
-  'Call a friend once a week',
-  'Cook at home 5 nights a week',
-]
 
 /* ─── Flame icon — reused in StepIntensity & StepConfirmation ── */
 
@@ -102,7 +76,28 @@ function computeAlignment(form, userValues) {
 
 /* ─── Step 1 — Define the Goal ──────────────────────── */
 
-function StepDefine({ form, setForm, suggestions }) {
+function StepDefine({ form, setForm, userValues }) {
+  const [suggesting,   setSuggesting]   = useState(false)
+  const [suggestError, setSuggestError] = useState(null)
+
+  async function handleSuggest() {
+    setSuggesting(true)
+    setSuggestError(null)
+    try {
+      const goal = await suggestSingleGoal(userValues)
+      setForm(f => ({
+        ...f,
+        title:             goal.title,
+        aiConnectedValues: goal.values ?? [],
+        values:            goal.values ?? [],  // pre-select; user confirms on step 3
+      }))
+    } catch {
+      setSuggestError('Couldn\'t reach Trumi\'s AI — try again in a moment.')
+    } finally {
+      setSuggesting(false)
+    }
+  }
+
   return (
     <div className="ag-step">
       <div className="ag-step__prompt">
@@ -120,22 +115,28 @@ function StepDefine({ form, setForm, suggestions }) {
         autoFocus
       />
 
-      {suggestions.length > 0 && (
-        <div className="ag-suggestions">
-          <p className="ag-suggestions__label">Or try one of these:</p>
-          <div className="ag-suggestions__chips">
-            {suggestions.map(s => (
-              <button
-                key={s}
-                className={`ag-suggestion-chip${form.title === s ? ' ag-suggestion-chip--active' : ''}`}
-                onClick={() => setForm(f => ({ ...f, title: s }))}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* AI-powered suggestion */}
+      <button
+        className="ag-ai-suggest-btn"
+        onClick={handleSuggest}
+        disabled={suggesting}
+      >
+        {suggesting ? (
+          <>
+            <span className="ag-ai-suggest-btn__spinner" aria-hidden="true" />
+            Thinking…
+          </>
+        ) : (
+          <>
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M7 0L8.26 5.74L14 7L8.26 8.26L7 14L5.74 8.26L0 7L5.74 5.74Z" fill="currentColor"/>
+            </svg>
+            {form.title.trim() ? 'Try a different suggestion' : 'Suggest one for me'}
+          </>
+        )}
+      </button>
+
+      {suggestError && <p className="ag-ai-suggest-error">{suggestError}</p>}
     </div>
   )
 }
@@ -206,10 +207,15 @@ function StepTimeframe({ form, setForm }) {
 /* ─── Step 3 — Value Connection ─────────────────────── */
 
 function StepValues({ form, setForm, userValues }) {
+  const aiConnected = form.aiConnectedValues ?? []
+  const hasAiValues = aiConnected.length > 0
+
   const all = [...new Set([...(userValues.top3 ?? []), ...(userValues.top10 ?? [])])]
-  const options = all.length > 0 ? all : [
-    'Health', 'Growth', 'Connection', 'Peace', 'Family', 'Creativity', 'Freedom', 'Balance',
-  ]
+  const fallback = ['Health', 'Growth', 'Connection', 'Peace', 'Family', 'Creativity', 'Freedom', 'Balance']
+  const allOptions = all.length > 0 ? all : fallback
+
+  // Options not already surfaced by the AI (shown in the "add more" section)
+  const remainingOptions = allOptions.filter(v => !aiConnected.includes(v))
 
   function toggle(v) {
     setForm(f => ({
@@ -222,22 +228,74 @@ function StepValues({ form, setForm, userValues }) {
     <div className="ag-step">
       <div className="ag-step__prompt">
         <span className="ag-step__emoji" aria-hidden="true">💎</span>
-        <h2 className="ag-step__title">Which of your values does this support?</h2>
-        <p className="ag-step__subtitle">This is how Trumi connects your goals to what matters most to you. Select one or more.</p>
+        <h2 className="ag-step__title">
+          {hasAiValues ? 'Does this feel right?' : 'Which of your values does this support?'}
+        </h2>
+        <p className="ag-step__subtitle">
+          {hasAiValues
+            ? 'Trumi connected your goal to these values. Tap to deselect any that don\'t fit, or add more below.'
+            : 'This is how Trumi connects your goals to what matters most to you. Select one or more.'}
+        </p>
       </div>
 
-      <div className="ag-chips ag-chips--wrap">
-        {options.map(v => (
-          <button
-            key={v}
-            className={`ag-chip ag-chip--value${form.values.includes(v) ? ' ag-chip--selected' : ''}`}
-            onClick={() => toggle(v)}
-            aria-pressed={form.values.includes(v)}
-          >
-            {v}
-          </button>
-        ))}
-      </div>
+      {/* AI-connected values — shown as a confirmation block */}
+      {hasAiValues && (
+        <div className="ag-ai-values">
+          <p className="ag-ai-values__label">
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M7 0L8.26 5.74L14 7L8.26 8.26L7 14L5.74 8.26L0 7L5.74 5.74Z" fill="currentColor"/>
+            </svg>
+            Connected by Trumi
+          </p>
+          <div className="ag-chips ag-chips--wrap">
+            {aiConnected.map(v => (
+              <button
+                key={v}
+                className={`ag-chip ag-chip--value${form.values.includes(v) ? ' ag-chip--selected' : ''}`}
+                onClick={() => toggle(v)}
+                aria-pressed={form.values.includes(v)}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* No AI suggestion: full picker */}
+      {!hasAiValues && (
+        <div className="ag-chips ag-chips--wrap">
+          {allOptions.map(v => (
+            <button
+              key={v}
+              className={`ag-chip ag-chip--value${form.values.includes(v) ? ' ag-chip--selected' : ''}`}
+              onClick={() => toggle(v)}
+              aria-pressed={form.values.includes(v)}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* AI suggestion: secondary section for adding more */}
+      {hasAiValues && remainingOptions.length > 0 && (
+        <div className="ag-values-more">
+          <p className="ag-values-more__label">Add others if you'd like:</p>
+          <div className="ag-chips ag-chips--wrap">
+            {remainingOptions.map(v => (
+              <button
+                key={v}
+                className={`ag-chip ag-chip--value${form.values.includes(v) ? ' ag-chip--selected' : ''}`}
+                onClick={() => toggle(v)}
+                aria-pressed={form.values.includes(v)}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -533,6 +591,7 @@ export default function AddGoal() {
     dueDate: '',
     dueDays: null,
     values: [],
+    aiConnectedValues: [],// values the AI returned with its suggestion (empty = user typed their own goal)
     intensity: null,      // 1–5 perceived difficulty (null = not yet set)
     executionStyle: null, // 'daily' | 'weekly' | 'flexible'
     weeklyTimes: 3,
@@ -573,8 +632,8 @@ export default function AddGoal() {
 
   function handleNext() {
     const next = step + 1
-    // Pre-select top3 values when first arriving at the values step
-    if (next === 2 && form.values.length === 0 && userValues.top3?.length > 0) {
+    // Pre-select top3 values when arriving at the values step — but only if AI hasn't already set them
+    if (next === 2 && form.values.length === 0 && form.aiConnectedValues.length === 0 && userValues.top3?.length > 0) {
       setForm(f => ({ ...f, values: userValues.top3.slice(0, 2) }))
     }
     setStep(next)
@@ -629,17 +688,6 @@ export default function AddGoal() {
     navigate('/goals')
   }
 
-  function getGoalSuggestions() {
-    const seen  = new Set()
-    const out   = []
-    const order = [...(userValues.top3 ?? []), ...(userValues.top10 ?? [])]
-    for (const v of order) {
-      for (const s of (VALUE_SUGGESTIONS[v] ?? [])) {
-        if (!seen.has(s) && out.length < 6) { seen.add(s); out.push(s) }
-      }
-    }
-    return out.length > 0 ? out : FALLBACK_SUGGESTIONS
-  }
 
   function ctaLabel() {
     if (step === 6) return 'See how this feels'
@@ -684,7 +732,7 @@ export default function AddGoal() {
 
       {/* Step content */}
       <div className="add-goal__content" key={step}>
-        {step === 0 && <StepDefine          form={form} setForm={setForm} suggestions={getGoalSuggestions()} />}
+        {step === 0 && <StepDefine          form={form} setForm={setForm} userValues={userValues} />}
         {step === 1 && <StepTimeframe       form={form} setForm={setForm} />}
         {step === 2 && <StepValues          form={form} setForm={setForm} userValues={userValues} />}
         {step === 3 && <StepIntensity       form={form} setForm={setForm} />}

@@ -71,23 +71,23 @@ export function createChatSession(characterName = 'Your Tru-mi') {
 
 /**
  * Analyze onboarding survey responses and suggest aligned goals.
- * @param {Object} surveyResponses
- * @returns {Promise<string>} JSON array of goal objects
+ * @param {{ top10, top3, valueLooks, tradeoffs, alignment, obstacles }} surveyResponses
+ * @returns {Promise<Array<{ title, why, description, subGoals }>>}
  */
 export async function suggestGoals(surveyResponses) {
-  const prompt = `
-You are a compassionate personal growth companion. A user just completed a self-discovery survey.
-Suggest 3–5 meaningful goals that genuinely align with who they are.
+  const res = await fetch('/api/suggest-goals', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(surveyResponses),
+  })
 
-Tone: second person, warm, encouraging. Never use "must", "should", "failed".
-Frame goals as possibilities, not obligations.
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error ?? `Server error ${res.status}`)
+  }
 
-Survey responses:
-${JSON.stringify(surveyResponses, null, 2)}
-
-Return a JSON array: [{ "title": string, "why": string, "subGoals": string[] }]
-  `.trim()
-  return generate(prompt)
+  const { goals } = await res.json()
+  return goals
 }
 
 /**

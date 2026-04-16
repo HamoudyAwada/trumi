@@ -15,6 +15,7 @@ import OnboardingStep2   from './pages/OnboardingStep2'
 import OnboardingStep3   from './pages/OnboardingStep3'
 import OnboardingStep4   from './pages/OnboardingStep4'
 import OnboardingStep5   from './pages/OnboardingStep5'
+import OnboardingGoals   from './pages/OnboardingGoals'
 import NotFound          from './pages/NotFound'
 
 // Checks Supabase (with localStorage as a fast-path cache) before rendering home
@@ -52,6 +53,7 @@ export default function App() {
         <Route path="/onboarding/step/3" element={<OnboardingStep3 />} />
         <Route path="/onboarding/step/4" element={<OnboardingStep4 />} />
         <Route path="/onboarding/step/5" element={<OnboardingStep5 />} />
+        <Route path="/onboarding/goals"  element={<OnboardingGoals />} />
         <Route path="/chat"              element={<Chat />} />
 
         {/* All main app pages share the BottomNav layout */}

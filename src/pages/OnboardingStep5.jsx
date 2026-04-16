@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { saveOnboardingResponses } from '../services/supabase'
 import './Onboarding.css'
 
 export default function OnboardingStep5() {
@@ -8,20 +6,13 @@ export default function OnboardingStep5() {
   const { state } = useLocation()
   const { top10 = [], top3 = [], valueLooks = {}, tradeoffs = {}, alignment = {}, obstacles = {} } = state ?? {}
 
-  const [saving, setSaving] = useState(false)
-  const [saveError, setSaveError] = useState(null)
-
   // Find best and worst aligned value
-  const sorted   = [...top3].sort((a, b) => (alignment[b] ?? 0) - (alignment[a] ?? 0))
-  const bestValue = sorted[0] ?? top3[0]
+  const sorted    = [...top3].sort((a, b) => (alignment[b] ?? 0) - (alignment[a] ?? 0))
+  const bestValue  = sorted[0] ?? top3[0]
   const worstValue = sorted[sorted.length - 1] ?? top3[top3.length - 1]
 
-  // Format top3 list as "X, Y, and Z"
-  function formatList(arr) {
-    if (arr.length === 0) return ''
-    if (arr.length === 1) return arr[0]
-    if (arr.length === 2) return `${arr[0]} and ${arr[1]}`
-    return `${arr.slice(0, -1).join(', ')}, and ${arr[arr.length - 1]}`
+  function handleNext() {
+    navigate('/onboarding/goals', { state: { top10, top3, valueLooks, tradeoffs, alignment, obstacles } })
   }
 
   return (
@@ -88,30 +79,9 @@ export default function OnboardingStep5() {
 
       {/* Footer */}
       <div className="ob-footer" style={{ marginTop: 'auto' }}>
-        <button
-          className="ob-btn"
-          disabled={saving}
-          onClick={async () => {
-            setSaving(true)
-            setSaveError(null)
-            try {
-              await saveOnboardingResponses({ top10, top3, valueLooks, tradeoffs, alignment, obstacles })
-              localStorage.setItem('trumi_onboarded', 'true')
-              navigate('/')
-            } catch (err) {
-              console.error('Failed to save onboarding:', err)
-              setSaveError('Something went wrong saving your responses. Please try again.')
-              setSaving(false)
-            }
-          }}
-        >
-          {saving ? 'Saving…' : 'Finish'}
+        <button className="ob-btn" onClick={handleNext}>
+          See your goals
         </button>
-        {saveError && (
-          <p style={{ color: '#cc4444', fontSize: '13px', textAlign: 'center', marginTop: '8px' }}>
-            {saveError}
-          </p>
-        )}
         <p className="ob-step-label">Step 5 of 5</p>
       </div>
 

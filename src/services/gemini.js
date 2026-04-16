@@ -43,9 +43,10 @@ export function createChatSession(characterName = 'Your Tru-mi') {
 
       return reply
     } catch (err) {
-      const isRateLimit = err?.message?.includes('429') || err?.message?.includes('quota')
-      if (isRateLimit && attempt < 4) {
-        await new Promise(res => setTimeout(res, attempt * 8000))
+      const isRateLimit = err?.message?.includes('429') || err?.message?.includes('quota') || err?.message?.includes('Rate limit')
+      const isServerError = err?.message?.includes('500') || err?.message?.includes('Server error')
+      if ((isRateLimit || isServerError) && attempt < 4) {
+        await new Promise(res => setTimeout(res, attempt * 4000))
         return sendMessage(userText, attempt + 1)
       }
       throw err

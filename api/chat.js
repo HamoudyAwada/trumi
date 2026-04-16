@@ -65,12 +65,12 @@ export default async function handler(req, res) {
 
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.0-flash-lite',
       systemInstruction: { parts: [{ text: buildSystemInstruction(characterName) }] },
     })
 
     const chat = model.startChat({
-      generationConfig: { maxOutputTokens: 300, temperature: 1.0 },
+      generationConfig: { maxOutputTokens: 200, temperature: 0.9 },
       history,
     })
 
@@ -80,6 +80,7 @@ export default async function handler(req, res) {
     res.status(200).json({ reply })
   } catch (err) {
     console.error('[/api/chat]', err)
-    res.status(500).json({ error: 'Failed to get response' })
+    const isQuota = err?.message?.includes('429') || err?.message?.includes('quota') || err?.status === 429
+    res.status(isQuota ? 429 : 500).json({ error: isQuota ? 'Rate limit reached' : 'Failed to get response' })
   }
 }

@@ -65,7 +65,32 @@ export default function OnboardingGoals() {
     setSaveError(null)
     try {
       await saveOnboardingResponses(surveyData)
-      // TODO: save added goals to Supabase goals table once schema is ready
+
+      // Persist added goals to localStorage for the Goals page to read
+      const addedGoalsList = goals.filter((_, i) => added.has(i))
+      if (addedGoalsList.length > 0) {
+        const existing = (() => {
+          try { return JSON.parse(localStorage.getItem('trumi_goals') ?? '[]') } catch { return [] }
+        })()
+        const now = new Date()
+        const dateLabel = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+        const newGoals = addedGoalsList.map((g, idx) => ({
+          id: Date.now() + idx,
+          title: g.title,
+          description: g.why || '',
+          aka: g.description || '',
+          startDate: dateLabel,
+          pausedDate: null,
+          status: 'active',
+          term: 'short',
+          intensity: 2,
+          progress: 0,
+          progressMessage: '',
+          values: g.values || [],
+        }))
+        localStorage.setItem('trumi_goals', JSON.stringify([...existing, ...newGoals]))
+      }
+
       localStorage.setItem('trumi_onboarded', 'true')
       navigate('/')
     } catch (err) {
@@ -212,9 +237,9 @@ export default function OnboardingGoals() {
                   </>
                 ) : (
                   <>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                      <path d="M13.65 2.35A8 8 0 1 0 14 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M14 2v4h-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M21 3v5h-5" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                     Try different suggestions
                   </>

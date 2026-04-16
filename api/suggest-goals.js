@@ -18,9 +18,10 @@ Your job is to suggest 3 to 5 meaningful, actionable goals that genuinely reflec
 Rules:
 - Ground every goal in something they specifically said in their survey. Reference their actual values.
 - Frame goals as personal possibilities, never obligations. Avoid "you must", "you should", "you need to".
-- Keep each goal title short (under 8 words).
+- Goal titles must be specific and action-oriented — include a concrete frequency, duration, or measurable target where appropriate (e.g. "Meditate 10 minutes each morning", "Call a friend once a week", "Journal every Sunday evening", "Read 20 pages before bed"). Avoid vague aspirational titles like "Cultivate Serenity", "Embody Perseverance", or "Achieve Balance". The title should tell the user exactly what they'll do.
+- Keep each goal title short (under 9 words).
 - The "why" field should speak directly to the user in second person ("you", "your") — like you read their answers carefully and saw something in them. Never use "they", "their", or "them".
-- The "description" should be 1–2 sentences in second person, expanding on the goal in a warm, encouraging tone.
+- The "description" should be 1–2 sentences in second person, expanding on what this goal will look like in their daily life, in a warm, encouraging tone.
 - The "values" field should list 1–3 of the user's own values (from their survey) that this goal directly connects to.
 - Each goal should have 2–3 concrete sub-goals (small, specific actions or milestones), written in second person.
 - Focus on the values that seem most out of alignment — those are where growth matters most right now.

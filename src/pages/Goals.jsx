@@ -39,51 +39,12 @@ function BullseyeIcon() {
   )
 }
 
-/* ── Sample data (will be replaced with Supabase queries) ── */
-const SAMPLE_GOALS = [
-  {
-    id: 1,
-    title: 'Run 3x Per Week',
-    description: 'Run outside 3 times a week, for a month!',
-    aka: 'Run 12 times in a month!',
-    startDate: 'April 2, 2026',
-    pausedDate: null,
-    status: 'active',
-    term: 'short',
-    intensity: 2,
-    progress: 75,
-    progressMessage: 'Only 3 More Runs to Go!',
-    values: ['Health', 'Commitment', 'Responsibility'],
-  },
-  {
-    id: 2,
-    title: 'Meal Prep 1/Week',
-    description: 'Meal prep every week this month',
-    aka: 'Make enough food to not eat out at all this month!',
-    startDate: 'April 2, 2026',
-    pausedDate: null,
-    status: 'active',
-    term: 'short',
-    intensity: 4,
-    progress: 75,
-    progressMessage: '',
-    values: ['Health', 'Commitment', 'Financial Responsibility'],
-  },
-  {
-    id: 3,
-    title: 'Learn Guitar',
-    description: 'Practice guitar 20 minutes every day',
-    aka: 'Get through the beginner course!',
-    startDate: 'March 16, 2026',
-    pausedDate: 'April 3',
-    status: 'paused',
-    term: 'short',
-    intensity: 2,
-    progress: 60,
-    progressMessage: '',
-    values: ['Creativity', 'Discipline', 'Growth'],
-  },
-]
+/* ── Load goals from localStorage (set during onboarding / add-goal flow) ── */
+function loadGoals() {
+  try { return JSON.parse(localStorage.getItem('trumi_goals') ?? '[]') } catch { return [] }
+}
+
+
 
 const TERMS = [
   { key: 'short', label: 'Short Term' },
@@ -95,11 +56,12 @@ export default function Goals() {
   const navigate = useNavigate()
   const [termFilter,   setTermFilter]   = useState('short')
   const [statusFilter, setStatusFilter] = useState('active')
+  const [goals, setGoals] = useState(loadGoals)
 
-  const activeCount = SAMPLE_GOALS.filter(g => g.status === 'active').length
-  const pausedCount = SAMPLE_GOALS.filter(g => g.status === 'paused').length
+  const activeCount = goals.filter(g => g.status === 'active').length
+  const pausedCount = goals.filter(g => g.status === 'paused').length
 
-  const filtered = SAMPLE_GOALS.filter(g => {
+  const filtered = goals.filter(g => {
     const termOk   = termFilter === 'all' || g.term === termFilter
     const statusOk = g.status === statusFilter
     return termOk && statusOk

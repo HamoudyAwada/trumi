@@ -65,12 +65,16 @@ export default async function handler(req, res) {
 
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       systemInstruction: { parts: [{ text: buildSystemInstruction(characterName) }] },
     })
 
     const chat = model.startChat({
-      generationConfig: { maxOutputTokens: 200, temperature: 0.9 },
+      generationConfig: {
+        maxOutputTokens: 200,
+        temperature: 0.9,
+        thinkingConfig: { thinkingBudget: 0 },
+      },
       history,
     })
 

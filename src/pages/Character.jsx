@@ -71,8 +71,7 @@ export default function Character() {
             onClick={() => setIsEditing(false)}
             aria-label="Done editing"
           >
-            <span>Done</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </button>
@@ -82,10 +81,9 @@ export default function Character() {
             onClick={() => setIsEditing(true)}
             aria-label="Edit character"
           >
-            <span>Edit</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34" />
+              <polygon points="18 2 22 6 12 16 8 16 8 12 18 2" />
             </svg>
           </button>
         )}
@@ -94,7 +92,7 @@ export default function Character() {
       {/* ── Preview zone: skin palette | canvas | feature palette ── */}
       <section className="char-preview-zone">
 
-        {isEditing ? (
+        {isEditing && (
           <div className="char-skin-palette">
             {SKIN_TONES.map(tone => (
               <button
@@ -107,8 +105,6 @@ export default function Character() {
               />
             ))}
           </div>
-        ) : (
-          <div className="char-skin-palette char-skin-palette--hidden" />
         )}
 
         <div className="char-preview">
@@ -122,17 +118,18 @@ export default function Character() {
           />
         </div>
 
-        {isEditing ? (
+        {isEditing && (
           <FeatureColorPalette
             colors={featureColors}
             selected={featureSelected}
             onChange={handleFeatureColorChange}
           />
-        ) : (
-          <div className="char-skin-palette char-skin-palette--hidden" />
         )}
 
       </section>
+
+      {/* ── Divider under canvas ───────────────── */}
+      <div className="char-divider" aria-hidden="true" />
 
       {isEditing ? (
         <>
@@ -167,6 +164,19 @@ export default function Character() {
             )}
           </div>
 
+          {/* ── Bio input ─────────────────────── */}
+          <div className="char-bio-row">
+            <textarea
+              className="char-bio-input"
+              value={selections.bio}
+              onChange={e => setSelections(prev => ({ ...prev, bio: e.target.value }))}
+              placeholder="Describe your ideal self..."
+              maxLength={300}
+              rows={3}
+              aria-label="Character biography"
+            />
+          </div>
+
           {/* ── Category tabs ──────────────────── */}
           <CategorySelector
             activeCategory={activeCategory}
@@ -184,49 +194,27 @@ export default function Character() {
 
         </>
       ) : (
-        /* ── Chat preview (view mode) ──────────── */
-        <div
-          className="char-chat-preview"
-          onClick={() => navigate('/chat', { state: { name: selections.name } })}
-          onKeyDown={e => e.key === 'Enter' && navigate('/chat', { state: { name: selections.name } })}
-          role="button"
-          tabIndex={0}
-          aria-label={`Open chat with ${displayName}`}
-        >
+        /* ── View mode ─────────────────────────── */
+        <div className="char-view-profile">
 
-          {/* Name + expand row */}
-          <div className="char-chat-preview__header">
-            <span className="char-chat-preview__name">
-              Speak to: <strong>{displayName}</strong>
-            </span>
-            <svg className="char-chat-preview__expand" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M15 3h6v6" />
-              <path d="M9 21H3v-6" />
-              <path d="M21 3l-7 7" />
-              <path d="M3 21l7-7" />
-            </svg>
-          </div>
+          {/* Character name */}
+          <p className="char-view-profile__name">{displayName}</p>
 
-          {/* AI message bubble */}
-          <div className="char-chat-preview__bubble">
-            <p className="char-chat-preview__bubble-text">
-              Hey! I'm here whenever you want to talk. What's on your mind?
+          {/* Bio section */}
+          <div className="char-view-profile__bio">
+            <p>
+              <strong>Who {displayName} is:</strong><br />
+              {selections.bio || 'Tap Edit to add a short biography about your ideal self.'}
             </p>
           </div>
 
-          {/* Chat input bar (visual only — tap anywhere to open) */}
-          <div className="char-chat-preview__bar">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" />
-              <line x1="12" y1="8" x2="12" y2="16" />
-              <line x1="8" y1="12" x2="16" y2="12" />
-            </svg>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z" />
-              <path d="M19 10a7 7 0 0 1-14 0" />
-              <line x1="12" y1="17" x2="12" y2="21" />
-            </svg>
-          </div>
+          {/* Talk CTA */}
+          <button
+            className="char-view-profile__cta"
+            onClick={() => navigate('/chat', { state: { name: selections.name } })}
+          >
+            Talk to {displayName}
+          </button>
 
         </div>
       )}

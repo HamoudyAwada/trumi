@@ -33,7 +33,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  padding-bottom: 36px;
+  padding-bottom: 4px;
 }
 
 .char-header__title {
@@ -57,16 +57,12 @@
 
 .char-header__action {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: var(--space-1) var(--space-2);
+  width: 44px;
+  height: 44px;
   background-color: var(--color-horizon-violet, #6666cc);
   color: #fff;
-  font-family: var(--font-primary);
-  font-size: var(--font-size-ui-sm);
-  font-weight: var(--font-weight-book);
   border: none;
   border-radius: var(--radius-sm, 4px);
   box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.3);
@@ -79,70 +75,75 @@
   background-color: var(--color-horizon-violet-600, #5252a3);
 }
 
-/* ── Chat preview (view mode) ────────────────── */
+/* ── Divider under canvas ─────────────────────── */
 
-.char-chat-preview {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+.char-divider {
   width: 100%;
-  flex: 1;
-  cursor: pointer;
-  outline: none;
-}
-
-.char-chat-preview__header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-  width: 100%;
-}
-
-.char-chat-preview__name {
-  font-family: var(--font-primary);
-  font-size: var(--font-size-ui-md);
-  font-weight: var(--font-weight-book);
-  color: var(--color-tranquil-night, #0f1c3f);
-  line-height: 1.2;
-}
-
-.char-chat-preview__expand {
-  color: var(--color-tranquil-night, #0f1c3f);
+  height: 2px;
+  background-color: var(--color-horizon-violet, #6666cc);
+  border-radius: 1px;
   flex-shrink: 0;
 }
 
-/* AI message bubble — left-aligned, violet-tinted */
-.char-chat-preview__bubble {
-  background-color: var(--color-horizon-violet-300, #a3a3e0);
-  border-radius: var(--radius-sm, 4px) var(--radius-lg, 24px) var(--radius-lg, 24px) var(--radius-lg, 24px);
-  padding: var(--space-3) var(--space-4);
-  max-width: 80%;
-  align-self: flex-start;
+/* ── View mode profile ────────────────────────── */
+
+.char-view-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding-top: var(--space-2);
 }
 
-.char-chat-preview__bubble-text {
+.char-view-profile__name {
   font-family: var(--font-primary);
-  font-size: var(--font-size-ui-md);
-  font-weight: var(--font-weight-book);
-  color: var(--color-tranquil-night, #0f1c3f);
-  line-height: 1.4;
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: #1a1919;
+  line-height: 1.2;
+  text-align: center;
   margin: 0;
 }
 
-/* Input bar — dark navy pill at the bottom */
-.char-chat-preview__bar {
+.char-view-profile__bio {
+  width: 100%;
+  text-align: center;
+}
+
+.char-view-profile__bio p {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-ui-md, 16px);
+  font-weight: var(--font-weight-book);
+  color: #1a1919;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.char-view-profile__cta {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 48px;
-  background-color: var(--color-tranquil-night, #0f1c3f);
+  justify-content: center;
+  padding: 12px 60px;
+  background-color: var(--color-horizon-violet, #6666cc);
+  color: var(--color-cloud, #fffcfa);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  border: none;
   border-radius: var(--radius-full, 512px);
-  padding: 0 var(--space-4);
-  box-sizing: border-box;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: auto;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--duration-base) var(--easing-out),
+              transform var(--duration-base) var(--easing-out);
+}
+
+.char-view-profile__cta:hover {
+  background-color: var(--color-horizon-violet-600, #5252a3);
+}
+
+.char-view-profile__cta:active {
+  transform: scale(0.97);
 }
 
 /* ── Name row ────────────────────────────────── */
@@ -152,8 +153,8 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding-top: 36px;
-  padding-bottom: var(--space-3);
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-1);
   position: relative;
   z-index: 999;
 }
@@ -206,7 +207,40 @@
   color: rgba(10, 10, 20, 0.35);
 }
 
-/* ── Preview zone (3-column: skin | canvas | feature) ── */
+/* ── Bio input (edit mode) ───────────────────── */
+
+.char-bio-row {
+  width: 100%;
+  padding-bottom: var(--space-2);
+}
+
+.char-bio-input {
+  width: 100%;
+  font-family: var(--font-primary);
+  font-size: var(--font-size-ui-sm);
+  font-weight: var(--font-weight-book);
+  color: #0a0a14;
+  background: transparent;
+  border: 1px solid rgba(102, 102, 204, 0.4);
+  border-radius: var(--radius-md, 12px);
+  outline: none;
+  padding: var(--space-2) var(--space-3);
+  resize: none;
+  box-sizing: border-box;
+  caret-color: var(--color-horizon-violet);
+  line-height: 1.5;
+  transition: border-color var(--duration-base) var(--easing-out);
+}
+
+.char-bio-input:focus {
+  border-color: var(--color-horizon-violet);
+}
+
+.char-bio-input::placeholder {
+  color: rgba(10, 10, 20, 0.35);
+}
+
+/* ── Preview zone (skin | canvas | feature in edit; canvas-only in view) ── */
 
 .char-preview-zone {
   display: flex;

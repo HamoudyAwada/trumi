@@ -187,6 +187,7 @@ export const DEFAULT_CHARACTER = {
   lipColor:  '#f15a6d',
   hairColor: '#59320c',
   name:      '',
+  bio:       '',
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

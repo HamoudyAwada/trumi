@@ -85,7 +85,10 @@ export default function OnboardingStep5() {
       <div className="ob-footer" style={{ marginTop: 'auto' }}>
         <button
           className="ob-btn"
-          onClick={() => navigate('/')}
+          onClick={() => {
+            localStorage.setItem('trumi_onboarded', 'true')
+            navigate('/')
+          }}
         >
           Finish
         </button>

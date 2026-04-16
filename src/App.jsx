@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import MainLayout        from './components/ui/MainLayout'
 import Home              from './pages/Home'
@@ -30,7 +30,14 @@ export default function App() {
 
         {/* All main app pages share the BottomNav layout */}
         <Route element={<MainLayout />}>
-          <Route path="/"             element={<Home />} />
+          <Route
+            path="/"
+            element={
+              localStorage.getItem('trumi_onboarded')
+                ? <Home />
+                : <Navigate to="/onboarding" replace />
+            }
+          />
           <Route path="/goals"        element={<Goals />} />
           <Route path="/add-goal"     element={<AddGoal />} />
           <Route path="/achievements" element={<Achievements />} />

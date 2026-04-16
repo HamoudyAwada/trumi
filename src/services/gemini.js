@@ -16,9 +16,14 @@
  * @param {string} characterName - The user's character name (shown in header)
  * @returns {{ sendMessage: (text: string) => Promise<string> }}
  */
-export function createChatSession(characterName = 'Your Tru-mi') {
+/**
+ * @param {string}   characterName  - The name shown in the header
+ * @param {Array}    initialHistory - Pre-seeded history when resuming a saved chat.
+ *                                   Each entry: { role: 'user'|'model', parts: [{text}] }
+ */
+export function createChatSession(characterName = 'Your Tru-mi', initialHistory = []) {
   // History stored locally and sent with every request to the serverless function
-  const history = []
+  const history = [...initialHistory]
 
   async function sendMessage(userText, attempt = 1) {
     const controller = new AbortController()

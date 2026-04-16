@@ -56,3 +56,81 @@ export async function getOnboardingResponses() {
   if (error) throw error
   return data
 }
+
+// ── Chat history ──────────────────────────────────────────────────────────────
+
+/**
+ * Create a new chat session row and return its UUID.
+ * The initial AI greeting is saved immediately after calling this.
+ */
+export async function startChatSession(characterName) {
+  const device_id = getDeviceId()
+  const { data, error } = await supabase
+    .from('chat_sessions')
+    .insert({ device_id, character_name: characterName, preview: '' })
+    .select('id')
+    .single()
+  if (error) throw error
+  return data.id
+}
+
+/**
+ * Append one message to a session and update the session preview + timestamp.
+ */
+export async function appendChatMessage(sessionId, role, text) {
+  const device_id = getDeviceId()
+
+  // Save the message
+  const { error: msgErr } = await supabase
+    .from('chat_messages')
+    .insert({ session_id: sessionId, role, content: text })
+  if (msgErr) throw msgErr
+
+  // Update session metadata
+  const preview = text.length > 80 ? text.slice(0, 77) + '\u2026' : text
+  await supabase
+    .from('chat_sessions')
+    .update({ preview, last_message_at: new Date().toISOString() })
+    .eq('id', sessionId)
+    .eq('device_id', device_id)
+}
+
+/**
+ * Return all chat sessions for this device, newest first.
+ */
+export async function fetchChatSessions() {
+  const device_id = getDeviceId()
+  const { data, error } = await supabase
+    .from('chat_sessions')
+    .select('id, character_name, preview, created_at, last_message_at')
+    .eq('device_id', device_id)
+    .order('last_message_at', { ascending: false })
+  if (error) throw error
+  return data ?? []
+}
+
+/**
+ * Return all messages for one session, oldest first.
+ */
+export async function fetchChatMessages(sessionId) {
+  const { data, error } = await supabase
+    .from('chat_messages')
+    .select('id, role, content, created_at')
+    .eq('session_id', sessionId)
+    .order('created_at', { ascending: true })
+  if (error) throw error
+  return data ?? []
+}
+
+/**
+ * Delete a session (messages cascade automatically).
+ */
+export async function deleteChatSession(sessionId) {
+  const device_id = getDeviceId()
+  const { error } = await supabase
+    .from('chat_sessions')
+    .delete()
+    .eq('id', sessionId)
+    .eq('device_id', device_id)
+  if (error) throw error
+}

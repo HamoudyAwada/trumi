@@ -58,12 +58,12 @@ export default function App() {
         <Route path="/onboarding/goals"  element={<OnboardingGoals />} />
         <Route path="/chat"              element={<Chat />} />
         <Route path="/add-goal"        element={<AddGoal />} />
-        <Route path="/goal/:id"        element={<GoalDetail />} />
 
         {/* All main app pages share the BottomNav layout */}
         <Route element={<MainLayout />}>
           <Route path="/"             element={<HomeGuard />} />
           <Route path="/goals"        element={<Goals />} />
+          <Route path="/goal/:id"     element={<GoalDetail />} />
           <Route path="/values"       element={<Values />} />
           <Route path="/achievements" element={<Achievements />} />
           <Route path="/character"    element={<Character />} />

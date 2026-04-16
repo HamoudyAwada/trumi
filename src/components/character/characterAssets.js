@@ -19,14 +19,47 @@ export const SKIN_TONES = [
   '#220e00',
 ]
 
-// ── Eyebrow colors ────────────────────────────────────────────────────────────
-export const DEFAULT_BROW_COLOR = '#9e1f63'  // original SVG fill
+// ── Feature base colors (original fills in SVGs — replaced by useRecolor) ─────
+export const DEFAULT_BROW_COLOR = '#9e1f63'  // original eyebrow SVG fill
+export const DEFAULT_EYE_COLOR  = '#2192c8'  // original eye iris fill
+export const DEFAULT_LIP_COLOR  = '#f15a6d'  // original lip SVG fill
+export const DEFAULT_HAIR_COLOR = '#59320c'  // original hair SVG fill (masculine base)
 
-export const BROW_COLORS = [
-  { label: 'Brown', value: '#59320c' },
-  { label: 'Black', value: '#1c1c1c' },
-  { label: 'Blonde', value: '#c8a044' },
-]
+// ── Lips that support colour recolouring ──────────────────────────────────────
+export const COLOURED_LIPS = new Set(['lip-5', 'lip-6', 'lip-7'])
+
+// ── Feature color palettes (per category) ────────────────────────────────────
+export const FEATURE_COLORS = {
+  hair: [
+    { label: 'Black',      value: '#1a1a1a' },
+    { label: 'Dark Brown', value: '#3b1f0a' },
+    { label: 'Brown',      value: '#59320c' },
+    { label: 'Auburn',     value: '#8b3a0f' },
+    { label: 'Blonde',     value: '#c4922a' },
+    { label: 'Red',        value: '#b22222' },
+  ],
+  eyes: [
+    { label: 'Blue',  value: '#2192c8' },
+    { label: 'Brown', value: '#7a4419' },
+    { label: 'Green', value: '#4a8c3f' },
+    { label: 'Grey',  value: '#7a8c9e' },
+  ],
+  eyebrows: [
+    { label: 'Brown',  value: '#59320c' },
+    { label: 'Black',  value: '#1c1c1c' },
+    { label: 'Blonde', value: '#c8a044' },
+  ],
+  lips: [
+    { label: 'Pink',  value: '#f15a6d' },
+    { label: 'Rose',  value: '#d44d79' },
+    { label: 'Berry', value: '#9e2a5c' },
+    { label: 'Nude',  value: '#c87a6a' },
+    { label: 'Red',   value: '#cc2936' },
+  ],
+}
+
+// Legacy alias kept for any existing imports
+export const BROW_COLORS = FEATURE_COLORS.eyebrows
 
 function f(folder, name) {
   return `${BASE}/${folder}/${name}.svg`
@@ -82,7 +115,6 @@ export const ASSETS = {
     { id: 'masc-wavy',   label: 'Wavy',     path: f('Hair', 'Hair - Masculine - Wavey')           },
     { id: 'fem-1',       label: 'Style 1',  path: f('Hair', 'Hair 1 - feminine')                  },
     { id: 'fem-2',       label: 'Style 2',  path: f('Hair', 'Hair 2 - feminine')                  },
-    { id: 'fem-3',       label: 'Style 3',  path: f('Hair', 'Hair 3 - feminine')                  },
     { id: 'fem-4',       label: 'Style 4',  path: f('Hair', 'Hair 4 - feminine')                  },
     { id: 'fem-5',       label: 'Style 5',  path: f('Hair', 'Hair 5 - feminine')                  },
     { id: 'fem-6',       label: 'Style 6',  path: f('Hair', 'Hair 6 - feminine')                  },
@@ -143,14 +175,17 @@ export const ASSETS = {
 
 // ── Defaults ──────────────────────────────────────────────────────────────────
 export const DEFAULT_CHARACTER = {
-  face:     'masc-oval-beard',
-  hair:     'masc-idk',
-  eyes:     'wide',
-  eyebrows: 'brow-2',
-  nose:     'nose-1',
-  lips:     'lip-1',
+  face:      'masc-oval-beard',
+  hair:      'masc-idk',
+  eyes:      'wide',
+  eyebrows:  'brow-2',
+  nose:      'nose-1',
+  lips:      'lip-1',
   skinTone:  '#ffe1cf',
   browColor: '#59320c',
+  eyeColor:  '#2192c8',
+  lipColor:  '#f15a6d',
+  hairColor: '#59320c',
   name:      '',
 }
 

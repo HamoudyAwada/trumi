@@ -146,13 +146,60 @@
   color: rgba(255, 255, 255, 0.35);
 }
 
-/* ── Character preview ───────────────────────── */
+/* ── Preview zone (3-column: skin | canvas | feature) ── */
 
+.char-preview-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Left / right palette columns */
+.char-skin-palette {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+.char-skin-palette--hidden {
+  visibility: hidden;
+}
+
+.char-skin-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-horizon-violet, #6666cc);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    transform    var(--duration-base) var(--easing-out),
+    border-color var(--duration-base) var(--easing-out),
+    box-shadow   var(--duration-base) var(--easing-out);
+}
+
+.char-skin-swatch:hover {
+  transform: scale(1.1);
+}
+
+.char-skin-swatch--active {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px var(--color-horizon-violet, #6666cc);
+  transform: scale(1.15);
+}
+
+/* Center — character canvas */
 .char-preview {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  width: 100%;
+  flex: 1;
   height: 275px;
 }
 

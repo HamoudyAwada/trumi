@@ -1,10 +1,9 @@
 import { useState, useRef } from 'react'
-import CharacterCanvas    from '../components/character/CharacterCanvas'
-import CategorySelector   from '../components/character/CategorySelector'
-import SkinToneSelector   from '../components/character/SkinToneSelector'
-import BrowColorSelector  from '../components/character/BrowColorSelector'
-import OptionGrid         from '../components/character/OptionGrid'
-import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
+import CharacterCanvas       from '../components/character/CharacterCanvas'
+import CategorySelector      from '../components/character/CategorySelector'
+import OptionGrid            from '../components/character/OptionGrid'
+import FeatureColorPalette   from '../components/character/FeatureColorPalette'
+import { DEFAULT_CHARACTER, SKIN_TONES, FEATURE_COLORS, COLOURED_LIPS } from '../components/character/characterAssets'
 import './Character.css'
 
 export default function Character() {
@@ -22,9 +21,23 @@ export default function Character() {
     setSelections(prev => ({ ...prev, skinTone: tone }))
   }
 
-  function handleBrowChange(color) {
-    setSelections(prev => ({ ...prev, browColor: color }))
+  // Maps the active category to the correct color key in selections
+  const CATEGORY_COLOR_KEY = {
+    hair:     'hairColor',
+    eyes:     'eyeColor',
+    eyebrows: 'browColor',
+    lips:     'lipColor',
   }
+
+  function handleFeatureColorChange(color) {
+    const key = CATEGORY_COLOR_KEY[activeCategory]
+    if (key) setSelections(prev => ({ ...prev, [key]: color }))
+  }
+
+  // Lips only show colour swatches for styles that have a coloured fill (5, 6, 7)
+  const lipsHaveColour = activeCategory !== 'lips' || COLOURED_LIPS.has(selections.lips)
+  const featureColors  = lipsHaveColour ? (FEATURE_COLORS[activeCategory] ?? []) : []
+  const featureSelected = selections[CATEGORY_COLOR_KEY[activeCategory]]
 
   function handleNameClick() {
     setIsEditingName(true)
@@ -75,27 +88,50 @@ export default function Character() {
         )}
       </header>
 
-      {/* ── Customization panels (edit mode only) ── */}
-      {isEditing && (
-        <>
-          <SkinToneSelector
-            selected={selections.skinTone}
-            onChange={handleSkinChange}
-          />
-          <BrowColorSelector
-            selected={selections.browColor}
-            onChange={handleBrowChange}
-          />
-        </>
-      )}
+      {/* ── Preview zone: skin palette | canvas | feature palette ── */}
+      <section className="char-preview-zone">
 
-      {/* ── Character preview (always visible) ────── */}
-      <section className="char-preview">
-        <CharacterCanvas
-          selections={selections}
-          skinTone={selections.skinTone}
-          browColor={selections.browColor}
-        />
+        {/* Left — skin tone column (edit mode only) */}
+        {isEditing ? (
+          <div className="char-skin-palette">
+            {SKIN_TONES.map(tone => (
+              <button
+                key={tone}
+                className={`char-skin-swatch${selections.skinTone === tone ? ' char-skin-swatch--active' : ''}`}
+                style={{ backgroundColor: tone }}
+                onClick={() => handleSkinChange(tone)}
+                aria-label={`Skin tone`}
+                aria-pressed={selections.skinTone === tone}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="char-skin-palette char-skin-palette--hidden" />
+        )}
+
+        {/* Center — character canvas */}
+        <div className="char-preview">
+          <CharacterCanvas
+            selections={selections}
+            skinTone={selections.skinTone}
+            browColor={selections.browColor}
+            eyeColor={selections.eyeColor}
+            lipColor={selections.lipColor}
+            hairColor={selections.hairColor}
+          />
+        </div>
+
+        {/* Right — feature-specific color column (edit mode only) */}
+        {isEditing ? (
+          <FeatureColorPalette
+            colors={featureColors}
+            selected={featureSelected}
+            onChange={handleFeatureColorChange}
+          />
+        ) : (
+          <div className="char-skin-palette char-skin-palette--hidden" />
+        )}
+
       </section>
 
       {/* ── Character name ────────────────────────── */}

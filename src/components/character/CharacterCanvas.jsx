@@ -1,6 +1,7 @@
 import { useSkinTone } from './useSkinTone'
 import { useRecolor } from './useRecolor'
-import { NECK_SHIRT_PATH, findAsset, DEFAULT_BROW_COLOR } from './characterAssets'
+import { useHairRecolor } from './useHairRecolor'
+import { NECK_SHIRT_PATH, findAsset, DEFAULT_BROW_COLOR, DEFAULT_EYE_COLOR, DEFAULT_LIP_COLOR } from './characterAssets'
 import './CharacterCanvas.css'
 
 /**
@@ -14,7 +15,7 @@ import './CharacterCanvas.css'
  *
  * Layer order (bottom → top): neck → face → nose → lips → eyes → eyebrows → hair
  */
-export default function CharacterCanvas({ selections, skinTone, browColor }) {
+export default function CharacterCanvas({ selections, skinTone, browColor, eyeColor, lipColor, hairColor }) {
   const faceAsset     = findAsset('face',     selections.face)
   const hairAsset     = findAsset('hair',     selections.hair)
   const eyesAsset     = findAsset('eyes',     selections.eyes)
@@ -25,11 +26,11 @@ export default function CharacterCanvas({ selections, skinTone, browColor }) {
   const neckSrc = useSkinTone(NECK_SHIRT_PATH,       skinTone, true)
   const faceSrc = useSkinTone(faceAsset?.path ?? '', skinTone, true)
 
-  const eyesSrc     = eyesAsset?.path ?? ''
+  const eyesSrc     = useRecolor(eyesAsset?.path ?? '',     DEFAULT_EYE_COLOR,  eyeColor  ?? DEFAULT_EYE_COLOR)
   const eyebrowsSrc = useRecolor(eyebrowsAsset?.path ?? '', DEFAULT_BROW_COLOR, browColor ?? '#59320c')
   const noseSrc     = noseAsset?.path ?? ''
-  const lipsSrc     = lipsAsset?.path     ?? ''
-  const hairSrc     = hairAsset?.path     ?? ''
+  const lipsSrc     = useRecolor(lipsAsset?.path ?? '',     DEFAULT_LIP_COLOR,  lipColor  ?? DEFAULT_LIP_COLOR)
+  const hairSrc     = useHairRecolor(hairAsset?.path ?? '', hairColor ?? DEFAULT_HAIR_COLOR)
 
   return (
     <div className="cc-canvas">

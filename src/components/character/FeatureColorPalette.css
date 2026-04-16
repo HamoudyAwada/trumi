@@ -1,0 +1,37 @@
+.feature-palette {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+.feature-palette--empty {
+  /* invisible spacer to keep canvas centred */
+  visibility: hidden;
+}
+
+.feature-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-horizon-violet, #6666cc);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    transform     var(--duration-base) var(--easing-out),
+    border-color  var(--duration-base) var(--easing-out),
+    box-shadow    var(--duration-base) var(--easing-out);
+}
+
+.feature-swatch:hover {
+  transform: scale(1.1);
+}
+
+.feature-swatch--active {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px var(--color-horizon-violet, #6666cc);
+  transform: scale(1.15);
+}

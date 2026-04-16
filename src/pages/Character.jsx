@@ -197,8 +197,8 @@ export default function Character() {
         /* ── Chat preview (view mode) ──────────── */
         <div
           className="char-chat-preview"
-          onClick={() => navigate('/chat')}
-          onKeyDown={e => e.key === 'Enter' && navigate('/chat')}
+          onClick={() => navigate('/chat', { state: { name: selections.name } })}
+          onKeyDown={e => e.key === 'Enter' && navigate('/chat', { state: { name: selections.name } })}
           role="button"
           tabIndex={0}
           aria-label={`Open chat with ${displayName}`}

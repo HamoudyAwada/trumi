@@ -14,8 +14,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Onboarding has no nav */}
+        {/* Full-screen pages — no nav bar */}
         <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/chat"       element={<Chat />} />
 
         {/* All main app pages share the BottomNav layout */}
         <Route element={<MainLayout />}>
@@ -24,7 +25,6 @@ export default function App() {
           <Route path="/add-goal"     element={<AddGoal />} />
           <Route path="/achievements" element={<Achievements />} />
           <Route path="/character"    element={<Character />} />
-          <Route path="/chat"         element={<Chat />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

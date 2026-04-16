@@ -32,11 +32,11 @@ export default async function handler(req, res) {
 
   const { top3 = [], top10 = [] } = req.body
 
-  if (top3.length === 0 && top10.length === 0) {
-    return res.status(400).json({ error: 'Values are required' })
-  }
+  const hasValues = top3.length > 0 || top10.length > 0
 
-  const userMessage = `The user's top 3 values: ${top3.join(', ')}\nOther values they care about: ${top10.filter(v => !top3.includes(v)).join(', ') || 'none listed'}\n\nSuggest one specific, actionable goal that genuinely fits who this person is.`
+  const userMessage = hasValues
+    ? `The user's top 3 values: ${top3.join(', ')}\nOther values they care about: ${top10.filter(v => !top3.includes(v)).join(', ') || 'none listed'}\n\nSuggest one specific, actionable goal that genuinely fits who this person is.`
+    : `The user hasn't specified their values yet. Suggest one specific, actionable personal growth goal that is meaningful and motivating for a young adult — something concrete, with a clear frequency or measurable target.`
 
   try {
     const completion = await groq.chat.completions.create({

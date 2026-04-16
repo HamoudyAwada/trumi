@@ -93,6 +93,7 @@ function StepDefine({ form, setForm, userValues }) {
       }))
     } catch {
       setSuggestError('Couldn\'t reach Trumi\'s AI — try again in a moment.')
+      setTimeout(() => setSuggestError(null), 4000)
     } finally {
       setSuggesting(false)
     }

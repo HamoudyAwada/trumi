@@ -58,7 +58,7 @@ export default function OnboardingStep3() {
 
       {/* Illustration */}
       <img
-        src="/assets/manager-desk.png"
+        src="/assets/manager-desk.svg"
         alt="Person at a desk making decisions"
         className="ob-s3__illustration"
       />

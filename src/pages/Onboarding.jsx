@@ -17,7 +17,7 @@ export default function Onboarding() {
 
       {/* Illustration */}
       <img
-        src="/assets/asking-question.png"
+        src="/assets/asking-question.svg"
         alt="Person thinking about their values"
         className="ob-intro__illustration"
       />

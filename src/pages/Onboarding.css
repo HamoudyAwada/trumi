@@ -532,6 +532,28 @@
   color: rgba(15,28,63,0.54);
 }
 
+.ob-card-expand-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.ob-card-expand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet, #6666cc);
+  padding: 2px 4px;
+  transition: opacity var(--duration-fast);
+}
+
+.ob-card-expand-btn:hover {
+  opacity: 0.7;
+}
+
 .ob-custom-input {
   width: 100%;
   margin-top: var(--space-2);

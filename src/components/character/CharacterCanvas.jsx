@@ -1,6 +1,7 @@
 import { useSkinTone } from './useSkinTone'
 import { useRecolor } from './useRecolor'
 import { useHairRecolor } from './useHairRecolor'
+import { useNoseRecolor } from './useNoseRecolor'
 import { NECK_SHIRT_PATH, findAsset, DEFAULT_BROW_COLOR, DEFAULT_EYE_COLOR, DEFAULT_LIP_COLOR } from './characterAssets'
 import './CharacterCanvas.css'
 
@@ -28,7 +29,7 @@ export default function CharacterCanvas({ selections, skinTone, browColor, eyeCo
 
   const eyesSrc     = useRecolor(eyesAsset?.path ?? '',     DEFAULT_EYE_COLOR,  eyeColor  ?? DEFAULT_EYE_COLOR)
   const eyebrowsSrc = useRecolor(eyebrowsAsset?.path ?? '', DEFAULT_BROW_COLOR, browColor ?? '#59320c')
-  const noseSrc     = noseAsset?.path ?? ''
+  const noseSrc     = useNoseRecolor(noseAsset?.path ?? '', skinTone)
   const lipsSrc     = useRecolor(lipsAsset?.path ?? '',     DEFAULT_LIP_COLOR,  lipColor  ?? DEFAULT_LIP_COLOR)
   const hairSrc     = useHairRecolor(hairAsset?.path ?? '', hairColor ?? DEFAULT_HAIR_COLOR)
 

@@ -6,6 +6,7 @@ import Character     from './pages/Character'
 import Goals         from './pages/Goals'
 import AddGoal       from './pages/AddGoal'
 import Achievements  from './pages/Achievements'
+import Chat          from './pages/Chat'
 import Onboarding    from './pages/Onboarding'
 import NotFound      from './pages/NotFound'
 
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/add-goal"     element={<AddGoal />} />
           <Route path="/achievements" element={<Achievements />} />
           <Route path="/character"    element={<Character />} />
+          <Route path="/chat"         element={<Chat />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

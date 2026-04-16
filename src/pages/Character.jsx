@@ -1,12 +1,15 @@
 import { useState, useRef } from 'react'
-import CharacterCanvas       from '../components/character/CharacterCanvas'
-import CategorySelector      from '../components/character/CategorySelector'
-import OptionGrid            from '../components/character/OptionGrid'
-import FeatureColorPalette   from '../components/character/FeatureColorPalette'
+import { useNavigate }          from 'react-router-dom'
+import CharacterCanvas          from '../components/character/CharacterCanvas'
+import CategorySelector         from '../components/character/CategorySelector'
+import OptionGrid               from '../components/character/OptionGrid'
+import FeatureColorPalette      from '../components/character/FeatureColorPalette'
 import { DEFAULT_CHARACTER, SKIN_TONES, FEATURE_COLORS, COLOURED_LIPS } from '../components/character/characterAssets'
 import './Character.css'
 
 export default function Character() {
+  const navigate = useNavigate()
+
   const [selections, setSelections]         = useState(DEFAULT_CHARACTER)
   const [activeCategory, setActiveCategory] = useState('hair')
   const [isEditingName, setIsEditingName]   = useState(false)
@@ -21,7 +24,6 @@ export default function Character() {
     setSelections(prev => ({ ...prev, skinTone: tone }))
   }
 
-  // Maps the active category to the correct color key in selections
   const CATEGORY_COLOR_KEY = {
     hair:     'hairColor',
     eyes:     'eyeColor',
@@ -34,7 +36,6 @@ export default function Character() {
     if (key) setSelections(prev => ({ ...prev, [key]: color }))
   }
 
-  // Lips only show colour swatches for styles that have a coloured fill (5, 6, 7)
   const lipsHaveColour = activeCategory !== 'lips' || COLOURED_LIPS.has(selections.lips)
   const featureColors  = lipsHaveColour ? (FEATURE_COLORS[activeCategory] ?? []) : []
   const featureSelected = selections[CATEGORY_COLOR_KEY[activeCategory]]
@@ -51,6 +52,8 @@ export default function Character() {
   function handleNameChange(e) {
     setSelections(prev => ({ ...prev, name: e.target.value }))
   }
+
+  const displayName = selections.name.trim() || 'your Tru-mi'
 
   return (
     <div className="char-page">
@@ -91,7 +94,6 @@ export default function Character() {
       {/* ── Preview zone: skin palette | canvas | feature palette ── */}
       <section className="char-preview-zone">
 
-        {/* Left — skin tone column (edit mode only) */}
         {isEditing ? (
           <div className="char-skin-palette">
             {SKIN_TONES.map(tone => (
@@ -100,7 +102,7 @@ export default function Character() {
                 className={`char-skin-swatch${selections.skinTone === tone ? ' char-skin-swatch--active' : ''}`}
                 style={{ backgroundColor: tone }}
                 onClick={() => handleSkinChange(tone)}
-                aria-label={`Skin tone`}
+                aria-label="Skin tone"
                 aria-pressed={selections.skinTone === tone}
               />
             ))}
@@ -109,7 +111,6 @@ export default function Character() {
           <div className="char-skin-palette char-skin-palette--hidden" />
         )}
 
-        {/* Center — character canvas */}
         <div className="char-preview">
           <CharacterCanvas
             selections={selections}
@@ -121,7 +122,6 @@ export default function Character() {
           />
         </div>
 
-        {/* Right — feature-specific color column (edit mode only) */}
         {isEditing ? (
           <FeatureColorPalette
             colors={featureColors}
@@ -134,49 +134,46 @@ export default function Character() {
 
       </section>
 
-      {/* ── Character name ────────────────────────── */}
-      <div className="char-name-row">
-        {isEditing && isEditingName ? (
-          <input
-            ref={nameInputRef}
-            className="char-name-input"
-            type="text"
-            value={selections.name}
-            onChange={handleNameChange}
-            onBlur={handleNameBlur}
-            placeholder="Name your Tru-mi"
-            maxLength={30}
-            aria-label="Character name"
-          />
-        ) : (
-          <button
-            className="char-name-display"
-            onClick={isEditing ? handleNameClick : undefined}
-            style={!isEditing ? { cursor: 'default' } : undefined}
-            aria-label={isEditing ? 'Edit name' : undefined}
-          >
-            <span className="char-name-display__text">
-              {selections.name || 'Name your Tru-mi'}
-            </span>
-            {isEditing && (
-              <svg className="char-name-display__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-              </svg>
-            )}
-          </button>
-        )}
-      </div>
-
       {isEditing ? (
         <>
-          {/* ── Category tabs (3×2 grid) ─────────── */}
+          {/* ── Character name (edit mode only) ─── */}
+          <div className="char-name-row">
+            {isEditingName ? (
+              <input
+                ref={nameInputRef}
+                className="char-name-input"
+                type="text"
+                value={selections.name}
+                onChange={handleNameChange}
+                onBlur={handleNameBlur}
+                placeholder="Name your Tru-mi"
+                maxLength={30}
+                aria-label="Character name"
+              />
+            ) : (
+              <button
+                className="char-name-display"
+                onClick={handleNameClick}
+                aria-label="Edit name"
+              >
+                <span className="char-name-display__text">
+                  {selections.name || 'Name your Tru-mi'}
+                </span>
+                <svg className="char-name-display__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+              </button>
+            )}
+          </div>
+
+          {/* ── Category tabs ──────────────────── */}
           <CategorySelector
             activeCategory={activeCategory}
             onChange={setActiveCategory}
           />
 
-          {/* ── Option grid ───────────────────────── */}
+          {/* ── Option grid ───────────────────── */}
           <div className="char-options">
             <OptionGrid
               category={activeCategory}
@@ -185,7 +182,7 @@ export default function Character() {
             />
           </div>
 
-          {/* ── CTA ───────────────────────────────── */}
+          {/* ── CTA ───────────────────────────── */}
           <div className="char-cta">
             <button
               className="char-cta__btn"
@@ -197,8 +194,51 @@ export default function Character() {
           </div>
         </>
       ) : (
-        /* ── Chat placeholder (filled in next) ──── */
-        <div className="char-chat-placeholder" />
+        /* ── Chat preview (view mode) ──────────── */
+        <div
+          className="char-chat-preview"
+          onClick={() => navigate('/chat')}
+          onKeyDown={e => e.key === 'Enter' && navigate('/chat')}
+          role="button"
+          tabIndex={0}
+          aria-label={`Open chat with ${displayName}`}
+        >
+
+          {/* Name + expand row */}
+          <div className="char-chat-preview__header">
+            <span className="char-chat-preview__name">
+              Speak to: <strong>{displayName}</strong>
+            </span>
+            <svg className="char-chat-preview__expand" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M15 3h6v6" />
+              <path d="M9 21H3v-6" />
+              <path d="M21 3l-7 7" />
+              <path d="M3 21l7-7" />
+            </svg>
+          </div>
+
+          {/* AI message bubble */}
+          <div className="char-chat-preview__bubble">
+            <p className="char-chat-preview__bubble-text">
+              Hey! I'm here whenever you want to talk. What's on your mind?
+            </p>
+          </div>
+
+          {/* Chat input bar (visual only — tap anywhere to open) */}
+          <div className="char-chat-preview__bar">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <line x1="12" y1="8" x2="12" y2="16" />
+              <line x1="8" y1="12" x2="16" y2="12" />
+            </svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z" />
+              <path d="M19 10a7 7 0 0 1-14 0" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+          </div>
+
+        </div>
       )}
 
     </div>

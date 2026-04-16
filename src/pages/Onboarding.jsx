@@ -9,13 +9,9 @@ export default function Onboarding() {
   return (
     <div className="ob-page">
 
-      {/* Header */}
+      {/* Header — no back button, this is the entry point */}
       <div className="ob-header">
-        <button className="ob-back-btn" onClick={() => navigate(-1)} aria-label="Go back">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-            <path d="M11.5 14L6.5 9L11.5 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
+        <span />
         <span />
       </div>
 

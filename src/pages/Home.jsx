@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/ui/PageHeader'
 import CharacterCanvas from '../components/character/CharacterCanvas'
 import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
+import GoalCard from '../components/goals/GoalCard'
 import './Home.css'
+
+const BULLSEYE_IMG = '/assets/Bullseye and Arrows.svg'
 
 /* ── Figma asset URLs (valid 7 days from Apr 17 2026) ─────────────────────── */
 
@@ -36,15 +39,6 @@ function loadGoals() {
   try { return JSON.parse(localStorage.getItem('trumi_goals') ?? '[]') } catch { return [] }
 }
 
-function getTrackingEnd(startDateStr) {
-  try {
-    const d = new Date(startDateStr)
-    if (isNaN(d)) return 'N/A'
-    d.setDate(d.getDate() + 30)
-    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-  } catch { return 'N/A' }
-}
-
 function loadCharacter() {
   try {
     const saved = localStorage.getItem('trumi_character')
@@ -60,24 +54,6 @@ function getGreeting() {
   return 'Welcome back'
 }
 
-function getWeekDays() {
-  const today = new Date()
-  const dow = today.getDay() // 0 = Sun
-  const monday = new Date(today)
-  monday.setDate(today.getDate() - (dow === 0 ? 6 : dow - 1))
-  monday.setHours(0, 0, 0, 0)
-  return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((label, i) => {
-    const d = new Date(monday)
-    d.setDate(monday.getDate() + i)
-    return {
-      label,
-      dateStr: d.toISOString().split('T')[0],
-      dayNum: d.getDate(),
-      isToday: d.toDateString() === today.toDateString(),
-    }
-  })
-}
-
 function computeStreak(allLoggedDays = []) {
   const logged = new Set(allLoggedDays)
   let streak = 0
@@ -88,130 +64,6 @@ function computeStreak(allLoggedDays = []) {
     else if (i > 0) break
   }
   return streak
-}
-
-/* ── GoalCard (full-width) ────────────────────────────────────────────────── */
-
-function GoalCard({ goal, onLogDay }) {
-  const weekDays      = getWeekDays()
-  const loggedSet     = new Set(goal.loggedDays ?? [])
-  const streak        = computeStreak(goal.loggedDays ?? [])
-  const progress      = goal.progress ?? 0
-  const thisWeekCount = weekDays.filter(d => loggedSet.has(d.dateStr)).length
-  const trackingEnd   = getTrackingEnd(goal.startDate)
-  const todayStr      = new Date().toISOString().split('T')[0]
-  const todayLogged   = loggedSet.has(todayStr)
-  const totalLogged   = (goal.loggedDays ?? []).length
-
-  const ringSize = 78
-  const r        = (ringSize - 8) / 2
-  const circ     = 2 * Math.PI * r
-  const offset   = circ * (1 - Math.min(100, Math.max(0, progress)) / 100)
-
-  return (
-    <div className="gc-card">
-
-      {/* Header */}
-      <div className="gc-header">
-        <span className="gc-header__title">{goal.title}</span>
-        {goal.aka && (
-          <div className="gc-header__mini">
-            <span className="gc-header__mini-label">Mini Goal:</span>
-            <span className="gc-header__mini-text">{goal.aka}</span>
-          </div>
-        )}
-      </div>
-
-      {/* Meta row */}
-      <div className="gc-meta">
-        <span className="gc-meta__item">
-          Goal Started: <span className="gc-meta__val">{goal.startDate}</span>
-        </span>
-        <span className="gc-meta__item">
-          Until: <span className="gc-meta__val">{trackingEnd}</span>
-        </span>
-      </div>
-
-      {/* Streak label */}
-      <p className="gc-streak-label">
-        Days Logged This Week:{' '}
-        <span className="gc-streak-label__val">
-          {streak > 0 ? `${streak} Day Streak!` : 'Start your streak!'}
-        </span>
-      </p>
-
-      {/* Week calendar */}
-      <div className="gc-week">
-        {weekDays.map(day => {
-          const logged = loggedSet.has(day.dateStr)
-          const filled = logged || day.isToday
-          return (
-            <div key={day.dateStr} className="gc-week__col">
-              <span className="gc-week__label">{day.label.slice(0, 3)}</span>
-              <div className={`gc-week__box${filled ? ' gc-week__box--filled' : ''}`}>
-                <span className={`gc-week__num${filled ? ' gc-week__num--filled' : ''}`}>
-                  {day.dayNum}
-                </span>
-              </div>
-              {day.isToday && <span className="gc-week__today">Today</span>}
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Insight + tracker row */}
-      <div className="gc-insight-row">
-        <div className="gc-insight-row__left">
-          <svg className="gc-flame" width="28" height="34" viewBox="0 0 22 29" fill="none" aria-hidden="true">
-            <path d="M11 29C15.418 29 19 26.25 19 21.375C19 19.125 18.225 15.375 15.525 12.375C15.9 14.625 13.65 15.375 13.65 15.375C14.85 11.625 11.85 6.375 7.35 5.625C7.881 8.625 8.1 11.625 4.35 14.625C2.475 16.125 1.35 18.7185 1.35 21.375C1.35 26.25 6.582 29 11 29Z" fill="#FF8B0B"/>
-            <ellipse cx="11" cy="22.5" rx="5" ry="5.5" fill="#FFD060" opacity="0.75"/>
-          </svg>
-          <p className="gc-insight-text">
-            {thisWeekCount > 0
-              ? `You've logged ${thisWeekCount} day${thisWeekCount > 1 ? 's' : ''} this week. Keep it going!`
-              : 'Start logging to build your streak and track your progress.'}
-          </p>
-        </div>
-
-        <div className="gc-tracker">
-          <p className="gc-tracker__label">
-            Current Total:<br />
-            <span className="gc-tracker__count">{totalLogged} {totalLogged === 1 ? 'Day' : 'Days'}</span>
-          </p>
-          <div className="gc-tracker__ring">
-            <svg width={ringSize} height={ringSize} viewBox={`0 0 ${ringSize} ${ringSize}`} aria-hidden="true">
-              <circle cx={ringSize / 2} cy={ringSize / 2} r={r} fill="none" stroke="#e0e0f5" strokeWidth="7" />
-              <circle
-                cx={ringSize / 2} cy={ringSize / 2} r={r}
-                fill="none"
-                stroke="var(--color-horizon-violet, #6666cc)"
-                strokeWidth="7"
-                strokeDasharray={circ}
-                strokeDashoffset={offset}
-                strokeLinecap="round"
-                transform={`rotate(-90 ${ringSize / 2} ${ringSize / 2})`}
-              />
-            </svg>
-            <span className="gc-tracker__pct">{progress}%</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Action buttons */}
-      <div className="gc-actions">
-        <button
-          className={`gc-btn gc-btn--filled${todayLogged ? ' gc-btn--logged' : ''}`}
-          onClick={() => onLogDay(goal.id, todayStr)}
-        >
-          {todayLogged ? '✓ Logged Today' : 'Create Entry'}
-        </button>
-        <button className="gc-btn gc-btn--outline" onClick={() => {}}>
-          + Add Run
-        </button>
-      </div>
-
-    </div>
-  )
 }
 
 /* ── HomeBadge ────────────────────────────────────────────────────────────── */
@@ -418,19 +270,6 @@ export default function Home() {
     setCharacter(loadCharacter())
   }, [])
 
-  function handleLogDay(goalId, dateStr) {
-    setGoals(prev => {
-      const updated = prev.map(g => {
-        if (g.id !== goalId) return g
-        const days    = g.loggedDays ?? []
-        const already = days.includes(dateStr)
-        return { ...g, loggedDays: already ? days.filter(d => d !== dateStr) : [...days, dateStr] }
-      })
-      localStorage.setItem('trumi_goals', JSON.stringify(updated))
-      return updated
-    })
-  }
-
   const firstGoal    = goals.find(g => g.status === 'active') ?? goals[0] ?? null
   const allLoggedDays = goals.flatMap(g => g.loggedDays ?? [])
   const streak        = computeStreak(allLoggedDays)
@@ -456,15 +295,25 @@ export default function Home() {
         {/* ── My Goals ──────────────────────────────── */}
         <section className="home-section">
           <h2 className="home-section__title">My Goals</h2>
-          <div className="home-card home-card--goals">
+          <div
+            className="home-card home-card--goals home-card--clickable"
+            onClick={() => navigate('/goals')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && navigate('/goals')}
+          >
             {firstGoal ? (
-              <GoalCard goal={firstGoal} onLogDay={handleLogDay} />
+              <div className="home-goals__preview-row">
+                <img src={BULLSEYE_IMG} alt="" aria-hidden="true" className="home-goals__bullseye" />
+                <div className="home-goals__preview-wrap">
+                  <div className="home-goals__preview-zoom">
+                    <GoalCard isPreview {...firstGoal} />
+                  </div>
+                </div>
+              </div>
             ) : (
               <div className="home-goals__empty">
-                <p>No goals yet.</p>
-                <button className="home-goals__empty-btn" onClick={() => navigate('/add-goal')}>
-                  + Add a Goal
-                </button>
+                <p>No goals yet — tap to add one.</p>
               </div>
             )}
           </div>
@@ -473,7 +322,13 @@ export default function Home() {
         {/* ── My Achievements ───────────────────────── */}
         <section className="home-section">
           <h2 className="home-section__title">My Achievements</h2>
-          <div className="home-card home-card--achievements">
+          <div
+            className="home-card home-card--achievements home-card--clickable"
+            onClick={() => navigate('/achievements')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && navigate('/achievements')}
+          >
             <HomeBadge variant="goal-setter"    count={goals.length} />
             <HomeBadge variant="streak-master"  count={streak} />
             <HomeBadge variant="gym-enthusiast" />
@@ -483,7 +338,13 @@ export default function Home() {
         {/* ── My Journey ────────────────────────────── */}
         <section className="home-section">
           <h2 className="home-section__title">My Journey</h2>
-          <div className="home-card home-card--journey">
+          <div
+            className="home-card home-card--journey home-card--clickable"
+            onClick={() => navigate('/achievements')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && navigate('/achievements')}
+          >
             <HomeJourneyMap />
           </div>
         </section>
@@ -491,7 +352,13 @@ export default function Home() {
         {/* ── My Trumi ──────────────────────────────── */}
         <section className="home-section">
           <h2 className="home-section__title">My Trumi</h2>
-          <div className="home-card home-card--trumi">
+          <div
+            className="home-card home-card--trumi home-card--clickable"
+            onClick={() => navigate('/character')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && navigate('/character')}
+          >
             <div className="home-trumi__canvas-wrap">
               <CharacterCanvas
                 selections={character}

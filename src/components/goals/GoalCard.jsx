@@ -68,6 +68,7 @@ export default function GoalCard({
   unit,
   actionLabel,
   insight,
+  isPreview = false,
   onQuickComplete,
   onCreateEntry,
   onPause,
@@ -129,7 +130,7 @@ export default function GoalCard({
     <article className={`goal-card goal-card--${status}`}>
 
       {/* ── Options button + dropdown ── */}
-      <div className="goal-card__menu-wrap" ref={menuRef}>
+      {!isPreview && <div className="goal-card__menu-wrap" ref={menuRef}>
         <button
           className="goal-card__settings-btn"
           onClick={e => { e.stopPropagation(); setMenuOpen(o => !o) }}
@@ -161,7 +162,7 @@ export default function GoalCard({
             </button>
           </div>
         )}
-      </div>
+      </div>}
 
       {/* ── Header ── */}
       <div className="goal-card__header">
@@ -264,7 +265,7 @@ export default function GoalCard({
       </div>
 
       {/* ── Action buttons ── */}
-      {!isPaused && (
+      {!isPreview && !isPaused && (
         <div className="goal-card__actions">
           <button
             className={`goal-card__btn goal-card__btn--filled${todayDone ? ' goal-card__btn--done' : ''}`}
@@ -285,7 +286,7 @@ export default function GoalCard({
         </div>
       )}
 
-      {isPaused && (
+      {!isPreview && isPaused && (
         <div className="goal-card__actions">
           <p className="goal-card__paused-note">
             This goal is paused — tap ··· to resume.
@@ -294,7 +295,7 @@ export default function GoalCard({
       )}
 
       {/* ── Delete confirmation overlay ── */}
-      {confirmDelete && (
+      {!isPreview && confirmDelete && (
         <div className="goal-card__confirm-overlay" role="dialog" aria-modal="true">
           <div className="goal-card__confirm-box">
             <p className="goal-card__confirm-title">Delete this goal?</p>

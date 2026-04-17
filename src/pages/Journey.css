@@ -44,61 +44,78 @@
 
 .jn-back-btn:hover { opacity: 0.6; }
 
+/* ── Progress summary ────────────────────────── */
+
+.jn-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 8px 0 12px;
+}
+
+.jn-summary__count {
+  font-family: var(--font-primary);
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-horizon-violet);
+  line-height: 1;
+}
+
+.jn-summary__label {
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fogstone);
+  line-height: 1;
+}
+
 /* ── Journey map container ───────────────────── */
 /*
-   Figma source size: 326.902 × 555.29 px
-   Aspect ratio: 326.902 / 555.29 ≈ 0.5887
-   All child positions use percentages of this container.
+   Figma frame: 326.902 × 943 px
+   All child positions are percentages of this container.
 */
 
 .jn-map {
   position: relative;
   width: 100%;
-  aspect-ratio: 326.902 / 555.29;
+  aspect-ratio: 326.902 / 943;
   margin: 0 auto;
   overflow: visible;
+  container-type: size;
 }
 
-/* ── Shared image fill ───────────────────────── */
+/* ── Connector paths ─────────────────────────── */
 
-.jn-map__img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-}
-
-.jn-map__img--contain {
-  object-fit: contain;
-}
-
-/* ── Path connectors ─────────────────────────── */
-
-.jn-map__path {
+.jn-connector {
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: visible;
+  container-type: size;
 }
 
-.jn-map__path-inner {
+/* ── Milestone nodes ─────────────────────────── */
+
+.jn-node {
   position: absolute;
   overflow: visible;
 }
 
 /* ── Character illustrations ─────────────────── */
 
-.jn-map__char {
+.jn-char {
   position: absolute;
+  pointer-events: none;
   overflow: visible;
 }
 
-.jn-map__char img {
+/* ── Shared image fill ───────────────────────── */
+
+.jn-fill-img {
   display: block;
   width: 100%;
   height: 100%;
-}
-
-/* ── Milestone nodes ─────────────────────────── */
-
-.jn-map__node {
-  position: absolute;
+  max-width: none;
+  object-fit: fill;
 }

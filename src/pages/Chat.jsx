@@ -12,7 +12,72 @@ import CharacterCanvas from '../components/character/CharacterCanvas'
 import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
 import './Chat.css'
 
-const INITIAL_AI_TEXT = "Hey! I'm here whenever you want to talk. What's on your mind?"
+const STARTERS = [
+  "How am I doing with my goals?",
+  "I want to reflect on something",
+  "I'm feeling overwhelmed",
+  "I need some encouragement",
+  "I want to think through a decision",
+  "Something's been on my mind",
+  "I'm not sure how I'm feeling",
+  "I had a really good day",
+]
+
+function pickStarters() {
+  const shuffled = [...STARTERS].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, 3)
+}
+
+function buildGreeting(goals) {
+  const hour = new Date().getHours()
+  const active = goals.filter(g => g.status === 'active')
+  const timeLabel = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening'
+
+  const pool = active.length > 0 ? [
+    `Hey! How are you feeling about everything going on with your goals lately?`,
+    `Hey — good to see you. How are things feeling today?`,
+    `Hi! How's your ${timeLabel} going so far?`,
+    `Hey. What's on your mind today?`,
+  ] : [
+    `Hey! Good ${timeLabel}. What's on your mind?`,
+    `Hi! I'm here whenever you want to talk. How are you doing?`,
+    `Hey — what's going on for you today?`,
+    `Hey! How are you feeling right now?`,
+  ]
+
+  return pool[Math.floor(Math.random() * pool.length)]
+}
+
+function loadUserContext() {
+  try {
+    const goals = JSON.parse(localStorage.getItem('trumi_goals') ?? '[]')
+    const survey = JSON.parse(localStorage.getItem('trumi_survey') ?? '{}')
+    const goalTitles = goals.filter(g => g.status === 'active').map(g => g.title)
+    const values = survey.top3 ?? survey.top10?.slice(0, 5) ?? []
+    return { goals: goalTitles, values }
+  } catch {
+    return null
+  }
+}
+
+function loadGoalsForGreeting() {
+  try { return JSON.parse(localStorage.getItem('trumi_goals') ?? '[]') } catch { return [] }
+}
+
+function MessageText({ text }) {
+  const paragraphs = text.split(/\n\n+/)
+  return (
+    <>
+      {paragraphs.map((para, i) => (
+        <p key={i} className={`chat-bubble__text${i > 0 ? ' chat-bubble__text--mt' : ''}`}>
+          {para.split('\n').map((line, j, arr) => (
+            <span key={j}>{line}{j < arr.length - 1 && <br />}</span>
+          ))}
+        </p>
+      ))}
+    </>
+  )
+}
 
 function formatRelativeDate(isoString) {
   const date   = new Date(isoString)
@@ -37,16 +102,23 @@ export default function Chat() {
   const characterName = location.state?.name?.trim() || 'Your Tru-mi'
   const character     = location.state?.character ?? DEFAULT_CHARACTER
 
-  // ── Gemini session ────────────────────────────────────────────────────────
+  // ── User context + greeting (computed once on mount) ─────────────────────
+  const userContextRef  = useRef(loadUserContext())
+  const initialGreeting = useRef(buildGreeting(loadGoalsForGreeting()))
+  const startersRef     = useRef(pickStarters())
+
+  // ── Chat session ──────────────────────────────────────────────────────────
   const sessionRef = useRef(null)
   if (!sessionRef.current) {
-    sessionRef.current = createChatSession(characterName)
+    sessionRef.current = createChatSession(characterName, [], userContextRef.current)
   }
 
   // ── Chat messages ─────────────────────────────────────────────────────────
-  const [messages, setMessages] = useState([{ role: 'ai', text: INITIAL_AI_TEXT }])
+  const [messages, setMessages] = useState([{ role: 'ai', text: initialGreeting.current }])
   const [input,    setInput]    = useState('')
   const [sending,  setSending]  = useState(false)
+  // showStarters: true until the user sends their first message
+  const [showStarters, setShowStarters] = useState(true)
   const scrollRef = useRef(null)
 
   // ── Supabase session tracking ─────────────────────────────────────────────
@@ -56,14 +128,14 @@ export default function Chat() {
   const [historyOpen,     setHistoryOpen]     = useState(false)
   const [sessions,        setSessions]        = useState([])
   const [sessionsLoading, setSessionsLoading] = useState(false)
-  const [deletingId,      setDeletingId]      = useState(null)   // optimistic delete
+  const [deletingId,      setDeletingId]      = useState(null)
 
   // ── On mount: create a new DB session and save the greeting ───────────────
   useEffect(() => {
     startChatSession(characterName)
       .then(id => {
         setSessionId(id)
-        return appendChatMessage(id, 'ai', INITIAL_AI_TEXT)
+        return appendChatMessage(id, 'ai', initialGreeting.current)
       })
       .catch(err => console.warn('[Chat] Could not start session:', err))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -83,10 +155,11 @@ export default function Chat() {
   }
 
   // ── Send a message ────────────────────────────────────────────────────────
-  async function handleSend() {
-    const text = input.trim()
+  async function handleSend(overrideText) {
+    const text = (overrideText ?? input).trim()
     if (!text || sending) return
 
+    setShowStarters(false)
     setMessages(prev => [...prev, { role: 'user', text }])
     persist('user', text)
     setInput('')
@@ -136,9 +209,10 @@ export default function Chat() {
       // Map DB rows → UI format
       const uiMessages = msgs.length > 0
         ? msgs.map(m => ({ role: m.role, text: m.content }))
-        : [{ role: 'ai', text: INITIAL_AI_TEXT }]
+        : [{ role: 'ai', text: initialGreeting.current }]
 
       setMessages(uiMessages)
+      setShowStarters(false)
       setSessionId(session.id)
 
       // Rebuild Gemini context from the last 20 messages so the AI remembers
@@ -221,7 +295,7 @@ export default function Chat() {
         {messages.map((msg, i) => (
           <div key={i} className={`chat-bubble-row chat-bubble-row--${msg.role}`}>
             <div className={`chat-bubble chat-bubble--${msg.role}`}>
-              <p className="chat-bubble__text">{msg.text}</p>
+              <MessageText text={msg.text} />
             </div>
           </div>
         ))}
@@ -231,6 +305,21 @@ export default function Chat() {
             <div className="chat-bubble chat-bubble--ai chat-bubble--typing">
               <span /><span /><span />
             </div>
+          </div>
+        )}
+
+        {/* Conversation starters — shown until first user message */}
+        {showStarters && !sending && (
+          <div className="chat-starters">
+            {startersRef.current.map(starter => (
+              <button
+                key={starter}
+                className="chat-starter-chip"
+                onClick={() => handleSend(starter)}
+              >
+                {starter}
+              </button>
+            ))}
           </div>
         )}
       </div>

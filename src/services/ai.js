@@ -14,7 +14,7 @@
  * @param {Array}    initialHistory - Pre-seeded history when resuming a saved chat.
  *                                   Each entry: { role: 'user'|'model', parts: [{text}] }
  */
-export function createChatSession(characterName = 'Your Tru-mi', initialHistory = []) {
+export function createChatSession(characterName = 'Your Tru-mi', initialHistory = [], userContext = null) {
   // History stored locally and sent with every request to the serverless function
   const history = [...initialHistory]
 
@@ -26,7 +26,7 @@ export function createChatSession(characterName = 'Your Tru-mi', initialHistory 
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userText, history, characterName }),
+        body: JSON.stringify({ message: userText, history, characterName, userContext }),
         signal: controller.signal,
       })
 

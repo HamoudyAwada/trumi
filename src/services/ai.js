@@ -113,6 +113,27 @@ export async function suggestSingleGoal(userValues) {
 }
 
 /**
+ * Generate a short personalised insight about a user's progress on a goal.
+ * @param {{ title, unit, totalLogged, streak, thisWeekCount, daysIntoGoal }} data
+ * @returns {Promise<string>}
+ */
+export async function getGoalInsight(data) {
+  const res = await fetch('/api/goal-insight', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error ?? `Server error ${res.status}`)
+  }
+
+  const { insight } = await res.json()
+  return insight
+}
+
+/**
  * Get a contextual action button label and progress unit for a goal card.
  * Cached — callers should only call this when the goal doesn't already have meta stored.
  * @param {{ title: string, successType: string, executionStyle: string, weeklyTimes?: number }} goal

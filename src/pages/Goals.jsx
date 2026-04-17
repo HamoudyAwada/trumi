@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import GoalCard from '../components/goals/GoalCard'
 import PageHeader from '../components/ui/PageHeader'
-import { getGoalMeta } from '../services/ai'
+import { getGoalMeta, getGoalInsight } from '../services/ai'
 import './Goals.css'
 
 /* ── Bullseye + arrows icon ── */
@@ -27,9 +27,39 @@ function BullseyeIcon() {
   )
 }
 
-/* ── Load goals from localStorage (set during onboarding / add-goal flow) ── */
+/* ── Load goals from localStorage ── */
 function loadGoals() {
   try { return JSON.parse(localStorage.getItem('trumi_goals') ?? '[]') } catch { return [] }
+}
+
+/* ── Helpers used for insight generation ── */
+function computeGoalStreak(loggedDays = []) {
+  const logged = new Set(loggedDays)
+  let streak = 0
+  for (let i = 0; i < 365; i++) {
+    const d = new Date()
+    d.setDate(d.getDate() - i)
+    if (logged.has(d.toISOString().split('T')[0])) streak++
+    else if (i > 0) break
+  }
+  return streak
+}
+
+function getThisWeekCount(loggedDays = []) {
+  const today   = new Date()
+  const dow     = today.getDay()
+  const monday  = new Date(today)
+  monday.setDate(today.getDate() - (dow === 0 ? 6 : dow - 1))
+  monday.setHours(0, 0, 0, 0)
+  return loggedDays.filter(d => new Date(d) >= monday).length
+}
+
+function getDaysIntoGoal(startDateStr) {
+  try {
+    const start = new Date(startDateStr)
+    if (isNaN(start)) return 0
+    return Math.max(0, Math.floor((Date.now() - start.getTime()) / 86400000))
+  } catch { return 0 }
 }
 
 
@@ -46,7 +76,7 @@ export default function Goals() {
   const [statusFilter, setStatusFilter] = useState('active')
   const [goals, setGoals] = useState(loadGoals)
 
-  // Fetch AI-generated meta for goals that don't have it yet (cached in localStorage after first fetch)
+  // Fetch AI-generated meta for goals that don't have it yet
   useEffect(() => {
     const goalsNeedingMeta = goals.filter(g => g.unit == null)
     if (goalsNeedingMeta.length === 0) return
@@ -61,20 +91,51 @@ export default function Goals() {
         setGoals(prev => {
           const updated = prev.map(g =>
             g.id === goal.id
-              ? { ...g,
-                  actionLabel: meta.actionLabel,
-                  unit:        meta.unit,
-                }
+              ? { ...g, actionLabel: meta.actionLabel, unit: meta.unit }
               : g
           )
           localStorage.setItem('trumi_goals', JSON.stringify(updated))
           return updated
         })
-      }).catch(() => {
-        // Silently ignore — card shows fallback defaults
-      })
+      }).catch(() => {})
     })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Fetch AI insights — generated once per goal, then refreshed whenever loggedDays.length changes
+  useEffect(() => {
+    goals.forEach(goal => {
+      if (goal.status === 'paused') return
+      const currentCount = (goal.loggedDays ?? []).length
+      // Skip if insight is fresh (same logged count as when it was last generated)
+      if (goal.insight && goal.insightLoggedCount === currentCount) return
+
+      // Only generate an insight if there is actual progress data
+      if (currentCount === 0) return
+
+      const streak        = computeGoalStreak(goal.loggedDays ?? [])
+      const thisWeekCount = getThisWeekCount(goal.loggedDays ?? [])
+      const daysIntoGoal  = getDaysIntoGoal(goal.startDate)
+
+      getGoalInsight({
+        title:         goal.title,
+        unit:          goal.unit ?? 'Sessions',
+        totalLogged:   currentCount,
+        streak,
+        thisWeekCount,
+        daysIntoGoal,
+      }).then(insight => {
+        setGoals(prev => {
+          const updated = prev.map(g =>
+            g.id === goal.id
+              ? { ...g, insight, insightLoggedCount: currentCount }
+              : g
+          )
+          localStorage.setItem('trumi_goals', JSON.stringify(updated))
+          return updated
+        })
+      }).catch(() => {})
+    })
+  }, [goals.map(g => (g.loggedDays ?? []).length).join(',')]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Quick-complete: mark today as 100% done, auto-add to loggedDays
   function handleQuickComplete(goalId) {
@@ -97,6 +158,27 @@ export default function Goals() {
   // Create Entry: navigate to dedicated log screen (design coming later)
   function handleCreateEntry(goalId) {
     navigate(`/log-entry/${goalId}`)
+  }
+
+  // Pause / resume toggle
+  function handlePause(goalId) {
+    setGoals(prev => {
+      const updated = prev.map(g => {
+        if (g.id !== goalId) return g
+        return { ...g, status: g.status === 'paused' ? 'active' : 'paused' }
+      })
+      localStorage.setItem('trumi_goals', JSON.stringify(updated))
+      return updated
+    })
+  }
+
+  // Delete goal permanently
+  function handleDelete(goalId) {
+    setGoals(prev => {
+      const updated = prev.filter(g => g.id !== goalId)
+      localStorage.setItem('trumi_goals', JSON.stringify(updated))
+      return updated
+    })
   }
 
   const activeCount = goals.filter(g => g.status === 'active').length
@@ -179,16 +261,17 @@ export default function Goals() {
                   <GoalCard
                     id={goal.id}
                     title={goal.title}
-                    aka={goal.aka}
                     startDate={goal.startDate}
                     status={goal.status}
                     loggedDays={goal.loggedDays ?? []}
                     dailyLogs={goal.dailyLogs ?? {}}
                     unit={goal.unit}
                     actionLabel={goal.actionLabel ?? null}
+                    insight={goal.insight ?? null}
                     onQuickComplete={handleQuickComplete}
                     onCreateEntry={handleCreateEntry}
-                    onSettings={() => {}}
+                    onPause={handlePause}
+                    onDelete={handleDelete}
                   />
                 </li>
               ))}

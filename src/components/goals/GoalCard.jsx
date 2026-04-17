@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react'
 import './GoalCard.css'
 
 /* ── Helpers ──────────────────────────────────────────────────────────── */
@@ -60,22 +61,22 @@ function getTrackingEnd(startDateStr) {
 export default function GoalCard({
   id,
   title,
-  aka,
   startDate,
   status = 'active',
   loggedDays = [],
   dailyLogs = {},
   unit,
   actionLabel,
+  insight,
   onQuickComplete,
   onCreateEntry,
-  onSettings,
+  onPause,
+  onDelete,
 }) {
   const isPaused      = status === 'paused'
   const weekDays      = getWeekDays()
   const loggedSet     = new Set(loggedDays)
   const streak        = computeStreak(loggedDays)
-  const thisWeekCount = weekDays.filter(d => loggedSet.has(d.dateStr)).length
   const trackingEnd   = getTrackingEnd(startDate)
   const todayStr      = new Date().toISOString().split('T')[0]
 
@@ -83,7 +84,6 @@ export default function GoalCard({
   const todayPct      = Math.min(100, Math.max(0, dailyLogs[todayStr] ?? 0))
   const todayDone     = todayPct >= 100
 
-  const displayUnit   = unit ?? 'Sessions'
   const showSecondary = Boolean(actionLabel) && !isPaused
 
   const ringSize = 78
@@ -91,31 +91,81 @@ export default function GoalCard({
   const circ     = 2 * Math.PI * r
   const offset   = circ * (1 - todayPct / 100)
 
+  // Options menu state
+  const [menuOpen,       setMenuOpen]       = useState(false)
+  const [confirmDelete,  setConfirmDelete]  = useState(false)
+  const menuRef = useRef(null)
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    if (!menuOpen) return
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [menuOpen])
+
+  // Build a human-readable progress summary for the delete confirmation
+  function buildProgressSummary() {
+    const daysLogged   = loggedDays.length
+    const displayUnit  = unit ?? 'days'
+
+    // Count total daily log entries that have any progress
+    const activeDays = Object.values(dailyLogs).filter(pct => pct > 0).length
+
+    const count = daysLogged > 0 ? daysLogged : activeDays
+
+    if (count === 0) return null
+    const unitLabel = displayUnit.toLowerCase()
+    return `${count} ${unitLabel} of progress`
+  }
+
+  const progressSummary = buildProgressSummary()
+
   return (
     <article className={`goal-card goal-card--${status}`}>
 
-      {/* ── Settings button ── */}
-      <button
-        className="goal-card__settings-btn"
-        onClick={e => { e.stopPropagation(); onSettings?.() }}
-        aria-label="Goal options"
-      >
-        <svg width="13" height="3" viewBox="0 0 13 3" fill="none" aria-hidden="true">
-          <circle cx="1.5"  cy="1.5" r="1.5" fill="var(--color-tranquil-night)" />
-          <circle cx="6.5"  cy="1.5" r="1.5" fill="var(--color-tranquil-night)" />
-          <circle cx="11.5" cy="1.5" r="1.5" fill="var(--color-tranquil-night)" />
-        </svg>
-      </button>
+      {/* ── Options button + dropdown ── */}
+      <div className="goal-card__menu-wrap" ref={menuRef}>
+        <button
+          className="goal-card__settings-btn"
+          onClick={e => { e.stopPropagation(); setMenuOpen(o => !o) }}
+          aria-label="Goal options"
+          aria-expanded={menuOpen}
+        >
+          <svg width="13" height="3" viewBox="0 0 13 3" fill="none" aria-hidden="true">
+            <circle cx="1.5"  cy="1.5" r="1.5" fill="var(--color-tranquil-night)" />
+            <circle cx="6.5"  cy="1.5" r="1.5" fill="var(--color-tranquil-night)" />
+            <circle cx="11.5" cy="1.5" r="1.5" fill="var(--color-tranquil-night)" />
+          </svg>
+        </button>
+
+        {menuOpen && (
+          <div className="goal-card__menu" role="menu">
+            <button
+              className="goal-card__menu-item"
+              role="menuitem"
+              onClick={e => { e.stopPropagation(); setMenuOpen(false); onPause?.(id) }}
+            >
+              {isPaused ? 'Resume Goal' : 'Pause Goal'}
+            </button>
+            <button
+              className="goal-card__menu-item goal-card__menu-item--danger"
+              role="menuitem"
+              onClick={e => { e.stopPropagation(); setMenuOpen(false); setConfirmDelete(true) }}
+            >
+              Delete Goal
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* ── Header ── */}
       <div className="goal-card__header">
         <span className="goal-card__title">{title}</span>
-        {aka && (
-          <div className="goal-card__mini">
-            <span className="goal-card__mini-label">Mini Goal:</span>
-            <span className="goal-card__mini-text">{aka}</span>
-          </div>
-        )}
       </div>
 
       {/* ── Meta row ── */}
@@ -172,11 +222,11 @@ export default function GoalCard({
           <p className="goal-card__insight-text">
             {isPaused
               ? "This goal is paused. Resume whenever you're ready."
-              : todayDone
-                ? `Today's done! You've also logged ${thisWeekCount} day${thisWeekCount !== 1 ? 's' : ''} this week.`
-                : thisWeekCount > 0
-                  ? `You've logged ${thisWeekCount} day${thisWeekCount > 1 ? 's' : ''} this week. Keep it going!`
-                  : 'Start logging to build your streak and track your progress.'}
+              : insight
+                ? insight
+                : loggedDays.length === 0
+                  ? 'Create your first entry to start receiving personalised insights on your progress.'
+                  : 'Generating your insight…'}
           </p>
         </div>
 
@@ -237,9 +287,37 @@ export default function GoalCard({
 
       {isPaused && (
         <div className="goal-card__actions">
-          <button className="goal-card__btn goal-card__btn--unpause">
-            Resume Goal
-          </button>
+          <p className="goal-card__paused-note">
+            This goal is paused — tap ··· to resume.
+          </p>
+        </div>
+      )}
+
+      {/* ── Delete confirmation overlay ── */}
+      {confirmDelete && (
+        <div className="goal-card__confirm-overlay" role="dialog" aria-modal="true">
+          <div className="goal-card__confirm-box">
+            <p className="goal-card__confirm-title">Delete this goal?</p>
+            <p className="goal-card__confirm-body">
+              {progressSummary
+                ? `You've already made ${progressSummary} towards "${title}". This can't be undone.`
+                : `"${title}" will be permanently deleted. This can't be undone.`}
+            </p>
+            <div className="goal-card__confirm-actions">
+              <button
+                className="goal-card__confirm-btn goal-card__confirm-btn--cancel"
+                onClick={() => setConfirmDelete(false)}
+              >
+                Keep It
+              </button>
+              <button
+                className="goal-card__confirm-btn goal-card__confirm-btn--delete"
+                onClick={() => { setConfirmDelete(false); onDelete?.(id) }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

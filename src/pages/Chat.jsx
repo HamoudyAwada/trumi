@@ -117,9 +117,14 @@ export default function Chat() {
   const [messages, setMessages] = useState([{ role: 'ai', text: initialGreeting.current }])
   const [input,    setInput]    = useState('')
   const [sending,  setSending]  = useState(false)
-  // showStarters: true until the user sends their first message
   const [showStarters, setShowStarters] = useState(true)
   const scrollRef = useRef(null)
+
+  // ── Voice recording ───────────────────────────────────────────────────────
+  const [isRecording,    setIsRecording]    = useState(false)
+  const [isTranscribing, setIsTranscribing] = useState(false)
+  const mediaRecorderRef = useRef(null)
+  const audioChunksRef   = useRef([])
 
   // ── Supabase session tracking ─────────────────────────────────────────────
   const [sessionId,  setSessionId]  = useState(null)
@@ -177,6 +182,64 @@ export default function Chat() {
     } finally {
       setSending(false)
     }
+  }
+
+  // ── Voice recording helpers ───────────────────────────────────────────────
+  async function startRecording() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4'
+      const recorder = new MediaRecorder(stream, { mimeType })
+      mediaRecorderRef.current = recorder
+      audioChunksRef.current   = []
+
+      recorder.ondataavailable = e => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data)
+      }
+
+      recorder.onstop = async () => {
+        stream.getTracks().forEach(t => t.stop())
+        const blob   = new Blob(audioChunksRef.current, { type: mimeType })
+        const base64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result.split(',')[1])
+          reader.onerror   = reject
+          reader.readAsDataURL(blob)
+        })
+
+        setIsTranscribing(true)
+        try {
+          const res = await fetch('/api/transcribe', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ audio: base64, mimeType }),
+          })
+          const { text } = await res.json()
+          if (text?.trim()) {
+            setInput(prev => prev ? `${prev} ${text.trim()}` : text.trim())
+          }
+        } catch (err) {
+          console.error('[Transcribe]', err)
+        } finally {
+          setIsTranscribing(false)
+        }
+      }
+
+      recorder.start()
+      setIsRecording(true)
+    } catch (err) {
+      console.error('[Mic] Permission denied or unavailable:', err)
+    }
+  }
+
+  function stopRecording() {
+    mediaRecorderRef.current?.stop()
+    setIsRecording(false)
+  }
+
+  function handleMicToggle() {
+    if (isRecording) stopRecording()
+    else startRecording()
   }
 
   function handleKeyDown(e) {
@@ -346,18 +409,38 @@ export default function Chat() {
             disabled={sending}
           />
 
-          <button
-            className="chat-input-bar__icon-btn"
-            aria-label="Send message"
-            onClick={handleSend}
-            disabled={sending || !input.trim()}
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z" />
-              <path d="M19 10a7 7 0 0 1-14 0" />
-              <line x1="12" y1="17" x2="12" y2="21" />
-            </svg>
-          </button>
+          {/* Smart right button: send when text present, mic otherwise */}
+          {input.trim() && !isRecording ? (
+            <button
+              className="chat-input-bar__icon-btn"
+              aria-label="Send message"
+              onClick={() => handleSend()}
+              disabled={sending}
+            >
+              {/* Send arrow */}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </button>
+          ) : (
+            <button
+              className={`chat-input-bar__icon-btn${isRecording ? ' chat-input-bar__icon-btn--recording' : ''}`}
+              aria-label={isRecording ? 'Stop recording' : 'Voice input'}
+              onClick={handleMicToggle}
+              disabled={sending || isTranscribing}
+            >
+              {isTranscribing ? (
+                <div className="chat-mic-spinner" aria-hidden="true" />
+              ) : (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z" />
+                  <path d="M19 10a7 7 0 0 1-14 0" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+              )}
+            </button>
+          )}
         </div>
       </div>
 

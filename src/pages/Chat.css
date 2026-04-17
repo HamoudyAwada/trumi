@@ -495,3 +495,29 @@
 .chat-input-bar__field::placeholder {
   color: rgba(255, 255, 255, 0.35);
 }
+
+/* Recording active state — mic button pulses red */
+.chat-input-bar__icon-btn--recording {
+  color: #ff5a5a !important;
+  animation: mic-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes mic-pulse {
+  0%, 100% { opacity: 1;    transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(1.15); }
+}
+
+/* Transcribing spinner */
+.chat-mic-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  animation: mic-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes mic-spin {
+  to { transform: rotate(360deg); }
+}

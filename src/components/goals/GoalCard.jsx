@@ -268,10 +268,10 @@ export default function GoalCard({
       {!isPreview && !isPaused && (
         <div className="goal-card__actions">
           <button
-            className={`goal-card__btn goal-card__btn--filled${todayDone ? ' goal-card__btn--done' : ''}`}
+            className="goal-card__btn goal-card__btn--filled"
             onClick={() => onCreateEntry?.(id)}
           >
-            {todayDone ? '✓ Entry Logged' : 'Create Entry'}
+            Create Entry
           </button>
 
           {showSecondary && (

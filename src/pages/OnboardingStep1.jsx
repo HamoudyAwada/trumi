@@ -9,53 +9,31 @@ const MAX = 10
 const VALUES_DATA = [
   {
     category: 'Well-Being & Inner State',
-    values: [
-      'Peace', 'Balance', 'Happiness', 'Self-Love', 'Simplicity', 'Mindfulness',
-      'Gratitude', 'Contentment', 'Acceptance', 'Optimism', 'Joy', 'Serenity',
-      'Self-Awareness', 'Emotional Health', 'Inner Peace',
-    ],
+    values: ['Peace', 'Balance', 'Happiness', 'Self-Love', 'Mindfulness', 'Gratitude'],
   },
   {
     category: 'Growth & Achievement',
-    values: [
-      'Growth', 'Discipline', 'Achievement', 'Purpose', 'Resilience', 'Ambition',
-      'Curiosity', 'Excellence', 'Mastery', 'Perseverance', 'Learning', 'Self-Improvement',
-    ],
+    values: ['Growth', 'Discipline', 'Purpose', 'Resilience', 'Curiosity', 'Mastery'],
   },
   {
     category: 'Relationships & Connection',
-    values: [
-      'Family', 'Faith', 'Connection', 'Friendship', 'Kindness', 'Love',
-      'Community', 'Empathy', 'Loyalty', 'Belonging', 'Partnership', 'Mentorship', 'Service',
-    ],
+    values: ['Family', 'Friendship', 'Kindness', 'Empathy', 'Loyalty', 'Community'],
   },
   {
     category: 'Integrity & Character',
-    values: [
-      'Integrity', 'Courage', 'Responsibility', 'Authenticity', 'Honesty',
-      'Humility', 'Fairness', 'Transparency', 'Ethics',
-    ],
+    values: ['Integrity', 'Courage', 'Authenticity', 'Honesty', 'Humility', 'Responsibility'],
   },
   {
     category: 'Lifestyle & Freedom',
-    values: [
-      'Freedom', 'Adventure', 'Stability', 'Creativity', 'Spontaneity',
-      'Nature', 'Solitude', 'Play', 'Humor', 'Travel', 'Leisure', 'Work-Life Balance',
-    ],
+    values: ['Freedom', 'Adventure', 'Creativity', 'Stability', 'Nature', 'Play'],
   },
   {
     category: 'Work & Impact',
-    values: [
-      'Impact', 'Wealth', 'Leadership', 'Entrepreneurship', 'Innovation',
-      'Career', 'Expertise', 'Recognition', 'Autonomy',
-    ],
+    values: ['Impact', 'Leadership', 'Innovation', 'Autonomy', 'Expertise', 'Wealth'],
   },
   {
     category: 'Health & Energy',
-    values: [
-      'Health', 'Energy', 'Sleep', 'Fitness', 'Nutrition',
-      'Mental Health', 'Movement', 'Longevity', 'Vitality',
-    ],
+    values: ['Health', 'Fitness', 'Mental Health', 'Sleep', 'Energy', 'Vitality'],
   },
 ]
 

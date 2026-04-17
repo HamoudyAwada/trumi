@@ -324,7 +324,7 @@ export default function Home() {
           <h2 className="home-section__title">My Achievements</h2>
           <div
             className="home-card home-card--achievements home-card--clickable"
-            onClick={() => navigate('/achievements')}
+            onClick={() => navigate('/badges')}
             role="button"
             tabIndex={0}
             onKeyDown={e => e.key === 'Enter' && navigate('/achievements')}

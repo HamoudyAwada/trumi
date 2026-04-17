@@ -1,0 +1,207 @@
+/* ─────────────────────────────────────────────
+   Badge Wall
+   Full grid of earned + locked achievements.
+   Route: /badges
+───────────────────────────────────────────── */
+
+.bw-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  min-height: calc(100dvh - 72px);
+  margin: 0 auto;
+  background-color: var(--color-cloud);
+  box-sizing: border-box;
+}
+
+.bw-content {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 40px;
+  gap: 4px;
+}
+
+/* ── Summary pill ────────────────────────────── */
+
+.bw-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 8px 0 12px;
+}
+
+.bw-summary__count {
+  font-family: var(--font-primary);
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-horizon-violet);
+  line-height: 1;
+}
+
+.bw-summary__label {
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fogstone);
+  line-height: 1;
+}
+
+/* ── Section ─────────────────────────────────── */
+
+.bw-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.bw-section__heading {
+  font-family: var(--font-primary);
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-tranquil-night);
+  margin: 0;
+  padding-top: 8px;
+}
+
+/* ── Badge grid — 3 columns ──────────────────── */
+
+.bw-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 8px;
+}
+
+/* ── Badge tile ──────────────────────────────── */
+
+.bw-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.bw-tile--locked {
+  opacity: 0.55;
+}
+
+/* Badge image container — 90×115 matching Figma spec */
+.bw-tile__badge {
+  position: relative;
+  width: 90px;
+  height: 115px;
+  flex-shrink: 0;
+}
+
+.bw-tile__outer-wrap {
+  position: absolute;
+  top: 1.26%; left: 0; right: 0; bottom: 1.42%;
+}
+
+.bw-tile__inner-wrap {
+  position: absolute;
+  top: 12.5px; left: 13px;
+  width: 63px; height: 88px;
+}
+
+.bw-tile__bg-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+/* Icons */
+.bw-tile__icon {
+  position: absolute;
+}
+
+.bw-tile__icon--target {
+  top: 24px; left: 18px;
+  width: 53px; height: 53px;
+}
+.bw-tile__icon--target img { width: 100%; height: 100%; }
+
+.bw-tile__icon--flame {
+  top: 30px; left: 27px;
+  width: 34px; height: 40px;
+}
+.bw-tile__flame-body { width: 100%; height: 100%; display: block; }
+.bw-tile__flame-ellipse {
+  position: absolute;
+  top: 32.17%; left: 20.93%;
+  right: 18.58%; bottom: 10.43%;
+}
+.bw-tile__flame-ellipse img { width: 100%; height: 100%; }
+
+.bw-tile__icon--dumbbell {
+  top: 33px; left: 8px;
+  width: 70px; height: 43px;
+  transform: rotate(3.92deg);
+}
+.bw-tile__icon--dumbbell img { width: 100%; height: 100%; }
+
+/* Lock icon — centered over inactive badge */
+.bw-tile__lock {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -55%);
+  opacity: 0.5;
+}
+
+/* Count pill */
+.bw-tile__pill {
+  position: absolute;
+  top: 77px; left: 20px;
+  width: 50px; height: 19px;
+  background: #ffffff;
+  border-bottom-width: 3px;
+  border-bottom-style: solid;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bw-tile__pill-num {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-tranquil-night);
+  font-style: italic;
+  line-height: 1;
+}
+
+/* Text below badge */
+.bw-tile__name {
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-tranquil-night);
+  text-align: center;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.bw-tile__desc {
+  font-family: var(--font-primary);
+  font-size: 10px;
+  font-weight: var(--font-weight-book);
+  color: var(--color-fogstone);
+  text-align: center;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* ── Empty state ─────────────────────────────── */
+
+.bw-empty {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  color: var(--color-fogstone);
+  text-align: center;
+  line-height: 1.5;
+  padding: 40px 16px;
+  margin: 0;
+}

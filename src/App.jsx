@@ -20,6 +20,7 @@ import OnboardingStep5   from './pages/OnboardingStep5'
 import OnboardingGoals   from './pages/OnboardingGoals'
 import AccountCreation   from './pages/AccountCreation'
 import LogEntry          from './pages/LogEntry'
+import BadgeWall         from './pages/BadgeWall'
 import NotFound          from './pages/NotFound'
 
 // Checks Supabase (with localStorage as a fast-path cache) before rendering home
@@ -62,6 +63,7 @@ export default function App() {
         <Route path="/chat"              element={<Chat />} />
         <Route path="/add-goal"          element={<AddGoal />} />
         <Route path="/log-entry/:id"     element={<LogEntry />} />
+        <Route path="/badges"            element={<BadgeWall />} />
 
         {/* All main app pages share the BottomNav layout */}
         <Route element={<MainLayout />}>

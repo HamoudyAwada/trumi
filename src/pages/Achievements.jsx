@@ -426,7 +426,7 @@ export default function Achievements() {
 
       {/* ── Achievements ── */}
       <h2 className="ach-page__heading">Achievements</h2>
-      <div className="ach-badges-box">
+      <div className="ach-badges-box" onClick={() => navigate('/badges')} style={{ cursor: 'pointer' }}>
         <div className="ach-badges-row">
           <AchievementBadge variant="goal-setter"    count={stats.totalGoals} />
           <AchievementBadge variant="streak-master"  count={stats.streak} />
@@ -436,7 +436,7 @@ export default function Achievements() {
 
       <button
         className="ach-view-all-btn"
-        onClick={() => {/* TODO: navigate to full achievements list */}}
+        onClick={() => navigate('/badges')}
       >
         View All Achievements
       </button>

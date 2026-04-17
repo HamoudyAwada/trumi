@@ -424,18 +424,23 @@
   gap: 12px;
 }
 
-.gd-values-section__character-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* Row: character overlaps the left side of the banner */
+.gd-values-section__banner-row {
+  position: relative;
   width: 100%;
-  gap: 0;
+  display: flex;
+  align-items: center;
 }
 
 .gd-character-svg {
-  width: 100px;
-  height: 110px;
-  margin-bottom: -4px;
+  /* sits above and to the left, overlapping the banner */
+  position: absolute;
+  left: -8px;
+  bottom: -4px;
+  width: 80px;
+  height: 80px;
+  z-index: 2;
+  flex-shrink: 0;
 }
 
 .gd-values-section__banner {
@@ -443,11 +448,15 @@
   background-color: var(--color-horizon-violet-100);
   border-radius: var(--radius-md);
   text-align: center;
-  padding: 8px 16px;
+  padding: 10px 16px 10px 80px; /* left padding makes room for the character */
   font-family: var(--font-primary);
   font-size: 16px;
   font-weight: var(--font-weight-medium);
   color: var(--color-horizon-violet-800);
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gd-values-section__chips {

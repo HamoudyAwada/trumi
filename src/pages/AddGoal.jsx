@@ -1,80 +1,87 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { suggestSingleGoal } from '../services/ai'
 import './AddGoal.css'
 
-/* ─── Constants ─────────────────────────────────────── */
+/* ─── Constants ─────────────────────────────── */
 
-const TOTAL_STEPS = 9
+const TOTAL_STEPS = 7
+const MAX_TITLE   = 800
+const MAX_MIN     = 300
 
-// Values that conflict with high intensity
-const PEACE_ADJACENT = new Set([
-  'Peace', 'Balance', 'Rest', 'Calm', 'Serenity', 'Harmony', 'Wellness', 'Mindfulness',
-])
+// dot progress per step (5 dots total, steps 1+)
+const DOT_PROGRESS = [0, 1, 1, 2, 3, 4, 5]
 
+/* ─── Flame icon ─────────────────────────────── */
 
-
-/* ─── Flame icon — reused in StepIntensity & StepConfirmation ── */
-
-function FlameIcon({ active, size = 36 }) {
+function FlameIcon({ active, size = 32 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <ellipse cx="12" cy="16.5" rx="6" ry="7.5"
+        fill={active ? '#D7FF8A' : 'var(--color-horizon-violet-100, #e8e8f7)'} />
       <path
-        d="M12 2C12 2 6.5 8.5 6.5 13.5C6.5 16.54 9.02 19 12 19C14.98 19 17.5 16.54 17.5 13.5C17.5 8.5 12 2 12 2Z"
-        fill={active ? 'var(--color-horizon-violet)' : 'var(--color-horizon-violet-200)'}
-        style={{ transition: 'fill 150ms ease' }}
-      />
-      {active && (
-        <path
-          d="M12 9C12 9 10 12 10 13.8C10 14.96 10.9 15.9 12 15.9C13.1 15.9 14 14.96 14 13.8C14 12 12 9 12 9Z"
-          fill="var(--color-horizon-violet-300)"
-        />
-      )}
+        d="M12 24C16.971 24 21 21 21 15.75C21 13.5 20.25 9.75 17.25 6.75C17.625 9 15.375 9.75 15.375 9.75C16.5 6 13.5 0.75 9 0C9.5355 3 9.75 6 6 9C4.125 10.5 3 13.0935 3 15.75C3 21 7.029 24 12 24ZM12 22.5C9.5145 22.5 7.5 21 7.5 18.375C7.5 17.25 7.875 15.375 9.375 13.875C9.1875 15 10.5 15.75 10.5 15.75C9.9375 13.875 11.25 10.875 13.5 10.5C13.2315 12 13.125 13.5 15 15C15.9375 15.75 16.5 17.046 16.5 18.375C16.5 21 14.4855 22.5 12 22.5Z"
+        fill={active ? '#293316' : 'var(--color-horizon-violet-300, #a3a3e0)'} />
     </svg>
   )
 }
 
-const DIFFICULTY_LABELS = {
-  1: 'Very light — easy to fit into your day',
-  2: 'Light — manageable with some consistency',
-  3: 'Moderate — requires real commitment',
-  4: 'Challenging — you\'ll need to push yourself',
-  5: 'Intense — a serious stretch goal',
-}
-
-/* ─── Helpers ───────────────────────────────────────── */
+/* ─── Helpers ────────────────────────────────── */
 
 function loadUserValues() {
   try { return JSON.parse(localStorage.getItem('trumi_values') ?? '{}') } catch { return {} }
 }
 
-function computeAlignment(form, userValues) {
-  const { intensity, values: chosen } = form
-  const top3 = userValues.top3 ?? []
+/* ─── Step 0 — Goal type ─────────────────────── */
 
-  const hasConflict = intensity >= 4 && top3.some(v => PEACE_ADJACENT.has(v))
-  if (hasConflict) {
-    const v = top3.find(v => PEACE_ADJACENT.has(v))
-    return {
-      aligned: false,
-      message: `This might put some pressure on your ${v}. You can always dial back the intensity when you need to — that's not giving up, that's knowing yourself.`,
-    }
-  }
+function StepGoalType({ form, setForm }) {
+  return (
+    <div className="ag-step">
+      <div className="ag-step__prompt">
+        <h2 className="ag-step__title">What Type of Goal Do You Have?</h2>
+        <p className="ag-step__subtitle">
+          Where Trumi really comes to life is after the onboarding — we ask detailed questions because we want to find the best possible methods to help you <em>actually</em> achieve your goals.
+        </p>
+      </div>
 
-  const referenced = (chosen.length > 0 ? chosen : top3).slice(0, 2)
-  if (referenced.length > 0) {
-    return {
-      aligned: true,
-      message: `This goal supports your ${referenced.join(' and ')} and fits well with where you are right now.`,
-    }
-  }
-  return {
-    aligned: true,
-    message: 'This goal looks well-aligned with who you are. You\'ve thought it through.',
-  }
+      <div className="ag-type-cards">
+        <button
+          className={`ag-type-card${form.goalType === 'short' ? ' ag-type-card--selected' : ''}`}
+          onClick={() => setForm(f => ({ ...f, goalType: 'short' }))}
+        >
+          <div className="ag-type-card__header">
+            <span className="ag-type-card__name">Short-Term</span>
+            <span className="ag-type-card__icon" aria-hidden="true">⏩</span>
+          </div>
+          <p className="ag-type-card__body">
+            Short-Term goals are goals that you could achieve within <strong>days</strong>, <strong>weeks</strong>, or a few <strong>months.</strong>
+          </p>
+          <p className="ag-type-card__cta">
+            Use this option for any goals you have that you want to complete in 6-months or less
+          </p>
+        </button>
+
+        <button
+          className={`ag-type-card${form.goalType === 'long' ? ' ag-type-card--selected' : ''}`}
+          onClick={() => setForm(f => ({ ...f, goalType: 'long' }))}
+        >
+          <div className="ag-type-card__header">
+            <span className="ag-type-card__name">Long-Term</span>
+            <span className="ag-type-card__icon" aria-hidden="true">🏃</span>
+          </div>
+          <p className="ag-type-card__body">
+            Long-Term goals require sustained commitment and dedication for at least <strong>6-months</strong> to <strong>a year,</strong> if not longer.
+          </p>
+          <p className="ag-type-card__cta">
+            Use this option for any goals that are long term, or continuous goals you want to achieve for at least 6-months.
+          </p>
+        </button>
+      </div>
+    </div>
+  )
 }
 
-/* ─── Step 1 — Define the Goal ──────────────────────── */
+/* ─── Step 1 — What to accomplish ───────────── */
 
 function StepDefine({ form, setForm, userValues }) {
   const [suggesting,   setSuggesting]   = useState(false)
@@ -89,7 +96,7 @@ function StepDefine({ form, setForm, userValues }) {
         ...f,
         title:             goal.title,
         aiConnectedValues: goal.values ?? [],
-        values:            goal.values ?? [],  // pre-select; user confirms on step 3
+        values:            goal.values ?? [],
       }))
     } catch {
       setSuggestError('Couldn\'t reach Trumi\'s AI — try again in a moment.')
@@ -102,37 +109,35 @@ function StepDefine({ form, setForm, userValues }) {
   return (
     <div className="ag-step">
       <div className="ag-step__prompt">
-        <span className="ag-step__emoji" aria-hidden="true">🎯</span>
         <h2 className="ag-step__title">What do you want to accomplish?</h2>
         <p className="ag-step__subtitle">Be as specific as you like — this is entirely yours.</p>
       </div>
 
-      <textarea
-        className="ag-textarea"
-        value={form.title}
-        onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-        placeholder="e.g. Meditate for 10 minutes each morning"
-        rows={3}
-        autoFocus
-      />
+      <div className="ag-textarea-wrap">
+        <textarea
+          className="ag-textarea"
+          value={form.title}
+          onChange={e => setForm(f => ({ ...f, title: e.target.value.slice(0, MAX_TITLE) }))}
+          placeholder="e.g. Meditate for 10 minutes each morning"
+          rows={5}
+          autoFocus
+        />
+        <span className="ag-textarea__counter">{form.title.length > 0 ? `${form.title.length}/800` : '/800'}</span>
+      </div>
 
-      {/* AI-powered suggestion */}
       <button
         className="ag-ai-suggest-btn"
         onClick={handleSuggest}
         disabled={suggesting}
       >
         {suggesting ? (
-          <>
-            <span className="ag-ai-suggest-btn__spinner" aria-hidden="true" />
-            Thinking…
-          </>
+          <><span className="ag-ai-suggest-btn__spinner" aria-hidden="true" />Thinking…</>
         ) : (
           <>
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
               <path d="M7 0L8.26 5.74L14 7L8.26 8.26L7 14L5.74 8.26L0 7L5.74 5.74Z" fill="currentColor"/>
             </svg>
-            {form.title.trim() ? 'Try a different suggestion' : 'Suggest one for me'}
+            {form.title.trim() ? 'Try a different suggestion' : '+ Suggest one for me'}
           </>
         )}
       </button>
@@ -142,38 +147,101 @@ function StepDefine({ form, setForm, userValues }) {
   )
 }
 
-/* ─── Step 2 — Timeframe ────────────────────────────── */
+/* ─── Step 2 — Define success ────────────────── */
 
-function StepTimeframe({ form, setForm }) {
-  const DAY_OPTIONS = [
-    { label: '1 week',   value: 7  },
-    { label: '2 weeks',  value: 14 },
-    { label: '1 month',  value: 30 },
-    { label: '2 months', value: 60 },
-    { label: '3 months', value: 90 },
-  ]
+function StepSuccess({ form, setForm }) {
+  return (
+    <div className="ag-step">
+      <p className="ag-goal-echo">"{form.title}"</p>
+      <div className="ag-step__prompt">
+        <h2 className="ag-step__title">Define Success For this Goal</h2>
+        <p className="ag-step__subtitle">Is this goal more:</p>
+      </div>
+
+      <div className="ag-success-cards">
+        <button
+          className={`ag-success-card${form.successType === 'outcome' ? ' ag-success-card--selected' : ''}`}
+          onClick={() => setForm(f => ({ ...f, successType: 'outcome' }))}
+        >
+          <p className="ag-success-card__label"><u>Outcome-Based?:</u></p>
+          <p className="ag-success-card__motto">"I'll succeed when I reach a <u>specific target</u>"</p>
+          <div className="ag-success-card__body">
+            <p className="ag-success-card__for">For clear, one-time goals, e.g:</p>
+            <ul className="ag-success-card__examples">
+              <li>"Run a <u>marathon</u>"</li>
+              <li>"Learn <u>500</u> spanish words"</li>
+              <li>"Save <u>$5,000</u>"</li>
+            </ul>
+          </div>
+        </button>
+
+        <button
+          className={`ag-success-card${form.successType === 'habit' ? ' ag-success-card--selected' : ''}`}
+          onClick={() => setForm(f => ({ ...f, successType: 'habit' }))}
+        >
+          <p className="ag-success-card__label"><u>Habit-Based?:</u></p>
+          <p className="ag-success-card__motto">"I'll succeed by staying <u>consistent</u>"</p>
+          <div className="ag-success-card__body">
+            <p className="ag-success-card__for">For Goals that primarily need consistency, e.g:</p>
+            <ul className="ag-success-card__examples">
+              <li>"Go to bed before 10pm"</li>
+              <li>"Workout Regularly"</li>
+              <li>"Journal Daily"</li>
+            </ul>
+          </div>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* ─── Step 3 — Tracking window ───────────────── */
+
+const DAY_OPTIONS = [
+  { label: '1 week', value: 7 },
+  { label: '2 weeks', value: 14 },
+  { label: '1 month', value: 30 },
+  { label: '2 months', value: 60 },
+  { label: '3 months', value: 90 },
+]
+
+const FRICTION_OPTIONS = ['Time', 'Energy', 'Motivation', 'Get Too Busy / Other Priorities']
+
+const EXEC_OPTIONS = [
+  { key: 'daily',    icon: '☀️', label: 'Daily Habit',        desc: 'Every Single Day' },
+  { key: 'weekly',   icon: '🗓️', label: 'A Few Times A Week', desc: 'Consistent, but not daily' },
+  { key: 'flexible', icon: '🌊', label: 'Flexible',            desc: 'Whenever the moment feels right' },
+]
+
+function StepTracking({ form, setForm }) {
+  function toggleFriction(v) {
+    setForm(f => ({
+      ...f,
+      friction: f.friction.includes(v) ? f.friction.filter(x => x !== v) : [...f.friction, v],
+    }))
+  }
 
   return (
     <div className="ag-step">
-      <div className="ag-step__prompt">
-        <span className="ag-step__emoji" aria-hidden="true">⏱</span>
-        <h2 className="ag-step__title">When do you want to complete this?</h2>
-        <p className="ag-step__subtitle">A rough timeframe helps keep this alive — no pressure to be exact.</p>
-      </div>
+      <p className="ag-goal-echo">"{form.title}"</p>
 
-      <div className="ag-timeframe">
-        <div className="ag-timeframe__tabs">
+      {/* Timeframe */}
+      <div className="ag-section">
+        <h2 className="ag-section__title">Tracking Window</h2>
+        <p className="ag-step__subtitle">Do you want to add an ideal completion date?</p>
+
+        <div className="ag-tab-row">
           <button
-            className={`ag-timeframe__tab${form.timeframeType === 'date' ? ' ag-timeframe__tab--active' : ''}`}
+            className={`ag-tab${form.timeframeType === 'date' ? ' ag-tab--active' : ''}`}
             onClick={() => setForm(f => ({ ...f, timeframeType: 'date', dueDays: null }))}
           >
-            Set a date
+            Set a Date
           </button>
           <button
-            className={`ag-timeframe__tab${form.timeframeType === 'days' ? ' ag-timeframe__tab--active' : ''}`}
+            className={`ag-tab${form.timeframeType === 'days' ? ' ag-tab--active' : ''}`}
             onClick={() => setForm(f => ({ ...f, timeframeType: 'days', dueDate: '' }))}
           >
-            Within a timeframe
+            Within a Timeframe
           </button>
         </div>
 
@@ -186,9 +254,8 @@ function StepTimeframe({ form, setForm }) {
             onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))}
           />
         )}
-
         {form.timeframeType === 'days' && (
-          <div className="ag-chips">
+          <div className="ag-chips ag-chips--wrap">
             {DAY_OPTIONS.map(opt => (
               <button
                 key={opt.value}
@@ -201,22 +268,157 @@ function StepTimeframe({ form, setForm }) {
           </div>
         )}
       </div>
+
+      {/* Execution style */}
+      <div className="ag-section">
+        <h2 className="ag-section__title">How Do You Want to Approach This?</h2>
+        <div className="ag-exec-cards">
+          {EXEC_OPTIONS.map(opt => (
+            <button
+              key={opt.key}
+              className={`ag-exec-card${form.executionStyle === opt.key ? ' ag-exec-card--selected' : ''}`}
+              onClick={() => setForm(f => ({ ...f, executionStyle: opt.key }))}
+            >
+              <span className="ag-exec-card__icon" aria-hidden="true">{opt.icon}</span>
+              <div className="ag-exec-card__text">
+                <span className="ag-exec-card__label">{opt.label}</span>
+                <span className="ag-exec-card__desc">{opt.desc}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {form.executionStyle === 'weekly' && (
+          <div className="ag-weekly">
+            <p className="ag-weekly__label">How many times per week?</p>
+            <div className="ag-chips">
+              {[2,3,4,5,6,7].map(n => (
+                <button
+                  key={n}
+                  className={`ag-chip${form.weeklyTimes === n ? ' ag-chip--selected' : ''}`}
+                  onClick={() => setForm(f => ({ ...f, weeklyTimes: n }))}
+                >
+                  {n}×
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Friction */}
+      <div className="ag-section">
+        <h2 className="ag-section__title">What Might Get in the Way?</h2>
+        <p className="ag-step__subtitle">What are some common roadblocks you've run into when tackling your goals?</p>
+        <div className="ag-friction-chips">
+          {FRICTION_OPTIONS.map(opt => (
+            <button
+              key={opt}
+              className={`ag-friction-chip${form.friction.includes(opt) ? ' ag-friction-chip--selected' : ''}`}
+              onClick={() => toggleFriction(opt)}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
 
-/* ─── Step 3 — Value Connection ─────────────────────── */
+/* ─── Step 4 — Difficulty + Minimum version ─── */
+
+const INTENSITY_LABELS = {
+  1: 'Very Light — Easy to fit into your day',
+  2: 'Light — Manageable with some consistency',
+  3: 'Moderate — Requires real commitment',
+  4: 'Challenging — You\'ll need to push yourself',
+  5: 'Intense — A serious stretch goal',
+}
+
+function StepEffort({ form, setForm }) {
+  return (
+    <div className="ag-step">
+      <p className="ag-goal-echo">"{form.title}"</p>
+
+      {/* Intensity */}
+      <div className="ag-section">
+        <h2 className="ag-section__title">How Hard Do You Think This Will Be?</h2>
+        <p className="ag-step__subtitle">Your honest prediction — Trumi will ask you later how it actually felt, so you can see the difference.</p>
+
+        <div className="ag-flame-row">
+          {[1,2,3,4,5].map(n => (
+            <button
+              key={n}
+              className="ag-flame-btn"
+              onClick={() => setForm(f => ({ ...f, intensity: n }))}
+              aria-label={`${n} out of 5`}
+            >
+              <FlameIcon active={form.intensity !== null && n <= form.intensity} />
+            </button>
+          ))}
+        </div>
+        {form.intensity ? (
+          <p className="ag-flame-label">{INTENSITY_LABELS[form.intensity]}</p>
+        ) : (
+          <p className="ag-flame-label ag-flame-label--empty">Tap a flame to rate the difficulty</p>
+        )}
+      </div>
+
+      {/* Minimum version */}
+      <div className="ag-section">
+        <h2 className="ag-section__title">What's the Smallest Version of This Goal?</h2>
+        <p className="ag-step__subtitle">
+          On a difficult, or busy day, what would still count as showing up for this goal?{' '}
+          <strong>Even 5% is still progress.</strong>
+        </p>
+
+        <div className="ag-example-row">
+          <span className="ag-example-row__ex">Ex.</span>
+          <p className="ag-example-row__text">
+            If your goal is to run 5km, your minimum might be:{' '}
+            "Put on my shoes and walk to the end of the block."
+          </p>
+        </div>
+
+        <p className="ag-min-label">On a busy day I can still...</p>
+        <div className="ag-textarea-wrap">
+          <textarea
+            className="ag-textarea"
+            value={form.minimumVersion}
+            onChange={e => setForm(f => ({ ...f, minimumVersion: e.target.value.slice(0, MAX_MIN) }))}
+            placeholder="Walk around the block"
+            rows={4}
+          />
+          <span className="ag-textarea__counter">
+            {form.minimumVersion.length > 0 ? `${form.minimumVersion.length}/300` : '/300'}
+          </span>
+        </div>
+
+        <button className="ag-ai-suggest-btn" disabled>
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M7 0L8.26 5.74L14 7L8.26 8.26L7 14L5.74 8.26L0 7L5.74 5.74Z" fill="currentColor"/>
+          </svg>
+          + Suggest for me
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* ─── Step 5 — Values ────────────────────────── */
 
 function StepValues({ form, setForm, userValues }) {
+  const [showCustom, setShowCustom] = useState(false)
+  const [customVal, setCustomVal]   = useState('')
+
   const aiConnected = form.aiConnectedValues ?? []
-  const hasAiValues = aiConnected.length > 0
-
   const all = [...new Set([...(userValues.top3 ?? []), ...(userValues.top10 ?? [])])]
-  const fallback = ['Health', 'Growth', 'Connection', 'Peace', 'Family', 'Creativity', 'Freedom', 'Balance']
-  const allOptions = all.length > 0 ? all : fallback
+  const fallback = ['Health','Growth','Connection','Peace','Family','Creativity','Freedom','Balance','Play','Mental Health','Self Care','Adventure']
+  const pool = all.length > 0 ? all : fallback
 
-  // Options not already surfaced by the AI (shown in the "add more" section)
-  const remainingOptions = allOptions.filter(v => !aiConnected.includes(v))
+  const primaryChips  = aiConnected.length > 0 ? aiConnected : pool.slice(0, 8)
+  const secondaryPool = pool.filter(v => !primaryChips.includes(v))
 
   function toggle(v) {
     setForm(f => ({
@@ -225,288 +427,86 @@ function StepValues({ form, setForm, userValues }) {
     }))
   }
 
-  return (
-    <div className="ag-step">
-      <div className="ag-step__prompt">
-        <span className="ag-step__emoji" aria-hidden="true">💎</span>
-        <h2 className="ag-step__title">
-          {hasAiValues ? 'Does this feel right?' : 'Which of your values does this support?'}
-        </h2>
-        <p className="ag-step__subtitle">
-          {hasAiValues
-            ? 'Trumi connected your goal to these values. Tap to deselect any that don\'t fit, or add more below.'
-            : 'This is how Trumi connects your goals to what matters most to you. Select one or more.'}
-        </p>
-      </div>
-
-      {/* AI-connected values — shown as a confirmation block */}
-      {hasAiValues && (
-        <div className="ag-ai-values">
-          <p className="ag-ai-values__label">
-            <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path d="M7 0L8.26 5.74L14 7L8.26 8.26L7 14L5.74 8.26L0 7L5.74 5.74Z" fill="currentColor"/>
-            </svg>
-            Connected by Trumi
-          </p>
-          <div className="ag-chips ag-chips--wrap">
-            {aiConnected.map(v => (
-              <button
-                key={v}
-                className={`ag-chip ag-chip--value${form.values.includes(v) ? ' ag-chip--selected' : ''}`}
-                onClick={() => toggle(v)}
-                aria-pressed={form.values.includes(v)}
-              >
-                {v}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* No AI suggestion: full picker */}
-      {!hasAiValues && (
-        <div className="ag-chips ag-chips--wrap">
-          {allOptions.map(v => (
-            <button
-              key={v}
-              className={`ag-chip ag-chip--value${form.values.includes(v) ? ' ag-chip--selected' : ''}`}
-              onClick={() => toggle(v)}
-              aria-pressed={form.values.includes(v)}
-            >
-              {v}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* AI suggestion: secondary section for adding more */}
-      {hasAiValues && remainingOptions.length > 0 && (
-        <div className="ag-values-more">
-          <p className="ag-values-more__label">Add others if you'd like:</p>
-          <div className="ag-chips ag-chips--wrap">
-            {remainingOptions.map(v => (
-              <button
-                key={v}
-                className={`ag-chip ag-chip--value${form.values.includes(v) ? ' ag-chip--selected' : ''}`}
-                onClick={() => toggle(v)}
-                aria-pressed={form.values.includes(v)}
-              >
-                {v}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-/* ─── Step 4 — Perceived Difficulty ────────────────── */
-
-function StepIntensity({ form, setForm }) {
-  const label = form.intensity ? DIFFICULTY_LABELS[form.intensity] : 'Tap a flame to rate the difficulty'
-
-  return (
-    <div className="ag-step">
-      <div className="ag-step__prompt">
-        <span className="ag-step__emoji" aria-hidden="true">🔥</span>
-        <h2 className="ag-step__title">How hard do you think this will be?</h2>
-        <p className="ag-step__subtitle">Your honest prediction — Trumi will ask you later how it actually felt, so you can see the difference.</p>
-      </div>
-
-      <div className="ag-flame-scale">
-        <div className="ag-flame-scale__row">
-          {[1, 2, 3, 4, 5].map(n => (
-            <button
-              key={n}
-              className="ag-flame-btn"
-              onClick={() => setForm(f => ({ ...f, intensity: n }))}
-              aria-label={`${n} out of 5`}
-              aria-pressed={form.intensity >= n}
-            >
-              <FlameIcon active={form.intensity !== null && n <= form.intensity} />
-            </button>
-          ))}
-        </div>
-        <p className="ag-flame-scale__label">{label}</p>
-      </div>
-    </div>
-  )
-}
-
-/* ─── Step 5 — Execution Style ──────────────────────── */
-
-const EXECUTION_OPTIONS = [
-  { key: 'daily',    label: 'Daily habit',      desc: 'Every single day',                  icon: '☀️' },
-  { key: 'weekly',   label: 'A few times a week', desc: 'Consistent, not daily',             icon: '📆' },
-  { key: 'flexible', label: 'Flexible',          desc: 'Whenever the moment feels right',   icon: '🌊' },
-]
-
-function StepExecution({ form, setForm }) {
-  const WEEKLY_TIMES = [2, 3, 4, 5, 6, 7]
-
-  return (
-    <div className="ag-step">
-      <div className="ag-step__prompt">
-        <span className="ag-step__emoji" aria-hidden="true">📅</span>
-        <h2 className="ag-step__title">How do you want to approach this?</h2>
-        <p className="ag-step__subtitle">Pick the rhythm that genuinely fits your life.</p>
-      </div>
-
-      <div className="ag-option-cards">
-        {EXECUTION_OPTIONS.map(opt => (
-          <button
-            key={opt.key}
-            className={`ag-option-card${form.executionStyle === opt.key ? ' ag-option-card--selected' : ''}`}
-            onClick={() => setForm(f => ({ ...f, executionStyle: opt.key }))}
-            aria-pressed={form.executionStyle === opt.key}
-          >
-            <span className="ag-option-card__icon" aria-hidden="true">{opt.icon}</span>
-            <div className="ag-option-card__text">
-              <span className="ag-option-card__label">{opt.label}</span>
-              <span className="ag-option-card__desc">{opt.desc}</span>
-            </div>
-            {form.executionStyle === opt.key && (
-              <svg className="ag-option-card__check" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <circle cx="9" cy="9" r="9" fill="var(--color-horizon-violet)"/>
-                <path d="M5.5 9L7.5 11L12.5 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {form.executionStyle === 'weekly' && (
-        <div className="ag-weekly">
-          <p className="ag-weekly__label">How many times per week?</p>
-          <div className="ag-chips">
-            {WEEKLY_TIMES.map(n => (
-              <button
-                key={n}
-                className={`ag-chip${form.weeklyTimes === n ? ' ag-chip--selected' : ''}`}
-                onClick={() => setForm(f => ({ ...f, weeklyTimes: n }))}
-              >
-                {n}×
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-/* ─── Step 6 — Friction Prediction ─────────────────── */
-
-const FRICTION_OPTIONS = ['Time', 'Energy', 'Motivation', 'Other priorities']
-
-function StepFriction({ form, setForm }) {
-  function toggle(v) {
-    setForm(f => ({
-      ...f,
-      friction: f.friction.includes(v) ? f.friction.filter(x => x !== v) : [...f.friction, v],
-    }))
+  function addCustom() {
+    const v = customVal.trim()
+    if (!v) return
+    setForm(f => ({ ...f, values: [...f.values, v] }))
+    setCustomVal('')
+    setShowCustom(false)
   }
 
+  const hasAi = aiConnected.length > 0
+
   return (
     <div className="ag-step">
+      <p className="ag-goal-echo">"{form.title}"</p>
+
       <div className="ag-step__prompt">
-        <span className="ag-step__emoji" aria-hidden="true">🚧</span>
-        <h2 className="ag-step__title">What might get in the way?</h2>
-        <p className="ag-step__subtitle">Knowing your friction points helps Trumi reach out at the right moment. Select all that apply.</p>
-      </div>
-
-      <div className="ag-friction-list">
-        {FRICTION_OPTIONS.map(opt => (
-          <button
-            key={opt}
-            className={`ag-friction-item${form.friction.includes(opt) ? ' ag-friction-item--selected' : ''}`}
-            onClick={() => toggle(opt)}
-            aria-pressed={form.friction.includes(opt)}
-          >
-            <span className="ag-friction-item__label">{opt}</span>
-            {form.friction.includes(opt) && (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3.5 8L6.5 11L12.5 5" stroke="var(--color-horizon-violet)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/* ─── Step 7 — Minimum Version ──────────────────────── */
-
-function StepMinimumVersion({ form, setForm }) {
-  return (
-    <div className="ag-step">
-      <div className="ag-step__prompt">
-        <span className="ag-step__emoji" aria-hidden="true">🔁</span>
-        <h2 className="ag-step__title">What's the smallest version of this goal?</h2>
-        <p className="ag-step__subtitle">On a hard or busy day, what would still count as showing up? Even 10% is real progress.</p>
-      </div>
-
-      <div className="ag-callout">
-        <p className="ag-callout__text">
-          If your goal is to run 5km, your minimum might be: <em>"Put on my shoes and walk to the end of the block."</em>
+        <h2 className="ag-step__title">Does This Feel Right?</h2>
+        <p className="ag-step__subtitle">
+          {hasAi
+            ? "Trumi thinks that this goal supports these values. Tap to deselect any that don't fit, or add more below."
+            : 'Which of your values does this goal support? Select one or more.'}
         </p>
       </div>
 
-      <textarea
-        className="ag-textarea"
-        value={form.minimumVersion}
-        onChange={e => setForm(f => ({ ...f, minimumVersion: e.target.value }))}
-        placeholder="On a busy day, I can still…"
-        rows={3}
-      />
+      <div className="ag-value-chips">
+        {primaryChips.map(v => (
+          <button
+            key={v}
+            className={`ag-value-chip${form.values.includes(v) ? ' ag-value-chip--selected' : ''}`}
+            onClick={() => toggle(v)}
+          >
+            {v}
+          </button>
+        ))}
+      </div>
+
+      {secondaryPool.length > 0 && (
+        <div className="ag-values-more">
+          <p className="ag-values-more__label">+ Add Others</p>
+          <div className="ag-value-chips">
+            {secondaryPool.map(v => (
+              <button
+                key={v}
+                className={`ag-value-chip${form.values.includes(v) ? ' ag-value-chip--selected' : ''}`}
+                onClick={() => toggle(v)}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!showCustom ? (
+        <button className="ag-value-chip ag-value-chip--custom" onClick={() => setShowCustom(true)}>
+          + Use my own words
+        </button>
+      ) : (
+        <div className="ag-custom-form">
+          <input
+            className="ag-custom-form__input"
+            value={customVal}
+            onChange={e => setCustomVal(e.target.value)}
+            placeholder="Type a value…"
+            autoFocus
+            onKeyDown={e => e.key === 'Enter' && addCustom()}
+          />
+          <button className="ag-custom-form__add" onClick={addCustom}>Add</button>
+          <button className="ag-custom-form__cancel" onClick={() => setShowCustom(false)}>✕</button>
+        </div>
+      )}
     </div>
   )
 }
 
-/* ─── Step 8 — Alignment Check ──────────────────────── */
-
-function StepAlignment({ checking, result }) {
-  return (
-    <div className="ag-step ag-step--centered">
-      {checking && (
-        <div className="ag-alignment-loading">
-          <div className="ag-alignment-spinner" aria-hidden="true" />
-          <p className="ag-alignment-loading__text">Trumi is reading your goal…</p>
-        </div>
-      )}
-
-      {!checking && result && (
-        <div className={`ag-alignment-result${result.aligned ? ' ag-alignment-result--aligned' : ' ag-alignment-result--caution'}`}>
-          <span className="ag-alignment-result__icon" aria-hidden="true">
-            {result.aligned ? (
-              <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-                <circle cx="18" cy="18" r="18" fill="var(--color-lucent-green, #cdff6d)" fillOpacity="0.3"/>
-                <path d="M11 18.5L15.5 23L25 13" stroke="var(--color-tranquil-night, #0f1c3f)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            ) : (
-              <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-                <circle cx="18" cy="18" r="18" fill="#fff0cc"/>
-                <path d="M18 12v8M18 22v2" stroke="#b07800" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            )}
-          </span>
-          <p className="ag-alignment-result__message">{result.message}</p>
-        </div>
-      )}
-    </div>
-  )
-}
-
-/* ─── Step 9 — Confirmation ─────────────────────────── */
+/* ─── Step 6 — Confirmation ──────────────────── */
 
 function StepConfirmation({ form }) {
-  function formatTimeframe() {
+  function formatDue() {
     if (form.timeframeType === 'date' && form.dueDate) {
-      return new Date(form.dueDate + 'T00:00:00').toLocaleDateString('en-US', {
-        month: 'long', day: 'numeric', year: 'numeric',
-      })
+      return new Date(form.dueDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
     }
     if (form.timeframeType === 'days' && form.dueDays) {
       const d = new Date()
@@ -516,129 +516,120 @@ function StepConfirmation({ form }) {
     return null
   }
 
-  function formatExecution() {
+  function formatExec() {
     if (form.executionStyle === 'daily')    return 'Every day'
     if (form.executionStyle === 'weekly')   return `${form.weeklyTimes}× per week`
     if (form.executionStyle === 'flexible') return 'Flexible — whenever you can'
     return null
   }
 
-  const timeframe = formatTimeframe()
-  const execution = formatExecution()
+  const today    = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+  const dueLabel = formatDue()
+  const execLabel = formatExec()
 
   return (
     <div className="ag-step">
       <div className="ag-step__prompt">
-        <h2 className="ag-step__title">Here's your goal</h2>
-        <p className="ag-step__subtitle">Everything looks good. Whenever you're ready, add it.</p>
+        <h2 className="ag-step__title">Here's Your Goal</h2>
+        <p className="ag-step__subtitle">If everything looks right, go ahead and add it to your active goals!</p>
       </div>
 
       <div className="ag-confirm-card">
-        <h3 className="ag-confirm-card__title">{form.title}</h3>
+        {/* Title band */}
+        <div className="ag-confirm-card__band">
+          <h3 className="ag-confirm-card__title">{form.title}</h3>
+        </div>
 
-        {timeframe && (
-          <div className="ag-confirm-row">
-            <span className="ag-confirm-row__label">Complete by</span>
-            <span className="ag-confirm-row__value">{timeframe}</span>
-          </div>
-        )}
+        {/* Meta row */}
+        <div className="ag-confirm-card__meta">
+          <span className="ag-confirm-card__meta-item">
+            Goal Started: <u>{today}</u>
+          </span>
+          {dueLabel && (
+            <span className="ag-confirm-card__meta-item ag-confirm-card__meta-item--right">
+              Current Tracking Window: Until <u>{dueLabel}</u>
+            </span>
+          )}
+        </div>
 
-        {execution && (
-          <div className="ag-confirm-row">
-            <span className="ag-confirm-row__label">Approach</span>
-            <span className="ag-confirm-row__value">{execution}</span>
-          </div>
-        )}
+        <div className="ag-confirm-card__body">
+          {/* Execution */}
+          {execLabel && (
+            <p className="ag-confirm-card__exec">{execLabel}</p>
+          )}
 
-        {form.intensity && (
-          <div className="ag-confirm-row">
-            <span className="ag-confirm-row__label">Predicted effort</span>
-            <div className="ag-confirm-flames">
-              {[1, 2, 3, 4, 5].map(n => (
-                <FlameIcon key={n} active={n <= form.intensity} size={18} />
+          {/* Flames */}
+          {form.intensity && (
+            <div className="ag-confirm-card__flames">
+              {[1,2,3,4,5].map(n => (
+                <FlameIcon key={n} active={n <= form.intensity} size={20} />
+              ))}
+              <span className="ag-confirm-card__intensity-text">
+                {INTENSITY_LABELS[form.intensity]}
+              </span>
+            </div>
+          )}
+
+          {/* Values */}
+          {form.values.length > 0 && (
+            <div className="ag-confirm-card__values">
+              {form.values.map(v => (
+                <span key={v} className="ag-confirm-value-chip">{v}</span>
               ))}
             </div>
-          </div>
-        )}
+          )}
 
-        {form.values.length > 0 && (
-          <div className="ag-confirm-values">
-            {form.values.map(v => (
-              <span key={v} className="ag-confirm-value-chip">{v}</span>
-            ))}
-          </div>
-        )}
-
-        {form.minimumVersion && (
-          <div className="ag-confirm-minimum">
-            <span className="ag-confirm-minimum__label">On a busy day:</span>
-            <span className="ag-confirm-minimum__text">{form.minimumVersion}</span>
-          </div>
-        )}
+          {/* Minimum version */}
+          {form.minimumVersion && (
+            <div className="ag-confirm-card__min">
+              <span className="ag-confirm-card__min-label">On a busy day:</span>
+              <span className="ag-confirm-card__min-text">{form.minimumVersion}</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
 }
 
-/* ─── Main AddGoal component ────────────────────────── */
+/* ─── Main ───────────────────────────────────── */
 
 export default function AddGoal() {
   const navigate = useNavigate()
 
   const [step, setStep] = useState(0)
   const [form, setForm] = useState({
-    title: '',
-    timeframeType: null,  // 'date' | 'days'
-    dueDate: '',
-    dueDays: null,
-    values: [],
-    aiConnectedValues: [],// values the AI returned with its suggestion (empty = user typed their own goal)
-    intensity: null,      // 1–5 perceived difficulty (null = not yet set)
-    executionStyle: null, // 'daily' | 'weekly' | 'flexible'
-    weeklyTimes: 3,
-    friction: [],
-    minimumVersion: '',
+    goalType:          null,
+    title:             '',
+    aiConnectedValues: [],
+    successType:       null,
+    timeframeType:     null,
+    dueDate:           '',
+    dueDays:           null,
+    executionStyle:    null,
+    weeklyTimes:       3,
+    friction:          [],
+    intensity:         null,
+    minimumVersion:    '',
+    values:            [],
   })
-  const [alignmentResult,   setAlignmentResult]   = useState(null)
-  const [alignmentChecking, setAlignmentChecking] = useState(false)
   const [userValues] = useState(loadUserValues)
-
-  // Trigger alignment check when landing on step 7
-  useEffect(() => {
-    if (step !== 7) return
-    setAlignmentChecking(true)
-    setAlignmentResult(null)
-    const timer = setTimeout(() => {
-      setAlignmentResult(computeAlignment(form, userValues))
-      setAlignmentChecking(false)
-    }, 1800)
-    return () => clearTimeout(timer)
-  }, [step]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function canAdvance() {
     switch (step) {
-      case 0: return form.title.trim().length > 0
-      case 1: return form.timeframeType === 'date'
-                ? form.dueDate !== ''
-                : form.dueDays !== null
-      case 2: return form.values.length > 0
-      case 3: return form.intensity !== null
-      case 4: return form.executionStyle !== null
-      case 5: return true  // friction is optional
-      case 6: return true  // minimum version is optional
-      case 7: return !alignmentChecking && alignmentResult !== null
+      case 0: return form.goalType !== null
+      case 1: return form.title.trim().length > 0
+      case 2: return true
+      case 3: return form.executionStyle !== null
+      case 4: return true
+      case 5: return true
       default: return true
     }
   }
 
-  function handleNext() {
-    const next = step + 1
-    // Pre-select top3 values when arriving at the values step — but only if AI hasn't already set them
-    if (next === 2 && form.values.length === 0 && form.aiConnectedValues.length === 0 && userValues.top3?.length > 0) {
-      setForm(f => ({ ...f, values: userValues.top3.slice(0, 2) }))
-    }
-    setStep(next)
-  }
+  const canSkip = step === 2 || step === 3 || step === 4 || step === 5
+
+  function handleNext() { setStep(s => s + 1) }
 
   function handleBack() {
     if (step === 0) navigate('/goals')
@@ -650,7 +641,7 @@ export default function AddGoal() {
       try { return JSON.parse(localStorage.getItem('trumi_goals') ?? '[]') } catch { return [] }
     })()
 
-    const now       = new Date()
+    const now      = new Date()
     const dateLabel = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 
     let dueDateLabel = null
@@ -665,111 +656,102 @@ export default function AddGoal() {
     }
 
     const newGoal = {
-      id:              Date.now(),
-      title:           form.title,
-      description:     form.minimumVersion ? `On a busy day: ${form.minimumVersion}` : '',
-      aka:             '',
-      startDate:       dateLabel,
-      dueDate:         dueDateLabel,
-      pausedDate:      null,
-      status:          'active',
-      term:            'short',
+      id:                   Date.now(),
+      title:                form.title,
+      description:          form.minimumVersion ? `On a busy day: ${form.minimumVersion}` : '',
+      aka:                  '',
+      startDate:            dateLabel,
+      dueDate:              dueDateLabel,
+      pausedDate:           null,
+      status:               'active',
+      term:                 form.goalType === 'long' ? 'long' : 'short',
+      successType:          form.successType,
       intensity:            form.intensity,
-      perceivedDifficulty:  form.intensity,   // captured at creation; actualDifficulty filled on progress log
-      progress:        0,
-      progressMessage: '',
-      values:          form.values,
-      executionStyle:  form.executionStyle,
-      weeklyTimes:     form.weeklyTimes,
-      friction:        form.friction,
-      minimumVersion:  form.minimumVersion,
+      perceivedDifficulty:  form.intensity,
+      progress:             0,
+      progressMessage:      '',
+      values:               form.values,
+      executionStyle:       form.executionStyle,
+      weeklyTimes:          form.weeklyTimes,
+      friction:             form.friction,
+      minimumVersion:       form.minimumVersion,
+      loggedDays:           [],
     }
 
     localStorage.setItem('trumi_goals', JSON.stringify([...existing, newGoal]))
     navigate('/goals')
   }
 
-
-  function ctaLabel() {
-    if (step === 6) return 'See how this feels'
-    if (step === 7) return alignmentResult?.aligned ? 'This works for me' : 'I\'ll keep that in mind'
-    return 'Continue'
-  }
-
-  const isFinalStep = step === TOTAL_STEPS - 1
-  const canSkip     = step === 5 || step === 6
+  const isFinal = step === TOTAL_STEPS - 1
+  const dotsFilled = DOT_PROGRESS[step] ?? 0
 
   return (
-    <div className="add-goal-page">
-
-      {/* Progress bar */}
-      <div className="add-goal__progress-track" aria-hidden="true">
-        <div
-          className="add-goal__progress-fill"
-          style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
-        />
-      </div>
+    <div className="ag-page">
 
       {/* Header */}
-      <div className="add-goal__header">
-        <button className="add-goal__back-btn" onClick={handleBack} aria-label="Go back">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M11.5 14L6.5 9L11.5 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+      <div className="ag-header">
+        <div className="ag-header__brand">
+          {/* Trumi sun logo mark */}
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="3.5" fill="var(--color-horizon-violet)" />
+            <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"
+              stroke="var(--color-horizon-violet)" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
-        </button>
-
-        {/* Step dots */}
-        <div className="add-goal__dots" aria-hidden="true">
-          {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-            <span
-              key={i}
-              className={`add-goal__dot${i < step ? ' add-goal__dot--past' : ''}${i === step ? ' add-goal__dot--current' : ''}`}
-            />
-          ))}
+          <span className="ag-header__wordmark">trumi</span>
         </div>
 
-        <span style={{ width: 32 }} />
+        {/* Step dots — visible only for steps 1–6 */}
+        {step > 0 && (
+          <div className="ag-dots" aria-hidden="true">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <span
+                key={i}
+                className={`ag-dot${i < dotsFilled ? ' ag-dot--filled' : ''}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
+      {/* Back button */}
+      <button className="ag-back-btn" onClick={handleBack} aria-label="Go back">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M11.5 14L6.5 9L11.5 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
       {/* Step content */}
-      <div className="add-goal__content" key={step}>
-        {step === 0 && <StepDefine          form={form} setForm={setForm} userValues={userValues} />}
-        {step === 1 && <StepTimeframe       form={form} setForm={setForm} />}
-        {step === 2 && <StepValues          form={form} setForm={setForm} userValues={userValues} />}
-        {step === 3 && <StepIntensity       form={form} setForm={setForm} />}
-        {step === 4 && <StepExecution       form={form} setForm={setForm} />}
-        {step === 5 && <StepFriction        form={form} setForm={setForm} />}
-        {step === 6 && <StepMinimumVersion  form={form} setForm={setForm} />}
-        {step === 7 && <StepAlignment       checking={alignmentChecking} result={alignmentResult} />}
-        {step === 8 && <StepConfirmation    form={form} />}
+      <div className="ag-content" key={step}>
+        {step === 0 && <StepGoalType    form={form} setForm={setForm} />}
+        {step === 1 && <StepDefine      form={form} setForm={setForm} userValues={userValues} />}
+        {step === 2 && <StepSuccess     form={form} setForm={setForm} />}
+        {step === 3 && <StepTracking    form={form} setForm={setForm} />}
+        {step === 4 && <StepEffort      form={form} setForm={setForm} />}
+        {step === 5 && <StepValues      form={form} setForm={setForm} userValues={userValues} />}
+        {step === 6 && <StepConfirmation form={form} />}
       </div>
 
       {/* Footer */}
-      <div className="add-goal__footer">
-        {isFinalStep ? (
-          <>
-            <button className="add-goal__cta-btn" onClick={handleSave}>
-              Add to my goals
-            </button>
-            <button className="add-goal__ghost-btn" onClick={() => navigate('/goals')}>
-              Maybe later
-            </button>
-          </>
+      <div className="ag-footer">
+        {isFinal ? (
+          <button className="ag-cta-btn" onClick={handleSave}>
+            Add to My Goals
+          </button>
         ) : (
-          <>
+          <div className="ag-footer__row">
             <button
-              className="add-goal__cta-btn"
+              className="ag-cta-btn"
               onClick={handleNext}
               disabled={!canAdvance()}
             >
-              {ctaLabel()}
+              Next
             </button>
             {canSkip && (
-              <button className="add-goal__ghost-btn" onClick={handleNext}>
-                Skip for now
+              <button className="ag-skip-btn" onClick={handleNext}>
+                {step === 2 ? "I'm not sure... skip" : 'skip'}
               </button>
             )}
-          </>
+          </div>
         )}
       </div>
 

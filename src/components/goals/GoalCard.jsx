@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import FlameIcon from '../ui/FlameIcon'
 import './GoalCard.css'
 
 /* ── Helpers ──────────────────────────────────────────────────────────── */
@@ -216,10 +217,7 @@ export default function GoalCard({
       {/* ── Insight + today's ring ── */}
       <div className="goal-card__insight-row">
         <div className="goal-card__insight-left">
-          <svg className="goal-card__flame" width="28" height="34" viewBox="0 0 22 29" fill="none" aria-hidden="true">
-            <path d="M11 29C15.418 29 19 26.25 19 21.375C19 19.125 18.225 15.375 15.525 12.375C15.9 14.625 13.65 15.375 13.65 15.375C14.85 11.625 11.85 6.375 7.35 5.625C7.881 8.625 8.1 11.625 4.35 14.625C2.475 16.125 1.35 18.7185 1.35 21.375C1.35 26.25 6.582 29 11 29Z" fill="#FF8B0B"/>
-            <ellipse cx="11" cy="22.5" rx="5" ry="5.5" fill="#FFD060" opacity="0.75"/>
-          </svg>
+          <FlameIcon active size={28} />
           <p className="goal-card__insight-text">
             {isPaused
               ? "This goal is paused. Resume whenever you're ready."

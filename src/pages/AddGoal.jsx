@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { suggestSingleGoal } from '../services/ai'
 import PageHeader from '../components/ui/PageHeader'
+import FlameIcon from '../components/ui/FlameIcon'
 import './AddGoal.css'
 
 /* ─── Constants ─────────────────────────────── */
@@ -12,20 +13,6 @@ const MAX_MIN     = 300
 
 // dot progress per step (5 dots total, steps 1+)
 const DOT_PROGRESS = [0, 1, 1, 2, 3, 4, 5]
-
-/* ─── Flame icon ─────────────────────────────── */
-
-function FlameIcon({ active, size = 32 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <ellipse cx="12" cy="16.5" rx="6" ry="7.5"
-        fill={active ? '#D7FF8A' : 'var(--color-horizon-violet-100, #e8e8f7)'} />
-      <path
-        d="M12 24C16.971 24 21 21 21 15.75C21 13.5 20.25 9.75 17.25 6.75C17.625 9 15.375 9.75 15.375 9.75C16.5 6 13.5 0.75 9 0C9.5355 3 9.75 6 6 9C4.125 10.5 3 13.0935 3 15.75C3 21 7.029 24 12 24ZM12 22.5C9.5145 22.5 7.5 21 7.5 18.375C7.5 17.25 7.875 15.375 9.375 13.875C9.1875 15 10.5 15.75 10.5 15.75C9.9375 13.875 11.25 10.875 13.5 10.5C13.2315 12 13.125 13.5 15 15C15.9375 15.75 16.5 17.046 16.5 18.375C16.5 21 14.4855 22.5 12 22.5Z"
-        fill={active ? '#293316' : 'var(--color-horizon-violet-300, #a3a3e0)'} />
-    </svg>
-  )
-}
 
 /* ─── Helpers ────────────────────────────────── */
 

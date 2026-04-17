@@ -69,7 +69,7 @@ export default function OnboardingStep4() {
 
       {/* Back navigation */}
       <div className="ob-header">
-        <button className="ob-back-btn" onClick={() => navigate('/onboarding/step/3', { state: { top10, top3, valueLooks, tradeoffs } })} aria-label="Go back">
+        <button className="ob-back-btn" onClick={() => navigate('/onboarding/step/2', { state: { top10, top3, valueLooks } })} aria-label="Go back">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
             <path d="M11.5 14L6.5 9L11.5 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>

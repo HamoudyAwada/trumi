@@ -398,11 +398,16 @@ export default function Chat() {
             </svg>
           </button>
 
-          <input
+          <textarea
             className="chat-input-bar__field"
-            type="text"
+            rows={1}
             value={input}
-            onChange={e => setInput(e.target.value)}
+            onChange={e => {
+              setInput(e.target.value)
+              // Auto-grow: reset height first so shrinking works
+              e.target.style.height = 'auto'
+              e.target.style.height = `${e.target.scrollHeight}px`
+            }}
             onKeyDown={handleKeyDown}
             placeholder={`Message ${characterName}…`}
             aria-label="Type a message"

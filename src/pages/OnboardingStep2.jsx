@@ -278,7 +278,7 @@ export default function OnboardingStep2() {
         <button
           className="ob-btn"
           disabled={!canContinue}
-          onClick={() => navigate('/onboarding/step/3', { state: { top10, top3, valueLooks } })}
+          onClick={() => navigate('/onboarding/step/4', { state: { top10, top3, valueLooks } })}
         >
           Continue
         </button>

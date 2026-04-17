@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/ui/PageHeader'
+import FlameIcon from '../components/ui/FlameIcon'
 import './Achievements.css'
 
 /* ── Data helpers ─────────────────────────────── */
@@ -177,16 +178,6 @@ function AchievementBadge({ variant, count }) {
 
 /* ── Stat icons ───────────────────────────────── */
 
-function StreakFlameIcon({ size = 22 }) {
-  const h = Math.round(size * 1.32)
-  return (
-    <svg width={size} height={h} viewBox="0 0 22 29" fill="none" aria-hidden="true">
-      <path d="M11 29C15.418 29 19 26.25 19 21.375C19 19.125 18.225 15.375 15.525 12.375C15.9 14.625 13.65 15.375 13.65 15.375C14.85 11.625 11.85 6.375 7.35 5.625C7.881 8.625 8.1 11.625 4.35 14.625C2.475 16.125 1.35 18.7185 1.35 21.375C1.35 26.25 6.582 29 11 29Z"
-        fill="#FF8B0B" />
-      <ellipse cx="11" cy="22.5" rx="5" ry="5.5" fill="#FFD060" opacity="0.75" />
-    </svg>
-  )
-}
 
 function DumbbellStatIcon({ size = 26 }) {
   return (
@@ -407,7 +398,7 @@ export default function Achievements() {
           </div>
 
           <div className="ach-stat-card">
-            <StreakFlameIcon size={22} />
+            <FlameIcon active size={28} />
             <span className="ach-stat-card__label">
               <strong>{stats.streak}</strong> Day Streak
             </span>

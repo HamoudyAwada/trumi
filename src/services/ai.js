@@ -113,6 +113,27 @@ export async function suggestSingleGoal(userValues) {
 }
 
 /**
+ * Get a contextual action button label and progress unit for a goal card.
+ * Cached — callers should only call this when the goal doesn't already have meta stored.
+ * @param {{ title: string, successType: string, executionStyle: string, weeklyTimes?: number }} goal
+ * @returns {Promise<{ actionLabel: string, unit: string }>}
+ */
+export async function getGoalMeta({ title, successType, executionStyle, weeklyTimes }) {
+  const res = await fetch('/api/goal-meta', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, successType, executionStyle, weeklyTimes }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error ?? `Server error ${res.status}`)
+  }
+
+  return res.json()
+}
+
+/**
  * Generate a reflective insight for a check-in.
  * @param {Object} checkinData
  * @param {'daily'|'weekly'|'monthly'} period

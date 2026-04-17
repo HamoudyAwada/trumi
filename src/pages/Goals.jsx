@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import GoalCard from '../components/goals/GoalCard'
 import PageHeader from '../components/ui/PageHeader'
+import { getGoalMeta } from '../services/ai'
 import './Goals.css'
 
 /* ── Bullseye + arrows icon ── */
@@ -44,6 +45,59 @@ export default function Goals() {
   const [termFilter,   setTermFilter]   = useState('short')
   const [statusFilter, setStatusFilter] = useState('active')
   const [goals, setGoals] = useState(loadGoals)
+
+  // Fetch AI-generated meta for goals that don't have it yet (cached in localStorage after first fetch)
+  useEffect(() => {
+    const goalsNeedingMeta = goals.filter(g => g.unit == null)
+    if (goalsNeedingMeta.length === 0) return
+
+    goalsNeedingMeta.forEach(goal => {
+      getGoalMeta({
+        title:          goal.title,
+        successType:    goal.successType,
+        executionStyle: goal.executionStyle,
+        weeklyTimes:    goal.weeklyTimes,
+      }).then(meta => {
+        setGoals(prev => {
+          const updated = prev.map(g =>
+            g.id === goal.id
+              ? { ...g,
+                  actionLabel: meta.actionLabel,
+                  unit:        meta.unit,
+                }
+              : g
+          )
+          localStorage.setItem('trumi_goals', JSON.stringify(updated))
+          return updated
+        })
+      }).catch(() => {
+        // Silently ignore — card shows fallback defaults
+      })
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Quick-complete: mark today as 100% done, auto-add to loggedDays
+  function handleQuickComplete(goalId) {
+    setGoals(prev => {
+      const todayStr = new Date().toISOString().split('T')[0]
+      const updated  = prev.map(g => {
+        if (g.id !== goalId) return g
+        const dailyLogs  = { ...(g.dailyLogs ?? {}), [todayStr]: 100 }
+        const loggedDays = g.loggedDays ?? []
+        const newLoggedDays = loggedDays.includes(todayStr)
+          ? loggedDays
+          : [...loggedDays, todayStr]
+        return { ...g, dailyLogs, loggedDays: newLoggedDays }
+      })
+      localStorage.setItem('trumi_goals', JSON.stringify(updated))
+      return updated
+    })
+  }
+
+  // Create Entry: navigate to dedicated log screen (design coming later)
+  function handleCreateEntry(goalId) {
+    navigate(`/log-entry/${goalId}`)
+  }
 
   const activeCount = goals.filter(g => g.status === 'active').length
   const pausedCount = goals.filter(g => g.status === 'paused').length
@@ -123,11 +177,17 @@ export default function Goals() {
               {filtered.map(goal => (
                 <li key={goal.id}>
                   <GoalCard
-                    {...goal}
-                    onClick={() => navigate(`/goal/${goal.id}`)}
-                    onLogProgress={() => {}}
-                    onLogSetback={() => {}}
-                    onUnpause={() => {}}
+                    id={goal.id}
+                    title={goal.title}
+                    aka={goal.aka}
+                    startDate={goal.startDate}
+                    status={goal.status}
+                    loggedDays={goal.loggedDays ?? []}
+                    dailyLogs={goal.dailyLogs ?? {}}
+                    unit={goal.unit}
+                    actionLabel={goal.actionLabel ?? null}
+                    onQuickComplete={handleQuickComplete}
+                    onCreateEntry={handleCreateEntry}
                     onSettings={() => {}}
                   />
                 </li>

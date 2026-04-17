@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate }          from 'react-router-dom'
 import PageHeader               from '../components/ui/PageHeader'
 import CharacterCanvas          from '../components/character/CharacterCanvas'
@@ -11,8 +11,18 @@ import './Character.css'
 export default function Character() {
   const navigate = useNavigate()
 
-  const [selections, setSelections]         = useState(DEFAULT_CHARACTER)
+  const [selections, setSelections] = useState(() => {
+    try {
+      const saved = localStorage.getItem('trumi_character')
+      return saved ? { ...DEFAULT_CHARACTER, ...JSON.parse(saved) } : DEFAULT_CHARACTER
+    } catch { return DEFAULT_CHARACTER }
+  })
   const [activeCategory, setActiveCategory] = useState('hair')
+
+  // Persist whenever the user changes anything
+  useEffect(() => {
+    localStorage.setItem('trumi_character', JSON.stringify(selections))
+  }, [selections])
   const [isEditingName, setIsEditingName]   = useState(false)
   const [isEditing, setIsEditing]           = useState(false)
   const nameInputRef = useRef(null)

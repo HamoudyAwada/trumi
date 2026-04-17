@@ -26,20 +26,6 @@ export default function Onboarding() {
         This questionnaire is meant to help you rediscover who you are and what <em>drives you.</em>
       </p>
 
-      <p className="ob-intro__question">
-        Trumi wants to help you answer the question:<br />
-        "How Can I Become More Truly and Authentically <em>Me</em>"
-      </p>
-
-      <p className="ob-intro__body">
-        Understanding your values will help you better recognize what actually matters to you.<br /><br />
-        Trumi helps you ensure that your goals and daily living, matches with your best self — based on <em>your values.</em>
-      </p>
-
-      <p className="ob-intro__nudge">What you put in is what you get out:</p>
-      <p className="ob-intro__timing">
-        This Questionnaire Takes about 2–3 minutes, depending on your amount of detail.
-      </p>
 
       {/* Privacy checkbox */}
       <label className="ob-intro__privacy">

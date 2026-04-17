@@ -333,13 +333,54 @@
   margin: 0 16px;
   border: 1px solid var(--color-horizon-violet);
   border-radius: var(--radius-sm);
-  padding: 16px 14px;
+  padding: 20px 24px;
   background-color: var(--color-cloud);
   overflow: hidden;
 }
 
-.ach-journey__svg {
+/* Wrapper scales to fill the box */
+.ach-journey__wrapper {
   width: 100%;
-  height: auto;
+}
+
+/* Canvas: maintains the Figma canvas ratio 305 : 100.815 ≈ 3.025 */
+.ach-journey__canvas {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 305 / 101;
+  overflow: visible;
+}
+
+/* All positioned children share these base styles */
+.ach-journey__node,
+.ach-journey__connector,
+.ach-journey__decor {
+  position: absolute;
+}
+
+/* Node images fill their bounding box */
+.ach-journey__node {
+  /* inset set via inline style */
+}
+
+/* Connector outer box — clips nothing, lets inner bleed show */
+.ach-journey__connector {
+  /* overflow: visible so inner bleed images render outside */
+  overflow: visible;
+}
+
+/* Inner container for connector/decor images (can be oversized for bleed) */
+.ach-journey__connector-inner,
+.ach-journey__decor-inner {
+  position: absolute;
+}
+
+/* All leaf images fill 100% of their direct parent */
+.ach-journey__fill-img {
   display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
 }

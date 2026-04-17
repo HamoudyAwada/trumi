@@ -43,11 +43,24 @@ function computeStats(goals) {
 }
 
 /* ─────────────────────────────────────────────────
-   Badge image assets — fetched from Figma MCP.
-   These URLs are valid for 7 days.
-   For production: save to /public/assets/badges/
-   and update the paths below.
+   Figma image assets — fetched from Figma MCP.
+   URLs valid for 7 days.
+   For production: save to /public/assets/ and
+   update paths below.
 ───────────────────────────────────────────────── */
+
+/* Journey Map assets */
+const JM_COIN_FILLED  = 'https://www.figma.com/api/mcp/asset/f56337ed-dcb4-400d-a096-0622517425ca'
+const JM_COIN_ALT     = 'https://www.figma.com/api/mcp/asset/6ca8e8c9-51a7-4704-9d44-45207986cbb3'
+const JM_CONNECTOR_1  = 'https://www.figma.com/api/mcp/asset/31e3fd5e-8e15-4525-9da6-75fc4ed2fb74'
+const JM_CONNECTOR_2  = 'https://www.figma.com/api/mcp/asset/3ebee800-3ad1-40cd-82bf-75d9142bbc39'
+const JM_CONNECTOR_3  = 'https://www.figma.com/api/mcp/asset/5a1f7fba-01b6-43be-a009-c6b0ed1da7f6'
+const JM_CONNECTOR_4  = 'https://www.figma.com/api/mcp/asset/703d5333-b69b-4e98-bd8f-34539f4e9f74'
+const JM_STAR         = 'https://www.figma.com/api/mcp/asset/cf41cb3a-0f7a-4157-8c1f-bcbb388cc181'
+const JM_POLYGON_2    = 'https://www.figma.com/api/mcp/asset/ac11bc0c-7cde-44f6-afb5-2c8678a77549'
+const JM_POLYGON_3    = 'https://www.figma.com/api/mcp/asset/32b0be63-58a1-4bdb-8d02-79a5539ac84d'
+
+/* Badge assets */
 
 // Badge background shells
 const BG_OUTER_BLUE     = 'https://www.figma.com/api/mcp/asset/71123275-abcc-4d81-9c40-5e7ab882634c'
@@ -216,64 +229,148 @@ function CalendarStatIcon({ day }) {
   )
 }
 
-/* ── Journey Map ──────────────────────────────── */
+/* ── Journey Map ──────────────────────────────────
+   Pixel-accurate recreation of Figma node 427-4673.
+   Natural canvas: 305 × 100.815 px.
+   All child positions are direct % insets from Figma.
+   The canvas scales to fill its wrapper via aspect-ratio.
+─────────────────────────────────────────────────── */
 
-function JourneyMap({ goalsCount }) {
-  const achieved = Math.min(goalsCount, 3)
-
-  const nodes = [
-    { cx: 35,  cy: 52 },
-    { cx: 120, cy: 80 },
-    { cx: 215, cy: 38 },
-    { cx: 298, cy: 68 },
-  ]
-
+function JourneyMap() {
   return (
-    <svg className="ach-journey__svg" viewBox="0 0 335 115" fill="none" aria-label="Your journey map">
-      <path d="M 53,52 C 72,52 100,80 120,80"
-        stroke="var(--color-horizon-violet-300)" strokeWidth="3" strokeLinecap="round" />
-      <path d="M 138,80 C 160,80 192,38 215,38"
-        stroke="var(--color-horizon-violet-300)" strokeWidth="3" strokeLinecap="round" />
-      <path d="M 233,38 C 254,38 276,68 298,68"
-        stroke="var(--color-horizon-violet-300)" strokeWidth="3" strokeLinecap="round"
-        strokeDasharray={achieved >= 3 ? '0' : '7,4'} />
+    /* Wrapper fills the box width; canvas maintains Figma proportions */
+    <div className="ach-journey__wrapper">
+      <div className="ach-journey__canvas">
 
-      <polygon points="116,76 123,80 116,84" fill="var(--color-horizon-violet-300)" />
-      <polygon points="211,34 218,38 211,42" fill="var(--color-horizon-violet-300)" />
-      <polygon points="294,64 301,68 294,72" fill="var(--color-horizon-violet-300)" />
+        {/* ── Coin nodes ──────────────────────────────
+            Figma inset order: top  right  bottom  left   */}
 
-      <polygon
-        points="83,18 85,24 91,24 86,28 88,34 83,30 78,34 80,28 75,24 81,24"
-        fill="var(--color-horizon-violet-300)" opacity="0.65" />
-      <polygon
-        points="186,88 190,95 186,102 182,95"
-        fill="var(--color-horizon-violet-300)" opacity="0.5" />
-      <polygon
-        points="258,22 261,27 258,32 255,27"
-        fill="var(--color-horizon-violet-300)" opacity="0.5" />
+        {/* Node 1 — top-left filled coin
+            inset-[8.71%_85.9%_56.54%_0] */}
+        <div className="ach-journey__node"
+          style={{ top:'8.71%', right:'85.9%', bottom:'56.54%', left:'0' }}>
+          <img src={JM_COIN_FILLED} alt="Milestone 1" className="ach-journey__fill-img" />
+        </div>
 
-      {nodes.map((node, i) => {
-        const isAchieved = i < achieved
-        return (
-          <g key={i}>
-            {isAchieved ? (
-              <>
-                <circle cx={node.cx} cy={node.cy} r="18" fill="var(--color-horizon-violet)" />
-                <circle cx={node.cx} cy={node.cy} r="12" fill="var(--color-horizon-violet-300)" />
-                <circle cx={node.cx} cy={node.cy} r="5"  fill="var(--color-cloud)" />
-              </>
-            ) : (
-              <>
-                <circle cx={node.cx} cy={node.cy} r="18"
-                  stroke="var(--color-horizon-violet-300)" strokeWidth="2"
-                  strokeDasharray="5,3" fill="var(--color-horizon-violet-50)" />
-                <circle cx={node.cx} cy={node.cy} r="12" fill="var(--color-horizon-violet-100)" />
-              </>
-            )}
-          </g>
-        )
-      })}
-    </svg>
+        {/* Node 2 — bottom coin (MapBlock1 — different angle variant)
+            inset-[65.25%_72.13%_0_13.77%] */}
+        <div className="ach-journey__node"
+          style={{ top:'65.25%', right:'72.13%', bottom:'0', left:'13.77%' }}>
+          <img src={JM_COIN_ALT} alt="Milestone 2" className="ach-journey__fill-img" />
+        </div>
+
+        {/* Node 3 — top-right filled coin
+            inset-[8.71%_26.23%_56.54%_59.67%] */}
+        <div className="ach-journey__node"
+          style={{ top:'8.71%', right:'26.23%', bottom:'56.54%', left:'59.67%' }}>
+          <img src={JM_COIN_FILLED} alt="Milestone 3" className="ach-journey__fill-img" />
+        </div>
+
+        {/* Node 4 — rightmost coin
+            inset-[22.59%_0_42.65%_85.9%] */}
+        <div className="ach-journey__node"
+          style={{ top:'22.59%', right:'0', bottom:'42.65%', left:'85.9%' }}>
+          <img src={JM_COIN_FILLED} alt="Milestone 4" className="ach-journey__fill-img" />
+        </div>
+
+        {/* ── Curved connectors ────────────────────── */}
+
+        {/* Connector 1: node 1 → node 2 (curves down-right)
+            inset-[49.38%_87.21%_30.79%_5.25%]
+            inner bleed: inset-[-10%_-8.7%] */}
+        <div className="ach-journey__connector"
+          style={{ top:'49.38%', right:'87.21%', bottom:'30.79%', left:'5.25%' }}>
+          <div className="ach-journey__connector-inner"
+            style={{ top:'-10%', right:'-8.7%', bottom:'-10%', left:'-8.7%' }}>
+            <img src={JM_CONNECTOR_1} alt="" aria-hidden="true" className="ach-journey__fill-img" />
+          </div>
+        </div>
+
+        {/* Connector 2: node 2 → node 3 (curves up-right)
+            inset-[48.38%_38.52%_19.37%_31.64%]
+            inner bleed: inset-[-6.15%_-2.2%] */}
+        <div className="ach-journey__connector"
+          style={{ top:'48.38%', right:'38.52%', bottom:'19.37%', left:'31.64%' }}>
+          <div className="ach-journey__connector-inner"
+            style={{ top:'-6.15%', right:'-2.2%', bottom:'-6.15%', left:'-2.2%' }}>
+            <img src={JM_CONNECTOR_2} alt="" aria-hidden="true" className="ach-journey__fill-img" />
+          </div>
+        </div>
+
+        {/* Connector 3: node 3 → node 4 (top arc)
+            inset-[0_3.61%_81.37%_74.75%]
+            inner bleed: inset-[-10.65%_-3.03%] */}
+        <div className="ach-journey__connector"
+          style={{ top:'0', right:'3.61%', bottom:'81.37%', left:'74.75%' }}>
+          <div className="ach-journey__connector-inner"
+            style={{ top:'-10.65%', right:'-3.03%', bottom:'-10.65%', left:'-3.03%' }}>
+            <img src={JM_CONNECTOR_3} alt="" aria-hidden="true" className="ach-journey__fill-img" />
+          </div>
+        </div>
+
+        {/* Connector 4: curved tail off the last node (rotated -155.82°)
+            inset-[62.27%_-0.31%_5.05%_86.23%]
+            inner bleed: inset-[-10.65%_-5.18%], rotation: -155.82deg */}
+        <div className="ach-journey__connector"
+          style={{ top:'62.27%', right:'-0.31%', bottom:'5.05%', left:'86.23%', overflow:'visible' }}>
+          <div className="ach-journey__connector-inner"
+            style={{
+              top:'-10.65%', right:'-5.18%', bottom:'-10.65%', left:'-5.18%',
+              transform:'rotate(-155.82deg)',
+              transformOrigin:'center',
+            }}>
+            <img src={JM_CONNECTOR_4} alt="" aria-hidden="true" className="ach-journey__fill-img" />
+          </div>
+        </div>
+
+        {/* ── Decorations ──────────────────────────── */}
+
+        {/* Star — between nodes 1 and 3 near top-left
+            container: inset-[10.69%_86.62%_67.99%_0.98%]
+            inner: inset-[1.38%_11.93%_6.73%_11.77%] */}
+        <div className="ach-journey__decor"
+          style={{ top:'10.69%', right:'86.62%', bottom:'67.99%', left:'0.98%' }}>
+          <div className="ach-journey__decor-inner"
+            style={{ top:'1.38%', right:'11.93%', bottom:'6.73%', left:'11.77%' }}>
+            <img src={JM_STAR} alt="" aria-hidden="true" className="ach-journey__fill-img" />
+          </div>
+        </div>
+
+        {/* Polygon 2 — below node 2
+            container: inset-[72.19%_74.64%_14.84%_16.72%]
+            inner: inset-[-4.54%_1.44%_-12.14%_1.53%] */}
+        <div className="ach-journey__decor"
+          style={{ top:'72.19%', right:'74.64%', bottom:'14.84%', left:'16.72%' }}>
+          <div className="ach-journey__decor-inner"
+            style={{ top:'-4.54%', right:'1.44%', bottom:'-12.14%', left:'1.53%' }}>
+            <img src={JM_POLYGON_2} alt="" aria-hidden="true" className="ach-journey__fill-img" />
+          </div>
+        </div>
+
+        {/* Polygon 3a — between nodes 1 and 3 (upper area)
+            container: inset-[15.65%_28.74%_71.38%_62.62%]
+            inner: inset-[-4.54%_1.44%_-12.14%_1.53%] */}
+        <div className="ach-journey__decor"
+          style={{ top:'15.65%', right:'28.74%', bottom:'71.38%', left:'62.62%' }}>
+          <div className="ach-journey__decor-inner"
+            style={{ top:'-4.54%', right:'1.44%', bottom:'-12.14%', left:'1.53%' }}>
+            <img src={JM_POLYGON_3} alt="" aria-hidden="true" className="ach-journey__fill-img" />
+          </div>
+        </div>
+
+        {/* Polygon 3b — right side near node 4
+            container: inset-[29.54%_2.51%_57.49%_88.85%]
+            inner: inset-[-4.54%_1.44%_-12.14%_1.53%] */}
+        <div className="ach-journey__decor"
+          style={{ top:'29.54%', right:'2.51%', bottom:'57.49%', left:'88.85%' }}>
+          <div className="ach-journey__decor-inner"
+            style={{ top:'-4.54%', right:'1.44%', bottom:'-12.14%', left:'1.53%' }}>
+            <img src={JM_POLYGON_3} alt="" aria-hidden="true" className="ach-journey__fill-img" />
+          </div>
+        </div>
+
+      </div>
+    </div>
   )
 }
 
@@ -353,7 +450,7 @@ export default function Achievements() {
       {/* ── My Journey ── */}
       <h2 className="ach-page__heading">My Journey</h2>
       <div className="ach-journey-box">
-        <JourneyMap goalsCount={stats.totalGoals} />
+        <JourneyMap />
       </div>
 
     </div>

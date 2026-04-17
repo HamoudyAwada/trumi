@@ -57,6 +57,26 @@ export async function getOnboardingResponses() {
   return data
 }
 
+// ── Auth ──────────────────────────────────────────────────────────────────────
+
+/**
+ * Create a new Supabase auth user with email + password.
+ * Throws on failure (duplicate email, weak password, etc.).
+ */
+export async function signUp(email, password) {
+  const { data, error } = await supabase.auth.signUp({ email, password })
+  if (error) throw error
+  return data
+}
+
+/**
+ * Return the currently signed-in user, or null if guest.
+ */
+export async function getUser() {
+  const { data: { user } } = await supabase.auth.getUser()
+  return user
+}
+
 // ── Chat history ──────────────────────────────────────────────────────────────
 
 /**

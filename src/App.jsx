@@ -18,6 +18,7 @@ import OnboardingStep3   from './pages/OnboardingStep3'
 import OnboardingStep4   from './pages/OnboardingStep4'
 import OnboardingStep5   from './pages/OnboardingStep5'
 import OnboardingGoals   from './pages/OnboardingGoals'
+import AccountCreation   from './pages/AccountCreation'
 import NotFound          from './pages/NotFound'
 
 // Checks Supabase (with localStorage as a fast-path cache) before rendering home
@@ -56,6 +57,7 @@ export default function App() {
         <Route path="/onboarding/step/4" element={<OnboardingStep4 />} />
         <Route path="/onboarding/step/5" element={<OnboardingStep5 />} />
         <Route path="/onboarding/goals"  element={<OnboardingGoals />} />
+        <Route path="/account-creation"  element={<AccountCreation />} />
         <Route path="/chat"              element={<Chat />} />
         <Route path="/add-goal"        element={<AddGoal />} />
 

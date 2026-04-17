@@ -308,17 +308,16 @@ function JourneyMap() {
           </div>
         </div>
 
-        {/* Connector 4: curved tail off the last node (rotated -155.82°)
+        {/* Connector 4: curved dashed tail off the last node
+            Figma exports raster images at their final visual orientation —
+            the inset IS the rotated bounding box, so no CSS rotation needed.
             inset-[62.27%_-0.31%_5.05%_86.23%]
-            inner bleed: inset-[-10.65%_-5.18%], rotation: -155.82deg */}
+            inner bleed: inset-[-10.65%_-5.18%] */}
         <div className="ach-journey__connector"
-          style={{ top:'62.27%', right:'-0.31%', bottom:'5.05%', left:'86.23%', overflow:'visible' }}>
+          style={{ top:'62.27%', right:'-0.31%', bottom:'5.05%', left:'86.23%',
+                   overflow:'visible' }}>
           <div className="ach-journey__connector-inner"
-            style={{
-              top:'-10.65%', right:'-5.18%', bottom:'-10.65%', left:'-5.18%',
-              transform:'rotate(-155.82deg)',
-              transformOrigin:'center',
-            }}>
+            style={{ top:'-10.65%', right:'-5.18%', bottom:'-10.65%', left:'-5.18%' }}>
             <img src={JM_CONNECTOR_4} alt="" aria-hidden="true" className="ach-journey__fill-img" />
           </div>
         </div>

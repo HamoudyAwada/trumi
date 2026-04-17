@@ -49,16 +49,16 @@ function computeStats(goals) {
    update paths below.
 ───────────────────────────────────────────────── */
 
-/* Journey Map assets */
-const JM_COIN_FILLED  = 'https://www.figma.com/api/mcp/asset/f56337ed-dcb4-400d-a096-0622517425ca'
-const JM_COIN_ALT     = 'https://www.figma.com/api/mcp/asset/6ca8e8c9-51a7-4704-9d44-45207986cbb3'
-const JM_CONNECTOR_1  = 'https://www.figma.com/api/mcp/asset/31e3fd5e-8e15-4525-9da6-75fc4ed2fb74'
-const JM_CONNECTOR_2  = 'https://www.figma.com/api/mcp/asset/3ebee800-3ad1-40cd-82bf-75d9142bbc39'
-const JM_CONNECTOR_3  = 'https://www.figma.com/api/mcp/asset/5a1f7fba-01b6-43be-a009-c6b0ed1da7f6'
-const JM_CONNECTOR_4  = 'https://www.figma.com/api/mcp/asset/703d5333-b69b-4e98-bd8f-34539f4e9f74'
-const JM_STAR         = 'https://www.figma.com/api/mcp/asset/cf41cb3a-0f7a-4157-8c1f-bcbb388cc181'
-const JM_POLYGON_2    = 'https://www.figma.com/api/mcp/asset/ac11bc0c-7cde-44f6-afb5-2c8678a77549'
-const JM_POLYGON_3    = 'https://www.figma.com/api/mcp/asset/32b0be63-58a1-4bdb-8d02-79a5539ac84d'
+/* Journey Map assets — refreshed 2026-04-16 (expire after 7 days) */
+const JM_COIN_FILLED  = 'https://www.figma.com/api/mcp/asset/7e13a82b-1c76-4e73-a8d9-4ff4ee06ca41'
+const JM_COIN_ALT     = 'https://www.figma.com/api/mcp/asset/e8032e8c-d7ed-4a91-94ca-bb228ff4f6f5'
+const JM_CONNECTOR_1  = 'https://www.figma.com/api/mcp/asset/46b9f14f-8c65-44db-b8c4-dcd9e8fb04c3'
+const JM_CONNECTOR_2  = 'https://www.figma.com/api/mcp/asset/4e3ce6f3-7a71-45d3-91b0-7240e1da3837'
+const JM_CONNECTOR_3  = 'https://www.figma.com/api/mcp/asset/374d4a70-5c68-4a51-af4f-861903cd536a'
+const JM_CONNECTOR_4  = 'https://www.figma.com/api/mcp/asset/9453daf6-6688-45e1-b2f2-ebc3c84561cc'
+const JM_STAR         = 'https://www.figma.com/api/mcp/asset/5b950663-0fe4-4c9c-a7d7-b8362426a38c'
+const JM_POLYGON_2    = 'https://www.figma.com/api/mcp/asset/10fda037-433d-4a77-800c-ea19cf3257d8'
+const JM_POLYGON_3    = 'https://www.figma.com/api/mcp/asset/a9371da9-b4ec-4789-84ae-7cb2e28712a0'
 
 /* Badge assets */
 
@@ -308,17 +308,29 @@ function JourneyMap() {
           </div>
         </div>
 
-        {/* Connector 4: curved dashed tail off the last node
-            Figma exports raster images at their final visual orientation —
-            the inset IS the rotated bounding box, so no CSS rotation needed.
-            inset-[62.27%_-0.31%_5.05%_86.23%]
-            inner bleed: inset-[-10.65%_-5.18%] */}
-        <div className="ach-journey__connector"
+        {/* Connector 4: curved dashed tail off the last node.
+            Figma uses CSS container queries (cqw/cqh) + hypot() to derive the
+            pre-rotation natural dimensions of the path image, then rotates it
+            into its final position. We replicate that exactly.
+            inset-[62.27%_-0.31%_5.05%_86.23%]  containerType:size
+            inner element: w=hypot(-82.09cqw,-48.01cqh)  h=hypot(17.91cqw,-51.99cqh)
+            rotate: -155.82deg  bleed: inset-[-10.65%_-5.18%] */}
+        <div
+          className="ach-journey__connector ach-journey__connector--cq"
           style={{ top:'62.27%', right:'-0.31%', bottom:'5.05%', left:'86.23%',
-                   overflow:'visible' }}>
-          <div className="ach-journey__connector-inner"
-            style={{ top:'-10.65%', right:'-5.18%', bottom:'-10.65%', left:'-5.18%' }}>
-            <img src={JM_CONNECTOR_4} alt="" aria-hidden="true" className="ach-journey__fill-img" />
+                   overflow:'visible', display:'flex',
+                   alignItems:'center', justifyContent:'center' }}
+        >
+          <div style={{
+            flexShrink: 0,
+            width:  'hypot(-82.0868cqw, -48.0086cqh)',
+            height: 'hypot(17.9132cqw, -51.9914cqh)',
+            transform: 'rotate(-155.82deg)',
+            position: 'relative',
+          }}>
+            <div style={{ position:'absolute', top:'-10.65%', right:'-5.18%', bottom:'-10.65%', left:'-5.18%' }}>
+              <img src={JM_CONNECTOR_4} alt="" aria-hidden="true" className="ach-journey__fill-img" />
+            </div>
           </div>
         </div>
 

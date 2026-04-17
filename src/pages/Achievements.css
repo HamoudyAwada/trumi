@@ -365,8 +365,12 @@
 
 /* Connector outer box — clips nothing, lets inner bleed show */
 .ach-journey__connector {
-  /* overflow: visible so inner bleed images render outside */
   overflow: visible;
+}
+
+/* Connector 4 needs CSS container queries so hypot(cqw,cqh) resolves correctly */
+.ach-journey__connector--cq {
+  container-type: size;
 }
 
 /* Inner container for connector/decor images (can be oversized for bleed) */

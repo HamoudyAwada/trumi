@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { useNavigate }          from 'react-router-dom'
+import PageHeader               from '../components/ui/PageHeader'
 import CharacterCanvas          from '../components/character/CharacterCanvas'
 import CategorySelector         from '../components/character/CategorySelector'
 import OptionGrid               from '../components/character/OptionGrid'
@@ -57,6 +58,8 @@ export default function Character() {
 
   return (
     <div className="char-page">
+
+      <PageHeader title="My Character" />
 
       {/* ── Header ─────────────────────────────── */}
       <header className="char-header">

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { suggestSingleGoal } from '../services/ai'
+import PageHeader from '../components/ui/PageHeader'
 import './AddGoal.css'
 
 /* ─── Constants ─────────────────────────────── */
@@ -689,29 +690,19 @@ export default function AddGoal() {
     <div className="ag-page">
 
       {/* Header */}
-      <div className="ag-header">
-        <div className="ag-header__brand">
-          {/* Trumi sun logo mark */}
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="3.5" fill="var(--color-horizon-violet)" />
-            <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"
-              stroke="var(--color-horizon-violet)" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          <span className="ag-header__wordmark">trumi</span>
-        </div>
+      <PageHeader title="Add a Goal" />
 
-        {/* Step dots — visible only for steps 1–6 */}
-        {step > 0 && (
-          <div className="ag-dots" aria-hidden="true">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <span
-                key={i}
-                className={`ag-dot${i < dotsFilled ? ' ag-dot--filled' : ''}`}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Step dots — visible only for steps 1–6 */}
+      {step > 0 && (
+        <div className="ag-dots" aria-hidden="true">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <span
+              key={i}
+              className={`ag-dot${i < dotsFilled ? ' ag-dot--filled' : ''}`}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Back button */}
       <button className="ag-back-btn" onClick={handleBack} aria-label="Go back">

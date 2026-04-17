@@ -42,7 +42,9 @@
 .ag-dots {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  padding: 0 16px 8px;
 }
 
 .ag-dot {

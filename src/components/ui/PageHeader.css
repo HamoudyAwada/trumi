@@ -1,0 +1,52 @@
+/* ─────────────────────────────────────────────
+   PageHeader
+   Consistent app header: logo (→ home) + title.
+   Used on every page except Chat.
+───────────────────────────────────────────── */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px 6px;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.page-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+  transition: opacity var(--duration-fast, 150ms);
+}
+
+.page-header__brand:hover { opacity: 0.75; }
+
+.page-header__logo {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.page-header__wordmark {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-horizon-violet);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.page-header__title {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet);
+  line-height: 1;
+}

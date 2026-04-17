@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+import PageHeader from '../components/ui/PageHeader'
 import './Onboarding.css'
 
 export default function OnboardingStep5() {
@@ -18,7 +19,9 @@ export default function OnboardingStep5() {
   return (
     <div className="ob-page">
 
-      {/* Header */}
+      <PageHeader title="Your Results" />
+
+      {/* Back navigation */}
       <div className="ob-header">
         <button className="ob-back-btn" onClick={() => navigate('/onboarding/step/4', { state: { top10, top3, valueLooks, tradeoffs, alignment, obstacles } })} aria-label="Go back">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">

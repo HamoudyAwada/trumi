@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import PageHeader from '../components/ui/PageHeader'
 import './Onboarding.css'
 
 const OBSTACLE_CHIPS = [
@@ -64,7 +65,9 @@ export default function OnboardingStep4() {
   return (
     <div className="ob-page">
 
-      {/* Header */}
+      <PageHeader title="Values Quiz" />
+
+      {/* Back navigation */}
       <div className="ob-header">
         <button className="ob-back-btn" onClick={() => navigate('/onboarding/step/3', { state: { top10, top3, valueLooks, tradeoffs } })} aria-label="Go back">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">

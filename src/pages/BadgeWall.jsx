@@ -227,6 +227,14 @@ export default function BadgeWall() {
 
       <div className="bw-content">
 
+        {/* Back button */}
+        <button className="bw-back-btn" onClick={() => navigate(-1)} aria-label="Go back">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M11.5 14L6.5 9L11.5 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Back
+        </button>
+
         {/* Earned count pill */}
         <div className="bw-summary">
           <span className="bw-summary__count">{earned.length}</span>

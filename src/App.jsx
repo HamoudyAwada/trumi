@@ -21,6 +21,7 @@ import OnboardingGoals   from './pages/OnboardingGoals'
 import AccountCreation   from './pages/AccountCreation'
 import LogEntry          from './pages/LogEntry'
 import BadgeWall         from './pages/BadgeWall'
+import Journey           from './pages/Journey'
 import NotFound          from './pages/NotFound'
 
 // Checks Supabase (with localStorage as a fast-path cache) before rendering home
@@ -64,6 +65,7 @@ export default function App() {
         <Route path="/add-goal"          element={<AddGoal />} />
         <Route path="/log-entry/:id"     element={<LogEntry />} />
         <Route path="/badges"            element={<BadgeWall />} />
+        <Route path="/journey"           element={<Journey />} />
 
         {/* All main app pages share the BottomNav layout */}
         <Route element={<MainLayout />}>

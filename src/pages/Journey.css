@@ -1,0 +1,104 @@
+/* ─────────────────────────────────────────────
+   Journey
+   Winding milestone map for the user's progress.
+   Route: /journey
+───────────────────────────────────────────── */
+
+.jn-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  min-height: calc(100dvh - 72px);
+  margin: 0 auto;
+  background-color: var(--color-cloud);
+  box-sizing: border-box;
+}
+
+.jn-content {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 40px;
+  gap: 4px;
+  flex: 1;
+}
+
+/* ── Back button ─────────────────────────────── */
+
+.jn-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-tranquil-night, #0f1c3f);
+  transition: opacity 150ms ease;
+  align-self: flex-start;
+  margin-bottom: 8px;
+}
+
+.jn-back-btn:hover { opacity: 0.6; }
+
+/* ── Journey map container ───────────────────── */
+/*
+   Figma source size: 326.902 × 555.29 px
+   Aspect ratio: 326.902 / 555.29 ≈ 0.5887
+   All child positions use percentages of this container.
+*/
+
+.jn-map {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 326.902 / 555.29;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+/* ── Shared image fill ───────────────────────── */
+
+.jn-map__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.jn-map__img--contain {
+  object-fit: contain;
+}
+
+/* ── Path connectors ─────────────────────────── */
+
+.jn-map__path {
+  position: absolute;
+  overflow: visible;
+}
+
+.jn-map__path-inner {
+  position: absolute;
+  overflow: visible;
+}
+
+/* ── Character illustrations ─────────────────── */
+
+.jn-map__char {
+  position: absolute;
+  overflow: visible;
+}
+
+.jn-map__char img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Milestone nodes ─────────────────────────── */
+
+.jn-map__node {
+  position: absolute;
+}

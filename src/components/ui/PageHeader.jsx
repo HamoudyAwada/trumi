@@ -49,13 +49,25 @@ function TrumiLogo() {
   )
 }
 
-export default function PageHeader({ title }) {
+export default function PageHeader({ title, onBack }) {
   const navigate    = useNavigate()
   const { pathname } = useLocation()
   const locked      = isOnboardingRoute(pathname)
 
   return (
     <div className="page-header">
+      {onBack && (
+        <button
+          className="page-header__back"
+          onClick={onBack}
+          aria-label="Go back"
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M11.5 14L6.5 9L11.5 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      )}
+
       {locked ? (
         <div className="page-header__brand page-header__brand--static" aria-hidden="true">
           <TrumiLogo />

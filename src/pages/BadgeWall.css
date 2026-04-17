@@ -22,6 +22,26 @@
   gap: 4px;
 }
 
+/* ── Back button ─────────────────────────────── */
+
+.bw-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-tranquil-night, #0f1c3f);
+  transition: opacity 150ms ease;
+  align-self: flex-start;
+}
+
+.bw-back-btn:hover { opacity: 0.6; }
+
 /* ── Summary pill ────────────────────────────── */
 
 .bw-summary {

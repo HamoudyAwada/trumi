@@ -340,10 +340,10 @@ export default function Home() {
           <h2 className="home-section__title">My Journey</h2>
           <div
             className="home-card home-card--journey home-card--clickable"
-            onClick={() => navigate('/achievements')}
+            onClick={() => navigate('/journey')}
             role="button"
             tabIndex={0}
-            onKeyDown={e => e.key === 'Enter' && navigate('/achievements')}
+            onKeyDown={e => e.key === 'Enter' && navigate('/journey')}
           >
             <HomeJourneyMap />
           </div>

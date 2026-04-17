@@ -443,7 +443,11 @@ export default function Achievements() {
 
       {/* ── My Journey ── */}
       <h2 className="ach-page__heading">My Journey</h2>
-      <div className="ach-journey-box">
+      <div
+        className="ach-journey-box"
+        onClick={() => navigate('/journey')}
+        style={{ cursor: 'pointer' }}
+      >
         <JourneyMap />
       </div>
 

@@ -110,6 +110,30 @@
   overflow: visible;
 }
 
+/* ── Achieved badge count pill ───────────────── */
+
+.jn-badge-pill {
+  position: absolute;
+  top: 66.96%;
+  left: 22.22%;
+  right: 22.22%;
+  height: 16.52%;
+  background: white;
+  border-radius: 25px;
+  border-bottom: 3px solid #ff8b0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jn-badge-pill__num {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-tranquil-night, #0f1c3f);
+  line-height: 1;
+}
+
 /* ── Shared image fill ───────────────────────── */
 
 .jn-fill-img {

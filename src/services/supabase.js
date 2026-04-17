@@ -64,7 +64,12 @@ export async function getOnboardingResponses() {
  * Throws on failure (duplicate email, weak password, etc.).
  */
 export async function signUp(email, password) {
-  const { data, error } = await supabase.auth.signUp({ email, password })
+  const redirectTo = `${window.location.origin}/`
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: redirectTo },
+  })
   if (error) throw error
   return data
 }

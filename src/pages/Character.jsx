@@ -71,6 +71,8 @@ export default function Character() {
 
       <PageHeader title="My Character" />
 
+      <div className="char-body">
+
       {/* ── Header ─────────────────────────────── */}
       <header className="char-header">
         <div className="char-header__text">
@@ -231,6 +233,8 @@ export default function Character() {
 
         </div>
       )}
+
+      </div>{/* end char-body */}
 
     </div>
   )

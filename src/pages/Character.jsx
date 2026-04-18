@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate }          from 'react-router-dom'
 import PageHeader               from '../components/ui/PageHeader'
-import CharacterCanvas          from '../components/character/CharacterCanvas'
+import WingCharacter            from '../components/character/WingCharacter'
 import CategorySelector         from '../components/character/CategorySelector'
 import OptionGrid               from '../components/character/OptionGrid'
 import FeatureColorPalette      from '../components/character/FeatureColorPalette'
@@ -123,8 +123,7 @@ export default function Character() {
         )}
 
         <div className="char-preview">
-          <CharacterCanvas
-            selections={selections}
+          <WingCharacter
             skinTone={selections.skinTone}
             browColor={selections.browColor}
             eyeColor={selections.eyeColor}

@@ -8,7 +8,7 @@ import {
   fetchChatMessages,
   deleteChatSession,
 } from '../services/supabase'
-import CharacterCanvas from '../components/character/CharacterCanvas'
+import TrumiCharacter from '../components/character/TrumiCharacter'
 import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
 import './Chat.css'
 
@@ -313,13 +313,14 @@ export default function Chat() {
         <div className="chat-header__left">
           <div className="chat-avatar" aria-hidden="true">
             <div className="chat-avatar__canvas-wrapper">
-              <CharacterCanvas
+              <TrumiCharacter
                 selections={character}
-                skinTone={character.skinTone}
-                browColor={character.browColor}
-                eyeColor={character.eyeColor}
-                lipColor={character.lipColor}
+                skinColor={character.skinColor}
                 hairColor={character.hairColor}
+                eyeColor={character.eyeColor}
+                browColor={character.browColor}
+                lipColor={character.lipColor}
+                size={120}
               />
             </div>
           </div>

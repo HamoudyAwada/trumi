@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/ui/PageHeader'
-import CharacterCanvas from '../components/character/CharacterCanvas'
+import TrumiCharacter from '../components/character/TrumiCharacter'
 import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
 import GoalCard from '../components/goals/GoalCard'
 import './Home.css'
@@ -360,13 +360,14 @@ export default function Home() {
             onKeyDown={e => e.key === 'Enter' && navigate('/character')}
           >
             <div className="home-trumi__canvas-wrap">
-              <CharacterCanvas
+              <TrumiCharacter
                 selections={character}
-                skinTone={character.skinTone}
-                browColor={character.browColor}
-                eyeColor={character.eyeColor}
-                lipColor={character.lipColor}
+                skinColor={character.skinColor}
                 hairColor={character.hairColor}
+                eyeColor={character.eyeColor}
+                browColor={character.browColor}
+                lipColor={character.lipColor}
+                size={200}
               />
             </div>
             {character.name && (

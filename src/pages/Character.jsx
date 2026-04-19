@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate }          from 'react-router-dom'
 import PageHeader               from '../components/ui/PageHeader'
-import WingCharacter            from '../components/character/WingCharacter'
+import TrumiCharacter           from '../components/character/TrumiCharacter'
 import CategorySelector         from '../components/character/CategorySelector'
 import OptionGrid               from '../components/character/OptionGrid'
 import FeatureColorPalette      from '../components/character/FeatureColorPalette'
-import { DEFAULT_CHARACTER, SKIN_TONES, FEATURE_COLORS, COLOURED_LIPS } from '../components/character/characterAssets'
+import { DEFAULT_CHARACTER, SKIN_TONES, FEATURE_COLORS } from '../components/character/characterAssets'
 import './Character.css'
 
 export default function Character() {
@@ -17,7 +17,7 @@ export default function Character() {
       return saved ? { ...DEFAULT_CHARACTER, ...JSON.parse(saved) } : DEFAULT_CHARACTER
     } catch { return DEFAULT_CHARACTER }
   })
-  const [activeCategory, setActiveCategory] = useState('hair')
+  const [activeCategory, setActiveCategory] = useState('hairFront')
 
   // Persist whenever the user changes anything
   useEffect(() => {
@@ -32,14 +32,15 @@ export default function Character() {
   }
 
   function handleSkinChange(tone) {
-    setSelections(prev => ({ ...prev, skinTone: tone }))
+    setSelections(prev => ({ ...prev, skinColor: tone }))
   }
 
   const CATEGORY_COLOR_KEY = {
-    hair:     'hairColor',
-    eyes:     'eyeColor',
-    eyebrows: 'browColor',
-    lips:     'lipColor',
+    hairFront:  'hairColor',
+    hairBehind: 'hairColor',
+    eyes:       'eyeColor',
+    eyebrows:   'browColor',
+    mouth:      'lipColor',
   }
 
   function handleFeatureColorChange(color) {
@@ -47,8 +48,7 @@ export default function Character() {
     if (key) setSelections(prev => ({ ...prev, [key]: color }))
   }
 
-  const lipsHaveColour = activeCategory !== 'lips' || COLOURED_LIPS.has(selections.lips)
-  const featureColors  = lipsHaveColour ? (FEATURE_COLORS[activeCategory] ?? []) : []
+  const featureColors   = FEATURE_COLORS[activeCategory] ?? []
   const featureSelected = selections[CATEGORY_COLOR_KEY[activeCategory]]
 
   function handleNameClick() {
@@ -112,23 +112,24 @@ export default function Character() {
             {SKIN_TONES.map(tone => (
               <button
                 key={tone}
-                className={`char-skin-swatch${selections.skinTone === tone ? ' char-skin-swatch--active' : ''}`}
+                className={`char-skin-swatch${selections.skinColor === tone ? ' char-skin-swatch--active' : ''}`}
                 style={{ backgroundColor: tone }}
                 onClick={() => handleSkinChange(tone)}
                 aria-label="Skin tone"
-                aria-pressed={selections.skinTone === tone}
+                aria-pressed={selections.skinColor === tone}
               />
             ))}
           </div>
         )}
 
         <div className="char-preview">
-          <WingCharacter
-            skinTone={selections.skinTone}
-            browColor={selections.browColor}
-            eyeColor={selections.eyeColor}
-            lipColor={selections.lipColor}
+          <TrumiCharacter
+            selections={selections}
+            skinColor={selections.skinColor}
             hairColor={selections.hairColor}
+            eyeColor={selections.eyeColor}
+            browColor={selections.browColor}
+            lipColor={selections.lipColor}
           />
         </div>
 

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { suggestGoals } from '../services/ai'
 import { saveOnboardingResponses } from '../services/supabase'
-import PageHeader from '../components/ui/PageHeader'
 import './Onboarding.css'
 import './OnboardingGoals.css'
 
@@ -107,8 +106,6 @@ export default function OnboardingGoals() {
 
   return (
     <div className="ob-page">
-
-      <PageHeader title="Your Goals" />
 
       {/* Back navigation */}
       <div className="ob-header">

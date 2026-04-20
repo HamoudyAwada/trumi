@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import PageHeader from '../components/ui/PageHeader'
 import './Onboarding.css'
 
 export default function Onboarding() {
@@ -9,8 +8,6 @@ export default function Onboarding() {
 
   return (
     <div className="ob-page">
-
-      <PageHeader title="Welcome" />
 
       {/* Illustration */}
       <img

@@ -63,13 +63,16 @@
 
 .char-view__bio {
   font-family: var(--font-primary);
-  font-size: 24px;
+  font-size: 16px;
   font-weight: var(--font-weight-bold);
   color: #1a1919;
   text-align: center;
   line-height: 1.2;
   margin: 0;
-  padding: 0 8px;
+  padding: 0 24px;
+  width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
 }
 
 .char-view__customize {

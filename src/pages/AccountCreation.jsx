@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signUp } from '../services/supabase'
-import PageHeader from '../components/ui/PageHeader'
 import './AccountCreation.css'
 
 // Figma asset — Trumi character illustration (valid for 7 days from Apr 17 2026)
@@ -30,6 +29,7 @@ function CheckIcon({ met }) {
 export default function AccountCreation() {
   const navigate = useNavigate()
 
+  const [username, setUsername] = useState('')
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw]     = useState(false)
@@ -38,6 +38,16 @@ export default function AccountCreation() {
 
   const reqMet   = REQUIREMENTS.map(r => r.test(password))
   const canSubmit = email.includes('@') && email.includes('.') && reqMet.every(Boolean)
+
+  function handleUsernameChange(value) {
+    setUsername(value)
+    try {
+      const saved = JSON.parse(localStorage.getItem('trumi_character') ?? '{}')
+      const updated = { ...saved, name: value }
+      localStorage.setItem('trumi_character', JSON.stringify(updated))
+      window.dispatchEvent(new Event('trumi_character_updated'))
+    } catch { /* ignore */ }
+  }
 
   async function handleCreate(e) {
     e.preventDefault()
@@ -66,8 +76,6 @@ export default function AccountCreation() {
   return (
     <div className="ac-page">
 
-      <PageHeader title="Sign Up" />
-
       {/* Hero — character + wordmark */}
       <div className="ac-hero">
         <img
@@ -86,6 +94,20 @@ export default function AccountCreation() {
         </p>
 
         <div className="ac-form__fields">
+
+          {/* Username */}
+          <div className="ac-field">
+            <label className="ac-field__label" htmlFor="ac-username">Username:</label>
+            <input
+              id="ac-username"
+              className="ac-field__input"
+              type="text"
+              autoComplete="username"
+              value={username}
+              onChange={e => handleUsernameChange(e.target.value)}
+              placeholder="Choose a username"
+            />
+          </div>
 
           {/* Email */}
           <div className="ac-field">

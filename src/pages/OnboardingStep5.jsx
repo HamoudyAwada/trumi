@@ -1,5 +1,4 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import PageHeader from '../components/ui/PageHeader'
 import './Onboarding.css'
 
 export default function OnboardingStep5() {
@@ -18,8 +17,6 @@ export default function OnboardingStep5() {
 
   return (
     <div className="ob-page">
-
-      <PageHeader title="Your Results" />
 
       {/* Back navigation */}
       <div className="ob-header">

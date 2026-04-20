@@ -34,7 +34,7 @@ export function CharacterAvatar({ character }) {
           eyeColor={character.eyeColor}
           browColor={character.browColor}
           lipColor={character.lipColor}
-          size={200}
+          size={250}
         />
       </div>
     </div>

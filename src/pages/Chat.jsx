@@ -8,8 +8,8 @@ import {
   fetchChatMessages,
   deleteChatSession,
 } from '../services/supabase'
-import TrumiCharacter from '../components/character/TrumiCharacter'
 import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
+import { CharacterAvatar } from '../components/ui/GlobalHeader'
 import './Chat.css'
 
 const STARTERS = [
@@ -311,19 +311,7 @@ export default function Chat() {
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <header className="chat-header">
         <div className="chat-header__left">
-          <div className="chat-avatar" aria-hidden="true">
-            <div className="chat-avatar__canvas-wrapper">
-              <TrumiCharacter
-                selections={character}
-                skinColor={character.skinColor}
-                hairColor={character.hairColor}
-                eyeColor={character.eyeColor}
-                browColor={character.browColor}
-                lipColor={character.lipColor}
-                size={120}
-              />
-            </div>
-          </div>
+          <CharacterAvatar character={character} />
           <span className="chat-header__name">{characterName}</span>
         </div>
 

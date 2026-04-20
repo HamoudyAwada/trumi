@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import PageHeader from '../components/ui/PageHeader'
 import './Journey.css'
 
 /* ── Assets (Figma node 652:5057 + 670:8980) ──────────────────────────── */
@@ -216,7 +215,7 @@ export default function Journey() {
 
   return (
     <div className="jn-page">
-      <PageHeader title="My Journey" />
+
 
       <div className="jn-content">
         <button className="jn-back-btn" onClick={() => navigate(-1)} aria-label="Go back">

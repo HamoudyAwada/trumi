@@ -92,18 +92,20 @@ const ICONS = {
 
 export default function CategorySelector({ activeCategory, onChange }) {
   return (
-    <div className="cat-grid">
-      {CATEGORIES.map(cat => (
-        <button
-          key={cat.id}
-          className={`cat-tab${activeCategory === cat.id ? ' cat-tab--active' : ''}`}
-          onClick={() => onChange(cat.id)}
-          aria-pressed={activeCategory === cat.id}
-          aria-label={cat.label}
-        >
-          {ICONS[cat.id]}
-        </button>
-      ))}
+    <div className="cat-scroll-wrap">
+      <div className="cat-row">
+        {CATEGORIES.map(cat => (
+          <button
+            key={cat.id}
+            className={`cat-tab${activeCategory === cat.id ? ' cat-tab--active' : ''}`}
+            onClick={() => onChange(cat.id)}
+            aria-pressed={activeCategory === cat.id}
+            aria-label={cat.label}
+          >
+            {ICONS[cat.id]}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }

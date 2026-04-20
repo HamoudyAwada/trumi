@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import PageHeader from '../components/ui/PageHeader'
 import FlameIcon from '../components/ui/FlameIcon'
 import './BadgeWall.css'
 
@@ -224,7 +223,7 @@ export default function BadgeWall() {
 
   return (
     <div className="bw-page">
-      <PageHeader title="Achievements" />
+
 
       <div className="bw-content">
 

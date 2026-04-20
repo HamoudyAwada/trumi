@@ -30,6 +30,9 @@ body {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  max-width: 390px;
+  margin-inline: auto;
+  width: 100%;
 }
 
 img, svg {

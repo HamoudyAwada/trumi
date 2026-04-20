@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import PageHeader from '../components/ui/PageHeader'
 import FlameIcon from '../components/ui/FlameIcon'
 import './GoalDetail.css'
 
@@ -153,8 +152,7 @@ export default function GoalDetail() {
   return (
     <div className="gd-page">
 
-      {/* ── App header ───────────────────── */}
-      <PageHeader title={termLabel} />
+
 
       {/* ── Back + title row ─────────────── */}
       <div className="gd-title-bar">

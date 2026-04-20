@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import PageHeader from '../components/ui/PageHeader'
 
 /* ─────────────────────────────────────────────
    LogEntry — placeholder screen
@@ -22,7 +21,7 @@ export default function LogEntry() {
       background: 'var(--color-cloud, #fffcfa)',
       boxSizing: 'border-box',
     }}>
-      <PageHeader title="Log Entry" />
+
       <div style={{
         flex: 1,
         display: 'flex',

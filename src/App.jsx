@@ -1,7 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { hasCompletedOnboarding } from './services/supabase'
 
+import GlobalHeader      from './components/ui/GlobalHeader'
 import MainLayout        from './components/ui/MainLayout'
 import Home              from './pages/Home'
 import Character         from './pages/Character'
@@ -47,11 +48,21 @@ function HomeGuard() {
   return <Home />
 }
 
+// Renders GlobalHeader above all app pages except Chat and Onboarding
+function AppShell() {
+  return (
+    <>
+      <GlobalHeader />
+      <Outlet />
+    </>
+  )
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Full-screen pages — no nav bar */}
+        {/* No GlobalHeader — Chat and Onboarding are self-contained */}
         <Route path="/onboarding"        element={<Onboarding />} />
         <Route path="/onboarding/step/1" element={<OnboardingStep1 />} />
         <Route path="/onboarding/step/2" element={<OnboardingStep2 />} />
@@ -60,19 +71,24 @@ export default function App() {
         <Route path="/onboarding/goals"  element={<OnboardingGoals />} />
         <Route path="/account-creation"  element={<AccountCreation />} />
         <Route path="/chat"              element={<Chat />} />
-        <Route path="/add-goal"          element={<AddGoal />} />
-        <Route path="/log-entry/:id"     element={<LogEntry />} />
-        <Route path="/badges"            element={<BadgeWall />} />
-        <Route path="/journey"           element={<Journey />} />
 
-        {/* All main app pages share the BottomNav layout */}
-        <Route element={<MainLayout />}>
-          <Route path="/"             element={<HomeGuard />} />
-          <Route path="/goals"        element={<Goals />} />
-          <Route path="/goal/:id"     element={<GoalDetail />} />
-          <Route path="/values"       element={<Values />} />
-          <Route path="/achievements" element={<Achievements />} />
-          <Route path="/character"    element={<Character />} />
+        {/* All other pages get the GlobalHeader via AppShell */}
+        <Route element={<AppShell />}>
+          {/* Standalone pages (no bottom nav) */}
+          <Route path="/add-goal"      element={<AddGoal />} />
+          <Route path="/log-entry/:id" element={<LogEntry />} />
+          <Route path="/badges"        element={<BadgeWall />} />
+          <Route path="/journey"       element={<Journey />} />
+
+          {/* Main app pages (bottom nav via MainLayout) */}
+          <Route element={<MainLayout />}>
+            <Route path="/"             element={<HomeGuard />} />
+            <Route path="/goals"        element={<Goals />} />
+            <Route path="/goal/:id"     element={<GoalDetail />} />
+            <Route path="/values"       element={<Values />} />
+            <Route path="/achievements" element={<Achievements />} />
+            <Route path="/character"    element={<Character />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<NotFound />} />

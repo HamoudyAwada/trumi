@@ -57,13 +57,33 @@ function useColors({ skinColor, hairColor, eyeColor, browColor, lipColor }) {
 }
 
 // ─── Layer asset definitions — positions verified against Example Character 1 ─
+// hair entries have { behind, front } — one click applies both layers at the right z-index
 
 const BASE = '/assets/character/Trumi Characters';
 
 const LAYER_DEFS = {
-  hairBehind: {
-    'back-hair-3': { src: `${BASE}/Hair/Behind/Back Hair 3.svg`, x: 30.5, y: 0,   w: 150, h: 278 },
-    'back-hair-4': { src: `${BASE}/Hair/Behind/Back Hair 4.svg`, x: 0,    y: 0,   w: 211, h: 229 },
+  // Each hair style bundles a back layer (rendered behind body) + front layer (rendered on top)
+  hair: {
+    'hair-1': {
+      behind: { src: `${BASE}/Hair/Behind/Back Hair 1.svg`, x: 0,    y: 0, w: 211, h: 229 },
+      front:  { src: `${BASE}/Hair/Front/Hair 01.svg`,       x: 41.5, y: 1.31, w: 128, h: 147 },
+    },
+    'hair-2': {
+      behind: { src: `${BASE}/Hair/Behind/Back Hair 2.svg`, x: 30.5, y: 0, w: 150, h: 278 },
+      front:  { src: `${BASE}/Hair/Front/Hair 02.svg`,       x: 34,   y: 1.31, w: 143, h: 96 },
+    },
+    'hair-3': {
+      behind: null,
+      front:  { src: `${BASE}/Hair/Front/Hair 03.svg`, x: 41.5, y: 1.31, w: 128, h: 87 },
+    },
+    'hair-4': {
+      behind: null,
+      front:  { src: `${BASE}/Hair/Front/Hair 04.svg`, x: 16.5, y: -18, w: 178, h: 128 },
+    },
+    'hair-5': {
+      behind: null,
+      front:  { src: `${BASE}/Hair/Front/Hair 05.svg`, x: 41, y: 1.31, w: 129, h: 99 },
+    },
   },
   body: {
     'body-1': { src: `${BASE}/Bodies/body 1.svg`, x: 14.82, y: 131.59, w: 181, h: 189 },
@@ -81,7 +101,7 @@ const LAYER_DEFS = {
   },
   eyes: {
     'eyes-01': { src: `${BASE}/Eyes/Eyes 01.svg`, x: 57.13, y: 76.11, w: 97,  h: 30 },
-    'eyes-02': { src: `${BASE}/Eyes/Eyes 02.svg`, x: 61.5,  y: 76.11, w: 88,  h: 9  },
+    'eyes-02': { src: `${BASE}/Eyes/Eyes 02.svg`, x: 61.5,  y: 82.11, w: 88,  h: 9  },
     'eyes-03': { src: `${BASE}/Eyes/Eyes 03.svg`, x: 63,    y: 76.11, w: 85,  h: 21 },
     'eyes-04': { src: `${BASE}/Eyes/Eyes 04.svg`, x: 54.5,  y: 76.11, w: 102, h: 32 },
     'eyes-05': { src: `${BASE}/Eyes/Eyes 05.svg`, x: 61.5,  y: 76.11, w: 88,  h: 27 },
@@ -107,13 +127,6 @@ const LAYER_DEFS = {
     'mouth-04': { src: `${BASE}/Mouths/Mouth 04.svg`, x: 90,    y: 115.94, w: 31, h: 13 },
     'mouth-05': { src: `${BASE}/Mouths/Mouth 05.svg`, x: 94.5,  y: 115.94, w: 22, h: 15 },
   },
-  hairFront: {
-    'hair-front-01': { src: `${BASE}/Hair/Front/Hair 01.svg`, x: 41.5, y: 1.31, w: 128, h: 147 },
-    'hair-front-02': { src: `${BASE}/Hair/Front/Hair 02.svg`, x: 34,   y: 1.31, w: 143, h: 96  },
-    'hair-front-03': { src: `${BASE}/Hair/Front/Hair 03.svg`, x: 41.5, y: 1.31, w: 128, h: 87  },
-    'hair-front-04': { src: `${BASE}/Hair/Front/Hair 04.svg`, x: 16.5, y: 1.31, w: 178, h: 128 },
-    'hair-front-05': { src: `${BASE}/Hair/Front/Hair 05.svg`, x: 41,   y: 1.31, w: 129, h: 99  },
-  },
   facialAddition: {
     'blush-01': { src: `${BASE}/Facial Additions/Blush 01.svg`, x: 57.5, y: 105.85, w: 96, h: 14 },
     'blush-02': { src: `${BASE}/Facial Additions/Blush 02.svg`, x: 58,   y: 105.85, w: 95, h: 14 },
@@ -125,8 +138,7 @@ const LAYER_DEFS = {
 
 function getColorMap(ctx, c) {
   switch (ctx) {
-    case 'hairBehind':
-    case 'hairFront':
+    case 'hair':
       return {
         '#CB8565': c.hair,
         '#694E45': c.hairDark,
@@ -230,14 +242,13 @@ function SvgLayer({ src, x, y, w, h, colorMap }) {
 // ─── Default selections ───────────────────────────────────────────────────────
 
 const DEFAULT_SELECTIONS = {
-  hairBehind:     'back-hair-4',
+  hair:           'hair-1',
   body:           'body-1',
   head:           'head-01',
   eyes:           'eyes-01',
   eyebrows:       'eyebrows-01',
   nose:           'nose-01',
   mouth:          'mouth-01',
-  hairFront:      'hair-front-01',
   facialAddition: 'none',
 };
 
@@ -256,16 +267,19 @@ export default function TrumiCharacter({
   const c   = useColors({ skinColor, hairColor, eyeColor, browColor, lipColor });
   const scale = size / 320;
 
+  const hairCombo = LAYER_DEFS.hair[sel.hair] ?? LAYER_DEFS.hair['hair-1'];
+
+  // Layer order: hair-behind → body → head → eyes → eyebrows → nose → mouth → hair-front → facialAddition
   const layers = [
-    { ctx: 'hairBehind',     def: LAYER_DEFS.hairBehind[sel.hairBehind] },
-    { ctx: 'body',           def: LAYER_DEFS.body[sel.body] },
-    { ctx: 'head',           def: LAYER_DEFS.head[sel.head] },
-    { ctx: 'eyes',           def: LAYER_DEFS.eyes[sel.eyes] },
-    { ctx: 'eyebrows',       def: LAYER_DEFS.eyebrows[sel.eyebrows] },
-    { ctx: 'nose',           def: LAYER_DEFS.nose[sel.nose] },
-    { ctx: 'mouth',          def: LAYER_DEFS.mouth[sel.mouth] },
-    { ctx: 'hairFront',      def: LAYER_DEFS.hairFront[sel.hairFront] },
-    { ctx: 'facialAddition', def: sel.facialAddition !== 'none' ? LAYER_DEFS.facialAddition[sel.facialAddition] : null },
+    { key: 'hairBehind',     ctx: 'hair',           def: hairCombo.behind },
+    { key: 'body',           ctx: 'body',           def: LAYER_DEFS.body[sel.body] },
+    { key: 'head',           ctx: 'head',           def: LAYER_DEFS.head[sel.head] },
+    { key: 'eyes',           ctx: 'eyes',           def: LAYER_DEFS.eyes[sel.eyes] },
+    { key: 'eyebrows',       ctx: 'eyebrows',       def: LAYER_DEFS.eyebrows[sel.eyebrows] },
+    { key: 'nose',           ctx: 'nose',           def: LAYER_DEFS.nose[sel.nose] },
+    { key: 'mouth',          ctx: 'mouth',          def: LAYER_DEFS.mouth[sel.mouth] },
+    { key: 'hairFront',      ctx: 'hair',           def: hairCombo.front },
+    { key: 'facialAddition', ctx: 'facialAddition', def: sel.facialAddition !== 'none' ? LAYER_DEFS.facialAddition[sel.facialAddition] : null },
   ];
 
   return (
@@ -276,10 +290,10 @@ export default function TrumiCharacter({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {layers.map(({ ctx, def }) =>
+      {layers.map(({ key, ctx, def }) =>
         def ? (
           <SvgLayer
-            key={ctx}
+            key={key}
             src={def.src}
             x={def.x} y={def.y}
             w={def.w} h={def.h}

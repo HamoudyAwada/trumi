@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import PageHeader from '../components/ui/PageHeader'
 import TrumiCharacter from '../components/character/TrumiCharacter'
 import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
 import GoalCard from '../components/goals/GoalCard'
@@ -281,7 +280,7 @@ export default function Home() {
 
   return (
     <div className="home-page">
-      <PageHeader title="Home" />
+
 
       <main className="home-content">
 

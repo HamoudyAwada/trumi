@@ -7,25 +7,23 @@ const BASE = '/assets/character/Trumi Characters'
 
 // ── Skin tones ────────────────────────────────────────────────────────────────
 export const SKIN_TONES = [
-  '#FEE6CF',
-  '#F5CBA7',
-  '#D4956A',
-  '#B07040',
-  '#7A4A28',
-  '#4A2810',
+  '#FDDFC0',
+  '#F8C9A0',
+  '#F3B680',
+  '#EAA068',
+  '#DE8A50',
+  '#CF733A',
+  '#B85E28',
+  '#9A4A18',
+  '#7A370E',
+  '#572508',
+  '#3A1604',
+  '#220A01',
 ]
 
 // ── Feature color palettes (per category) ────────────────────────────────────
 export const FEATURE_COLORS = {
-  hairFront: [
-    { label: 'Tan',        value: '#CB8565' },
-    { label: 'Black',      value: '#1a1a1a' },
-    { label: 'Dark Brown', value: '#3b1f0a' },
-    { label: 'Auburn',     value: '#8b3a0f' },
-    { label: 'Blonde',     value: '#d4a847' },
-    { label: 'Red',        value: '#b22222' },
-  ],
-  hairBehind: [
+  hair: [
     { label: 'Tan',        value: '#CB8565' },
     { label: 'Black',      value: '#1a1a1a' },
     { label: 'Dark Brown', value: '#3b1f0a' },
@@ -61,22 +59,24 @@ function f(folder, name) {
 
 // ── Category definitions (order = tab order in UI) ────────────────────────────
 export const CATEGORIES = [
-  { id: 'hairBehind',    label: 'Back Hair'  },
+  { id: 'hair',          label: 'Hair'       },
   { id: 'body',          label: 'Body'       },
   { id: 'head',          label: 'Head'       },
   { id: 'eyes',          label: 'Eyes'       },
   { id: 'eyebrows',      label: 'Eyebrows'   },
   { id: 'nose',          label: 'Nose'       },
   { id: 'mouth',         label: 'Mouth'      },
-  { id: 'hairFront',     label: 'Hair'       },
   { id: 'facialAddition',label: 'Extras'     },
 ]
 
 // ── Asset lists per category ──────────────────────────────────────────────────
 export const ASSETS = {
-  hairBehind: [
-    { id: 'back-hair-3', label: 'Style 3', path: f('Hair/Behind', 'Back Hair 3') },
-    { id: 'back-hair-4', label: 'Style 4', path: f('Hair/Behind', 'Back Hair 4') },
+  hair: [
+    { id: 'hair-1', label: 'Style 1', path: f('Hair/Front', 'Hair 01') },
+    { id: 'hair-2', label: 'Style 2', path: f('Hair/Front', 'Hair 02') },
+    { id: 'hair-3', label: 'Style 3', path: f('Hair/Front', 'Hair 03') },
+    { id: 'hair-4', label: 'Style 4', path: f('Hair/Front', 'Hair 04') },
+    { id: 'hair-5', label: 'Style 5', path: f('Hair/Front', 'Hair 05') },
   ],
 
   body: [
@@ -127,14 +127,6 @@ export const ASSETS = {
     { id: 'mouth-05', label: 'Style 5', path: f('Mouths', 'Mouth 05') },
   ],
 
-  hairFront: [
-    { id: 'hair-front-01', label: 'Style 1', path: f('Hair/Front', 'Hair 01') },
-    { id: 'hair-front-02', label: 'Style 2', path: f('Hair/Front', 'Hair 02') },
-    { id: 'hair-front-03', label: 'Style 3', path: f('Hair/Front', 'Hair 03') },
-    { id: 'hair-front-04', label: 'Style 4', path: f('Hair/Front', 'Hair 04') },
-    { id: 'hair-front-05', label: 'Style 5', path: f('Hair/Front', 'Hair 05') },
-  ],
-
   facialAddition: [
     { id: 'none',     label: 'None',     path: null },
     { id: 'blush-01', label: 'Blush 1',  path: f('Facial Additions', 'Blush 01') },
@@ -145,14 +137,13 @@ export const ASSETS = {
 
 // ── Default character (matches Example Character 1) ───────────────────────────
 export const DEFAULT_CHARACTER = {
-  hairBehind:    'back-hair-4',
+  hair:          'hair-1',
   body:          'body-1',
   head:          'head-01',
   eyes:          'eyes-01',
   eyebrows:      'eyebrows-01',
   nose:          'nose-01',
   mouth:         'mouth-01',
-  hairFront:     'hair-front-01',
   facialAddition:'none',
   skinColor:     '#FEE6CF',
   hairColor:     '#CB8565',

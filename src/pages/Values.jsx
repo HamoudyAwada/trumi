@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import PageHeader from '../components/ui/PageHeader'
 import './Values.css'
 
 /* ── Figma assets (node 667:8575) ─────────────────────────────────────── */
@@ -33,7 +32,7 @@ export default function Values() {
 
   return (
     <div className="mv-page">
-      <PageHeader title="My Values" />
+
 
       {/* Goals toggle — top-right, lets user switch to the Goals view */}
       <button className="mv-goals-btn" onClick={() => navigate('/goals')} aria-label="Switch to Goals">

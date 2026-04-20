@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { suggestSingleGoal } from '../services/ai'
-import PageHeader from '../components/ui/PageHeader'
 import FlameIcon from '../components/ui/FlameIcon'
 import './AddGoal.css'
 
@@ -676,8 +675,7 @@ export default function AddGoal() {
   return (
     <div className="ag-page">
 
-      {/* Header */}
-      <PageHeader title="Add a Goal" />
+
 
       {/* Step dots — visible only for steps 1–6 */}
       {step > 0 && (

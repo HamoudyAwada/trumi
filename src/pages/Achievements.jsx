@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import PageHeader from '../components/ui/PageHeader'
 import FlameIcon from '../components/ui/FlameIcon'
 import './Achievements.css'
 
@@ -375,8 +374,7 @@ export default function Achievements() {
   return (
     <div className="ach-page">
 
-      {/* App Header */}
-      <PageHeader title="Achievements" />
+
 
       {/* ── Goals Summary ── */}
       <section className="ach-section">

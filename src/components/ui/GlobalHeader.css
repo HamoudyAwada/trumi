@@ -1,0 +1,36 @@
+.global-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: var(--color-cloud, #fffcfa);
+  box-sizing: border-box;
+}
+
+.global-header__logo {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+/* Circle frame */
+.global-header__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2.5px solid var(--color-tranquil-night, #0f1c3f);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-cloud, #fffcfa);
+}
+
+/* Shift the character so the head/face is centred in the circle */
+.global-header__avatar-clip {
+  margin-left: -1px;
+  margin-top: -58px;
+}

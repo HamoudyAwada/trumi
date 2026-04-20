@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import GoalCard from '../components/goals/GoalCard'
-import PageHeader from '../components/ui/PageHeader'
 import { getGoalMeta, getGoalInsight } from '../services/ai'
 import './Goals.css'
 
@@ -193,8 +192,7 @@ export default function Goals() {
   return (
     <div className="goals-page">
 
-      {/* ── App header ─────────────────────────── */}
-      <PageHeader title="Goals" />
+
 
       {/* ── Bullseye icon ───────────────────────── */}
       <div className="goals-bullseye" aria-hidden="true">

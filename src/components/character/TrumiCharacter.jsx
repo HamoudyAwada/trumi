@@ -284,9 +284,9 @@ export default function TrumiCharacter({
 
   return (
     <svg
-      width={211 * scale}
-      height={320 * scale}
-      viewBox="0 0 211 320"
+      width={231 * scale}
+      height={370 * scale}
+      viewBox="-10 -40 231 370"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >

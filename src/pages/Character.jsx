@@ -15,9 +15,9 @@ function ChatBubbleIcon() {
         <filter id="filter0_d_874_10590" x="0" y="0" width="79" height="78.9938" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
           <feFlood floodOpacity="0" result="BackgroundImageFix"/>
           <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-          <feMorphology radius="2" operator="dilate" in="SourceAlpha" result="effect1_dropShadow_874_10590"/>
+          <feMorphology radius="1" operator="dilate" in="SourceAlpha" result="effect1_dropShadow_874_10590"/>
           <feOffset/>
-          <feGaussianBlur stdDeviation="2.5"/>
+          <feGaussianBlur stdDeviation="1.5"/>
           <feComposite in2="hardAlpha" operator="out"/>
           <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
           <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_874_10590"/>
@@ -182,6 +182,7 @@ export default function Character() {
                   eyeColor={selections.eyeColor}
                   browColor={selections.browColor}
                   lipColor={selections.lipColor}
+                  size={280}
                 />
               </div>
 

@@ -214,14 +214,14 @@ export default function Character() {
               </div>
             </div>
 
-            {/* Bio single-line input */}
-            <input
+            {/* Bio textarea */}
+            <textarea
               className="char-edit-bio-input"
-              type="text"
               value={selections.bio}
               onChange={e => setSelections(prev => ({ ...prev, bio: e.target.value }))}
               placeholder="character description here..."
               maxLength={300}
+              rows={3}
               aria-label="Character description"
             />
 

@@ -243,16 +243,18 @@
 .char-edit-bio-input {
   width: 100%;
   font-family: var(--font-primary);
-  font-size: 24px;
-  font-weight: var(--font-weight-bold);
+  font-size: 15px;
+  font-weight: var(--font-weight-regular, 400);
   color: var(--color-tranquil-night, #0f1c3f);
   background: #f0f0fa;
   border: 2px solid var(--color-horizon-violet, #6666cc);
   border-radius: 12px;
   outline: none;
-  padding: 8px 20px;
+  padding: 12px 16px;
   box-sizing: border-box;
   caret-color: var(--color-horizon-violet);
+  resize: none;
+  line-height: 1.5;
   transition: border-color var(--duration-base) var(--easing-out);
 }
 

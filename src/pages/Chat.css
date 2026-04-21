@@ -452,7 +452,7 @@
 
 .chat-input-bar {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: var(--space-2);
   width: 100%;
   min-height: 48px;
@@ -485,7 +485,7 @@
   border: none;
   outline: none;
   font-family: var(--font-primary);
-  font-size: var(--font-size-ui-sm);
+  font-size: 15px;
   font-weight: var(--font-weight-book);
   color: #fff;
   caret-color: var(--color-horizon-violet-300, #a3a3e0);
@@ -493,11 +493,10 @@
   resize: none;
   overflow-y: auto;
   line-height: 1.5;
-  /* 4 lines max: line-height(1.5) × font-size(~14px) × 4 = ~84px */
-  max-height: 84px;
+  /* 4 lines max: 15px × 1.5 × 4 = 90px */
+  max-height: 90px;
   padding: 0;
-  /* Align text to the top so single-line sits at the same visual height */
-  display: block;
+  vertical-align: middle;
 }
 
 .chat-input-bar__field::placeholder {

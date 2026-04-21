@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import TrumiCharacter from '../character/TrumiCharacter'
 import { DEFAULT_CHARACTER } from '../character/characterAssets'
 import './GlobalHeader.css'
@@ -51,6 +52,7 @@ function readCharacter() {
 }
 
 export default function GlobalHeader() {
+  const navigate = useNavigate()
   const [character, setCharacter] = useState(readCharacter)
 
   useEffect(() => {
@@ -62,7 +64,13 @@ export default function GlobalHeader() {
   return (
     <header className="global-header">
       <TrumiMark />
-      <CharacterAvatar character={character} />
+      <button
+        className="global-header__avatar-btn"
+        onClick={() => navigate('/account-settings')}
+        aria-label="Account settings"
+      >
+        <CharacterAvatar character={character} />
+      </button>
     </header>
   )
 }

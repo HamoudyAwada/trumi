@@ -19,6 +19,8 @@ import OnboardingStep4   from './pages/OnboardingStep4'
 import OnboardingStep5   from './pages/OnboardingStep5'
 import OnboardingGoals   from './pages/OnboardingGoals'
 import AccountCreation   from './pages/AccountCreation'
+import AccountSettings   from './pages/AccountSettings'
+import Login             from './pages/Login'
 import LogEntry          from './pages/LogEntry'
 import BadgeWall         from './pages/BadgeWall'
 import Journey           from './pages/Journey'
@@ -70,6 +72,7 @@ export default function App() {
         <Route path="/onboarding/step/5" element={<OnboardingStep5 />} />
         <Route path="/onboarding/goals"  element={<OnboardingGoals />} />
         <Route path="/account-creation"  element={<AccountCreation />} />
+        <Route path="/login"             element={<Login />} />
         <Route path="/chat"              element={<Chat />} />
 
         {/* All other pages get the GlobalHeader via AppShell */}
@@ -87,7 +90,8 @@ export default function App() {
             <Route path="/goal/:id"     element={<GoalDetail />} />
             <Route path="/values"       element={<Values />} />
             <Route path="/achievements" element={<Achievements />} />
-            <Route path="/character"    element={<Character />} />
+            <Route path="/character"        element={<Character />} />
+            <Route path="/account-settings" element={<AccountSettings />} />
           </Route>
         </Route>
 

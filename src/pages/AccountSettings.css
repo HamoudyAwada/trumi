@@ -1,0 +1,212 @@
+.as-page {
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.as-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.as-title {
+  font-family: var(--font-primary);
+  font-size: 32px;
+  font-weight: var(--font-weight-bold);
+  color: #1a1919;
+  text-align: center;
+  line-height: 1.05;
+  margin: 0;
+}
+
+/* ── Guest text ───────────────────────────────── */
+
+.as-guest-text {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-regular, 400);
+  color: #1a1919;
+  text-align: center;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* ── Fields ───────────────────────────────────── */
+
+.as-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.as-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.as-field__label {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-regular, 400);
+  color: #1a1919;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.as-field__card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 4px 12px;
+  background: #f0f0fa;
+  border-radius: 12px;
+  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.as-field__value {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-regular, 400);
+  color: #1a1919;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.as-field__pencil {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--color-tranquil-night, #0f1c3f);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 200ms ease-out;
+}
+
+.as-field__pencil:hover { opacity: 0.6; }
+
+.as-field__edit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.as-field__input {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  color: #1a1919;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--color-horizon-violet, #6666cc);
+  outline: none;
+  width: 100%;
+  padding: 2px 0;
+  caret-color: var(--color-horizon-violet);
+}
+
+.as-field__edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.as-field__btn {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-bold);
+  border: none;
+  border-radius: var(--radius-full, 512px);
+  cursor: pointer;
+  padding: 4px 14px;
+  transition: opacity 200ms ease-out;
+}
+
+.as-field__btn--save {
+  background: var(--color-horizon-violet, #6666cc);
+  color: #fff;
+}
+
+.as-field__btn--cancel {
+  background: transparent;
+  color: var(--color-tranquil-night, #0f1c3f);
+  border: 1.5px solid #ccc;
+}
+
+.as-field__btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.as-field__error {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  color: #cc3333;
+  margin: 0;
+}
+
+/* ── Divider ──────────────────────────────────── */
+
+.as-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(15, 28, 63, 0.15);
+}
+
+/* ── Action buttons ───────────────────────────── */
+
+.as-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+}
+
+.as-btn {
+  width: 100%;
+  max-width: 345px;
+  padding: 12px 60px;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  border: none;
+  border-radius: var(--radius-full, 512px);
+  cursor: pointer;
+  transition: opacity 200ms ease-out, transform 150ms ease-out;
+  box-sizing: border-box;
+}
+
+.as-btn:active { transform: scale(0.97); }
+
+.as-btn--primary {
+  background: var(--color-horizon-violet, #6666cc);
+  color: #fffcfa;
+}
+
+.as-btn--primary:hover { opacity: 0.88; }
+
+.as-btn--logout {
+  background: var(--color-horizon-violet, #6666cc);
+  color: #fffcfa;
+}
+
+.as-btn--logout:hover { opacity: 0.88; }
+
+.as-btn--delete {
+  background: #ff0000;
+  color: #fffcfa;
+}
+
+.as-btn--delete:hover { opacity: 0.88; }

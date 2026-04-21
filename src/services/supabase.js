@@ -82,6 +82,39 @@ export async function getUser() {
   return user
 }
 
+/**
+ * Sign in with email + password.
+ */
+export async function signIn(email, password) {
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  if (error) throw error
+  return data
+}
+
+/**
+ * Sign out the current user.
+ */
+export async function signOut() {
+  const { error } = await supabase.auth.signOut()
+  if (error) throw error
+}
+
+/**
+ * Update the signed-in user's email address.
+ */
+export async function updateUserEmail(email) {
+  const { error } = await supabase.auth.updateUser({ email })
+  if (error) throw error
+}
+
+/**
+ * Update the signed-in user's password.
+ */
+export async function updateUserPassword(password) {
+  const { error } = await supabase.auth.updateUser({ password })
+  if (error) throw error
+}
+
 // ── Chat history ──────────────────────────────────────────────────────────────
 
 /**

@@ -25,9 +25,10 @@ import BadgeWall         from './pages/BadgeWall'
 import Journey           from './pages/Journey'
 import NotFound          from './pages/NotFound'
 
-// Guards /add-goal: first-time users go through onboarding before creating a goal
+// Guards /add-goal: first-time users go through onboarding before creating a goal.
+// Uses trumi_goal_setup (not trumi_onboarded) so it's unaffected by the old flow's flag.
 function AddGoalGuard() {
-  if (!localStorage.getItem('trumi_onboarded')) {
+  if (!localStorage.getItem('trumi_goal_setup')) {
     return <Navigate to="/onboarding" replace />
   }
   return <AddGoal />

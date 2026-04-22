@@ -94,6 +94,7 @@ export default function OnboardingGoals() {
       // Save the user's values so the add-goal flow can suggest and pre-select them
       localStorage.setItem('trumi_values', JSON.stringify({ top10, top3 }))
       localStorage.setItem('trumi_onboarded', 'true')
+      localStorage.setItem('trumi_goal_setup', 'true')
       navigate('/goals')
     } catch (err) {
       console.error('[OnboardingGoals] save failed:', err)

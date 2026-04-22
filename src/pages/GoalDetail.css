@@ -88,6 +88,33 @@
   line-height: 1.2;
 }
 
+/* Done button (edit mode) */
+
+.gd-nav__done-btn {
+  flex-shrink: 0;
+  height: 32px;
+  padding: 0 16px;
+  background-color: var(--color-horizon-violet, #6666cc);
+  color: var(--color-cloud, #fffcfa);
+  border: none;
+  border-radius: var(--radius-full, 512px);
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: opacity var(--duration-base) var(--easing-out);
+  min-width: 60px;
+}
+
+.gd-nav__done-btn:hover { opacity: 0.85; }
+
+.gd-nav__done-btn--loading {
+  opacity: 0.65;
+  cursor: default;
+}
+
+/* 3-dot menu */
+
 .gd-nav__menu-wrap {
   position: relative;
   flex-shrink: 0;
@@ -169,10 +196,18 @@
 }
 
 /* ── Day picker strip ────────────────────── */
+/*
+   Layout math (390px screen):
+   .gd-day-picker padding: 16px each side → content = 358px
+   Each arrow button: 18px SVG + 8px padding = 26px
+   Two arrows + two gaps (8px each): 26 + 8 + 8 + 26 = 68px
+   Strip available width: 358 - 68 = 290px
+   7 columns × 38px + 6 gaps × 4px = 266 + 24 = 290px ✓
+*/
 
 .gd-day-picker {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   width: 100%;
   padding: 0 var(--space-4, 16px);
@@ -189,7 +224,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 24px; /* align with day cells */
   transition: opacity var(--duration-base) var(--easing-out);
 }
 
@@ -197,11 +231,16 @@
 
 .gd-day-picker__strip {
   flex: 1;
+  min-width: 0; /* prevent flex overflow */
   display: flex;
   gap: 4px;
   overflow-x: auto;
+  overflow-y: visible;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  /* Extra bottom space for the "Today" label that sits below cells */
+  padding-bottom: 18px;
+  margin-bottom: -18px;
 }
 
 .gd-day-picker__strip::-webkit-scrollbar {
@@ -214,7 +253,8 @@
   align-items: center;
   gap: 3px;
   flex-shrink: 0;
-  width: 39px;
+  width: 38px;
+  position: relative;
 }
 
 .gd-day-picker__label {
@@ -227,7 +267,7 @@
 }
 
 .gd-day-picker__cell {
-  width: 35px;
+  width: 34px;
   height: 38px;
   border: 1px solid #292952;
   border-radius: 8px;
@@ -240,10 +280,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
   transition:
     background-color var(--duration-base) var(--easing-out),
     border-color     var(--duration-base) var(--easing-out);
-  padding: 0;
 }
 
 .gd-day-picker__cell--logged {
@@ -253,6 +293,7 @@
   font-weight: var(--font-weight-bold);
 }
 
+/* Today always shows dark navy regardless of logged state */
 .gd-day-picker__cell--today {
   background-color: #292952;
   border-color: #292952;
@@ -260,7 +301,7 @@
   font-weight: var(--font-weight-bold);
 }
 
-/* Selection ring — visible on non-today, non-logged days */
+/* Selected ring on non-today, non-logged days */
 .gd-day-picker__cell--selected:not(.gd-day-picker__cell--today):not(.gd-day-picker__cell--logged) {
   background-color: #f0f0fa;
   border-color: var(--color-horizon-violet, #6666cc);
@@ -268,13 +309,18 @@
   color: #292952;
 }
 
+/* "Today" label sits absolutely below the cell so it doesn't push column width */
 .gd-day-picker__today-label {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: var(--font-primary);
   font-size: 10px;
   font-weight: var(--font-weight-book);
   color: #292952;
-  text-align: center;
-  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 /* ── Log Information section ─────────────── */
@@ -367,7 +413,6 @@
   box-sizing: border-box;
 }
 
-/* Character overlaps the left edge of the banner */
 .gd-values-section__banner-row {
   position: relative;
   width: 100%;
@@ -403,6 +448,8 @@
   box-sizing: border-box;
   line-height: 1.25;
 }
+
+/* Normal (view) mode: aligned value chips */
 
 .gd-values-section__chips {
   display: flex;
@@ -453,6 +500,72 @@
   max-width: 320px;
 }
 
+/* Edit mode: value picker */
+
+.gd-values-section__edit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.gd-values-section__edit-label {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fogstone, #66747f);
+  text-align: center;
+  margin: 0;
+}
+
+.gd-values-section__edit-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+}
+
+.gd-values-section__edit-chip {
+  background: none;
+  border: 1.5px solid rgba(102, 102, 204, 0.45);
+  border-radius: 4px;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: #5252a3;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--easing-out),
+    border-color     var(--duration-base) var(--easing-out),
+    color            var(--duration-base) var(--easing-out);
+}
+
+.gd-values-section__edit-chip:hover {
+  background-color: rgba(102, 102, 204, 0.08);
+}
+
+.gd-values-section__edit-chip--on {
+  background-color: var(--color-horizon-violet, #6666cc);
+  border-color: var(--color-horizon-violet, #6666cc);
+  color: var(--color-cloud, #fffcfa);
+}
+
+.gd-values-section__edit-chip--on:hover {
+  background-color: #5252a3;
+}
+
+.gd-values-section__regen-note {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-book);
+  color: var(--color-horizon-violet, #6666cc);
+  text-align: center;
+  margin: 0;
+}
+
 /* ── Your Why ────────────────────────────── */
 
 .gd-why-section {
@@ -495,6 +608,31 @@
   box-shadow: 0 1px 2.1px rgba(15, 28, 63, 0.5);
   letter-spacing: -0.015em;
   white-space: nowrap;
+}
+
+/* Edit mode: chip becomes a flex row with the ✕ delete button inside */
+.gd-why-section__chip--editing {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 10px;
+}
+
+.gd-why-section__chip-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  color: #5252a3;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.65;
+  flex-shrink: 0;
+  transition: opacity var(--duration-base) var(--easing-out);
+}
+
+.gd-why-section__chip-delete:hover {
+  opacity: 1;
 }
 
 .gd-why-section__add-btn {

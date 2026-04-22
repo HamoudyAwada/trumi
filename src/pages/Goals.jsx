@@ -136,24 +136,6 @@ export default function Goals() {
     })
   }, [goals.map(g => (g.loggedDays ?? []).length).join(',')]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Quick-complete: mark today as 100% done, auto-add to loggedDays
-  function handleQuickComplete(goalId) {
-    setGoals(prev => {
-      const todayStr = new Date().toISOString().split('T')[0]
-      const updated  = prev.map(g => {
-        if (g.id !== goalId) return g
-        const dailyLogs  = { ...(g.dailyLogs ?? {}), [todayStr]: 100 }
-        const loggedDays = g.loggedDays ?? []
-        const newLoggedDays = loggedDays.includes(todayStr)
-          ? loggedDays
-          : [...loggedDays, todayStr]
-        return { ...g, dailyLogs, loggedDays: newLoggedDays }
-      })
-      localStorage.setItem('trumi_goals', JSON.stringify(updated))
-      return updated
-    })
-  }
-
   function handleViewDetail(goalId) {
     navigate(`/goal/${goalId}`)
   }
@@ -263,14 +245,7 @@ export default function Goals() {
                   <GoalCard
                     id={goal.id}
                     title={goal.title}
-                    startDate={goal.startDate}
                     status={goal.status}
-                    loggedDays={goal.loggedDays ?? []}
-                    dailyLogs={goal.dailyLogs ?? {}}
-                    unit={goal.unit}
-                    actionLabel={goal.actionLabel ?? null}
-                    insight={goal.insight ?? null}
-                    onQuickComplete={handleQuickComplete}
                     onCreateEntry={handleCreateEntry}
                     onViewDetail={handleViewDetail}
                     onPause={handlePause}

@@ -301,7 +301,17 @@
   font-weight: var(--font-weight-bold);
 }
 
-/* Selected ring on non-today, non-logged days */
+/* Selected: outer ring visible on every day state */
+.gd-day-picker__cell--selected {
+  box-shadow: 0 0 0 2.5px var(--color-horizon-violet, #6666cc);
+}
+
+/* On today (dark navy bg) use the green accent so the ring is legible */
+.gd-day-picker__cell--selected.gd-day-picker__cell--today {
+  box-shadow: 0 0 0 2.5px var(--color-lucent-green, #cdff6d);
+}
+
+/* Plain (not logged, not today) selected day: also fill the bg */
 .gd-day-picker__cell--selected:not(.gd-day-picker__cell--today):not(.gd-day-picker__cell--logged) {
   background-color: #f0f0fa;
   border-color: var(--color-horizon-violet, #6666cc);

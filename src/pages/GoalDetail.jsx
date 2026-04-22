@@ -31,8 +31,16 @@ function loadUserValues() {
   try { return JSON.parse(localStorage.getItem('trumi_values') ?? '{}') } catch { return {} }
 }
 
+function toLocalDateStr(d = new Date()) {
+  return [
+    d.getFullYear(),
+    String(d.getMonth() + 1).padStart(2, '0'),
+    String(d.getDate()).padStart(2, '0'),
+  ].join('-')
+}
+
 function getTodayISO() {
-  return new Date().toISOString().split('T')[0]
+  return toLocalDateStr()
 }
 
 /** Array of 31 days: 30 days ago → today (today is last / rightmost). */
@@ -44,7 +52,7 @@ function generateDayRange() {
     const d = new Date(today)
     d.setDate(today.getDate() - i)
     days.push({
-      iso:      d.toISOString().split('T')[0],
+      iso:      toLocalDateStr(d),
       dayNum:   d.getDate(),
       dayLabel: d.toLocaleDateString('en-US', { weekday: 'short' }),
       isToday:  i === 0,

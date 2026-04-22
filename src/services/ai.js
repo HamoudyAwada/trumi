@@ -155,6 +155,26 @@ export async function getGoalMeta({ title, successType, executionStyle, weeklyTi
 }
 
 /**
+ * Determine which of the user's values a goal aligns with, plus a short summary per value.
+ * @param {{ goalTitle: string, values: string[] }} data
+ * @returns {Promise<{ alignedValues: string[], summaries: { [value]: string } }>}
+ */
+export async function getValueAlignment({ goalTitle, values }) {
+  const res = await fetch('/api/goal-value-alignment', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ goalTitle, values }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error ?? `Server error ${res.status}`)
+  }
+
+  return res.json()
+}
+
+/**
  * Generate a reflective insight for a check-in.
  * @param {Object} checkinData
  * @param {'daily'|'weekly'|'monthly'} period

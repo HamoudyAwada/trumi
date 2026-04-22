@@ -154,7 +154,11 @@ export default function Goals() {
     })
   }
 
-  // Create Entry: navigate to dedicated log screen (design coming later)
+  function handleViewDetail(goalId) {
+    navigate(`/goal/${goalId}`)
+  }
+
+  // Create Entry: navigate to dedicated log screen
   function handleCreateEntry(goalId) {
     navigate(`/log-entry/${goalId}`)
   }
@@ -268,6 +272,7 @@ export default function Goals() {
                     insight={goal.insight ?? null}
                     onQuickComplete={handleQuickComplete}
                     onCreateEntry={handleCreateEntry}
+                    onViewDetail={handleViewDetail}
                     onPause={handlePause}
                     onDelete={handleDelete}
                   />

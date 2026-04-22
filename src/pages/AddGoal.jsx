@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { suggestSingleGoal } from '../services/ai'
+import { suggestSingleGoal, getValueAlignment } from '../services/ai'
 import FlameIcon from '../components/ui/FlameIcon'
 import './AddGoal.css'
 
@@ -667,6 +667,24 @@ export default function AddGoal() {
 
     localStorage.setItem('trumi_goals', JSON.stringify([...existing, newGoal]))
     navigate('/goals')
+
+    // Fire-and-forget: enrich goal with AI value alignment in the background
+    if (form.values.length > 0) {
+      const savedId = newGoal.id
+      getValueAlignment({ goalTitle: form.title, values: form.values })
+        .then(({ alignedValues, summaries }) => {
+          try {
+            const goals = JSON.parse(localStorage.getItem('trumi_goals') ?? '[]')
+            const updated = goals.map(g =>
+              String(g.id) === String(savedId)
+                ? { ...g, alignedValues, valueSummaries: summaries }
+                : g
+            )
+            localStorage.setItem('trumi_goals', JSON.stringify(updated))
+          } catch { /* noop */ }
+        })
+        .catch(() => { /* non-critical — goal works without it */ })
+    }
   }
 
   const isFinal = step === TOTAL_STEPS - 1

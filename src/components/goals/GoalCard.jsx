@@ -72,6 +72,7 @@ export default function GoalCard({
   isPreview = false,
   onQuickComplete,
   onCreateEntry,
+  onViewDetail,
   onPause,
   onDelete,
 }) {
@@ -128,7 +129,11 @@ export default function GoalCard({
   const progressSummary = buildProgressSummary()
 
   return (
-    <article className={`goal-card goal-card--${status}`}>
+    <article
+      className={`goal-card goal-card--${status}`}
+      onClick={() => !isPreview && onViewDetail?.(id)}
+      style={{ cursor: isPreview || !onViewDetail ? 'default' : 'pointer' }}
+    >
 
       {/* ── Options button + dropdown ── */}
       {!isPreview && <div className="goal-card__menu-wrap" ref={menuRef}>
@@ -267,7 +272,7 @@ export default function GoalCard({
         <div className="goal-card__actions">
           <button
             className="goal-card__btn goal-card__btn--filled"
-            onClick={() => onCreateEntry?.(id)}
+            onClick={e => { e.stopPropagation(); onCreateEntry?.(id) }}
           >
             Create Entry
           </button>
@@ -275,7 +280,7 @@ export default function GoalCard({
           {showSecondary && (
             <button
               className={`goal-card__btn goal-card__btn--outline${todayDone ? ' goal-card__btn--outline-done' : ''}`}
-              onClick={() => !todayDone && onQuickComplete?.(id)}
+              onClick={e => { e.stopPropagation(); !todayDone && onQuickComplete?.(id) }}
               disabled={todayDone}
             >
               {actionLabel}

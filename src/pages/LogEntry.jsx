@@ -124,7 +124,7 @@ export default function LogEntry() {
     return (
       <div className="log-entry">
         <div className="log-entry__nav">
-          <button className="log-entry__back" onClick={() => navigate(`/goal/${id}`)} aria-label="Go back">
+          <button className="log-entry__back" onClick={() => navigate(-1)} aria-label="Go back">
             <svg width="10" height="20" viewBox="0 0 10 20" fill="none" aria-hidden="true">
               <path d="M9 1L1 10L9 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
@@ -139,7 +139,7 @@ export default function LogEntry() {
           <p className="log-entry__already-logged__body">
             You've already made an entry for this goal today. Come back tomorrow — every day is a new chance to grow.
           </p>
-          <button className="log-entry__submit-btn" onClick={() => navigate(`/goal/${id}`)}>
+          <button className="log-entry__submit-btn" onClick={() => navigate(-1)}>
             Back to Goal
           </button>
         </div>
@@ -153,7 +153,7 @@ export default function LogEntry() {
 
       {/* ── Back nav + goal title ── */}
       <div className="log-entry__nav">
-        <button className="log-entry__back" onClick={() => navigate(`/goal/${id}`)} aria-label="Go back">
+        <button className="log-entry__back" onClick={() => navigate(-1)} aria-label="Go back">
           <svg width="10" height="20" viewBox="0 0 10 20" fill="none" aria-hidden="true">
             <path d="M9 1L1 10L9 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>

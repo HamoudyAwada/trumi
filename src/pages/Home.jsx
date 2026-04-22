@@ -5,16 +5,6 @@ import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
 import { getUser } from '../services/supabase'
 import './Home.css'
 
-function PersonIcon() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="8" r="4" stroke="#0f1c3f" strokeWidth="1.75"/>
-      <path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="#0f1c3f" strokeWidth="1.75" strokeLinecap="round"/>
-    </svg>
-  )
-}
-
-const TRUMI_LOGO   = 'https://www.figma.com/api/mcp/asset/34f100bf-974a-490e-8a8b-5ef43690b75f'
 const LEAF_ICON    = 'https://www.figma.com/api/mcp/asset/1c0e62cd-a6c0-4762-acb9-3d343bd7ccd3'
 const DECOR_LEFT   = 'https://www.figma.com/api/mcp/asset/bdadf008-bb26-431b-9781-2eb2b371bace'
 const DECOR_RIGHT  = 'https://www.figma.com/api/mcp/asset/9991db61-3460-4bc0-bd25-5a263c12fc19'
@@ -135,18 +125,6 @@ export default function Home() {
       {showAuthModal && (
         <AuthModal onDismiss={() => setShowAuthModal(false)} />
       )}
-
-      {/* ── Header ──────────────────────────────── */}
-      <header className="home-header">
-        <img src={TRUMI_LOGO} alt="Trumi" className="home-header__logo" />
-        <button
-          className="home-header__avatar"
-          onClick={() => navigate('/character')}
-          aria-label="View character"
-        >
-          <PersonIcon />
-        </button>
-      </header>
 
       <main className="home-content">
 

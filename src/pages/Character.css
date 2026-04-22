@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  background-color: var(--color-cloud, #fffcfa);
+  background-color: transparent;
   width: 100%;
   box-sizing: border-box;
   padding-bottom: calc(var(--space-8) + 72px);

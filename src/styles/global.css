@@ -14,6 +14,7 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-cloud);
 }
 
 body {
@@ -21,7 +22,7 @@ body {
   font-weight: var(--font-weight-book);
   font-size: var(--font-size-paragraph);
   line-height: var(--line-height-paragraph);
-  background-color: var(--color-cloud);
+  background-color: transparent;
   color: var(--color-tranquil-night);
   min-height: 100dvh;
 }

@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import GlobalHeader      from './components/ui/GlobalHeader'
+import BackgroundPattern from './components/ui/BackgroundPattern'
 import MainLayout        from './components/ui/MainLayout'
 import Home              from './pages/Home'
 import Character         from './pages/Character'
@@ -24,6 +25,13 @@ import BadgeWall         from './pages/BadgeWall'
 import Journey           from './pages/Journey'
 import NotFound          from './pages/NotFound'
 
+const BG_ROUTES = new Set(['/', '/character', '/chat'])
+
+function ConditionalBackground() {
+  const { pathname } = useLocation()
+  return BG_ROUTES.has(pathname) ? <BackgroundPattern /> : null
+}
+
 // Guards /add-goal: first-time users go through onboarding before creating a goal.
 // Uses trumi_goal_setup (not trumi_onboarded) so it's unaffected by the old flow's flag.
 function AddGoalGuard() {
@@ -46,6 +54,7 @@ function AppShell() {
 export default function App() {
   return (
     <BrowserRouter>
+      <ConditionalBackground />
       <Routes>
         {/* No GlobalHeader — Chat and Onboarding are self-contained */}
         <Route path="/onboarding"        element={<Onboarding />} />

@@ -10,7 +10,6 @@ import {
 } from '../services/supabase'
 import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
 import { CharacterAvatar } from '../components/ui/GlobalHeader'
-import BackgroundPattern from '../components/ui/BackgroundPattern'
 import './Chat.css'
 
 const STARTERS = [
@@ -308,8 +307,6 @@ export default function Chat() {
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="chat-page">
-      <BackgroundPattern />
-
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <header className="chat-header">
         <div className="chat-header__left">

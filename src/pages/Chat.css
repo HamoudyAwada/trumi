@@ -11,7 +11,7 @@
   max-width: 430px;
   height: 100dvh;
   margin: 0 auto;
-  background-color: var(--color-cloud, #fffcfa);
+  background-color: transparent;
   box-sizing: border-box;
   overflow: hidden;
 }

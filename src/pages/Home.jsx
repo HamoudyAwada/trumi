@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import TrumiCharacter from '../components/character/TrumiCharacter'
 import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
 import { getUser } from '../services/supabase'
-import BackgroundPattern from '../components/ui/BackgroundPattern'
 import './Home.css'
 
 const LEAF_ICON    = 'https://www.figma.com/api/mcp/asset/1c0e62cd-a6c0-4762-acb9-3d343bd7ccd3'
@@ -122,8 +121,6 @@ export default function Home() {
 
   return (
     <div className="home-page">
-      <BackgroundPattern />
-
       {showAuthModal && (
         <AuthModal onDismiss={() => setShowAuthModal(false)} />
       )}

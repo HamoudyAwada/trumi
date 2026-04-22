@@ -8,7 +8,7 @@ import './OnboardingGoals.css'
 export default function OnboardingGoals() {
   const navigate = useNavigate()
   const { state } = useLocation()
-  const { top10 = [], top3 = [], valueLooks = {}, tradeoffs = {}, alignment = {}, obstacles = {} } = state ?? {}
+  const { top10 = [], top3 = [], valueLooks = {}, tradeoffs = {}, alignment = {}, obstacles = {}, skipDeep = false } = state ?? {}
 
   const [goals, setGoals]           = useState([])
   const [loading, setLoading]       = useState(true)
@@ -94,7 +94,7 @@ export default function OnboardingGoals() {
       // Save the user's values so the add-goal flow can suggest and pre-select them
       localStorage.setItem('trumi_values', JSON.stringify({ top10, top3 }))
       localStorage.setItem('trumi_onboarded', 'true')
-      navigate('/account-creation')
+      navigate('/goals')
     } catch (err) {
       console.error('[OnboardingGoals] save failed:', err)
       setSaveError('Something went wrong saving your responses. Please try again.')
@@ -111,7 +111,10 @@ export default function OnboardingGoals() {
       <div className="ob-header">
         <button
           className="ob-back-btn"
-          onClick={() => navigate('/onboarding/step/5', { state: surveyData })}
+          onClick={() => navigate(
+            skipDeep ? '/onboarding/step/2' : '/onboarding/step/5',
+            { state: surveyData }
+          )}
           aria-label="Go back"
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">

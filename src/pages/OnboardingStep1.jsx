@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import './Onboarding.css'
 
 const MIN = 5
@@ -121,7 +121,10 @@ const VALUE_SYNONYMS = {
 const POPDOWN_TEXT = "Personal values are the beliefs, principles, and standards that guide your everyday actions and behaviour. They define what is important to you, and help serve as your compass for navigating all of life's challenges."
 
 export default function OnboardingStep1() {
-  const navigate = useNavigate()
+  const navigate   = useNavigate()
+  const { state }  = useLocation()
+  const skipDeep   = state?.skipDeep ?? false
+
   const [selected, setSelected]     = useState([])
   const [custom, setCustom]         = useState([])   // user-added values not in the list
   const [query, setQuery]           = useState('')
@@ -311,7 +314,7 @@ export default function OnboardingStep1() {
         <button
           className="ob-btn"
           disabled={totalSelected < MIN}
-          onClick={() => navigate('/onboarding/step/2', { state: { top10: selected } })}
+          onClick={() => navigate('/onboarding/step/2', { state: { top10: selected, skipDeep } })}
         >
           Continue
         </button>

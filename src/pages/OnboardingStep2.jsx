@@ -103,9 +103,10 @@ const DEFAULT_CHIPS = ['Living it daily', "Something I'm working toward", 'Being
 const COLLAPSE_AT = 3
 
 export default function OnboardingStep2() {
-  const navigate = useNavigate()
+  const navigate  = useNavigate()
   const { state } = useLocation()
-  const top10 = state?.top10 ?? []
+  const top10     = state?.top10 ?? []
+  const skipDeep  = state?.skipDeep ?? false
 
   const [top3, setTop3]           = useState([])
   const [valueLooks, setValueLooks] = useState({})
@@ -275,7 +276,13 @@ export default function OnboardingStep2() {
         <button
           className="ob-btn"
           disabled={!canContinue}
-          onClick={() => navigate('/onboarding/step/4', { state: { top10, top3, valueLooks } })}
+          onClick={() => {
+            if (skipDeep) {
+              navigate('/onboarding/goals', { state: { top10, top3, valueLooks, skipDeep: true } })
+            } else {
+              navigate('/onboarding/step/4', { state: { top10, top3, valueLooks } })
+            }
+          }}
         >
           Continue
         </button>

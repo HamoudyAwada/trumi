@@ -281,6 +281,26 @@
   line-height: 1.4;
 }
 
+.ob-intro__skip-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-horizon-violet, #6666cc);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: opacity 200ms ease;
+}
+
+.ob-intro__skip-btn:not(:disabled):hover { opacity: 0.65; }
+
+.ob-intro__skip-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 .ob-intro__disclaimer {
   font-family: var(--font-primary);
   font-size: 12px;

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import TrumiCharacter from '../components/character/TrumiCharacter'
 import { DEFAULT_CHARACTER } from '../components/character/characterAssets'
 import GoalCard from '../components/goals/GoalCard'
+import { getUser } from '../services/supabase'
 import './Home.css'
 
 const BULLSEYE_IMG = '/assets/Bullseye and Arrows.svg'
@@ -257,16 +258,64 @@ function HomeJourneyMap() {
   )
 }
 
+/* ── AuthModal ────────────────────────────────────────────────────────────── */
+
+function AuthModal({ onDismiss }) {
+  const navigate = useNavigate()
+
+  function handleDismiss() {
+    sessionStorage.setItem('trumi_auth_dismissed', 'true')
+    onDismiss()
+  }
+
+  return (
+    <div className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+      <div className="auth-modal__card">
+        <h2 className="auth-modal__title" id="auth-modal-title">Welcome to Trumi</h2>
+        <p className="auth-modal__body">
+          Sign in or create an account to save your progress and unlock personalised insights.
+        </p>
+        <div className="auth-modal__actions">
+          <button
+            className="auth-modal__btn auth-modal__btn--primary"
+            onClick={() => navigate('/account-creation')}
+          >
+            Create Account
+          </button>
+          <button
+            className="auth-modal__btn auth-modal__btn--secondary"
+            onClick={() => navigate('/login')}
+          >
+            Sign In
+          </button>
+        </div>
+        <button className="auth-modal__explore" onClick={handleDismiss}>
+          Explore first
+        </button>
+      </div>
+    </div>
+  )
+}
+
 /* ── Home ─────────────────────────────────────────────────────────────────── */
 
 export default function Home() {
   const navigate = useNavigate()
-  const [goals, setGoals]         = useState([])
-  const [character, setCharacter] = useState(DEFAULT_CHARACTER)
+  const [goals, setGoals]             = useState([])
+  const [character, setCharacter]     = useState(DEFAULT_CHARACTER)
+  const [showAuthModal, setShowAuthModal] = useState(false)
 
   useEffect(() => {
     setGoals(loadGoals())
     setCharacter(loadCharacter())
+  }, [])
+
+  // Show auth prompt on first load if the user is not signed in
+  useEffect(() => {
+    if (sessionStorage.getItem('trumi_auth_dismissed')) return
+    getUser()
+      .then(user => { if (!user) setShowAuthModal(true) })
+      .catch(() => setShowAuthModal(true))
   }, [])
 
   const firstGoal    = goals.find(g => g.status === 'active') ?? goals[0] ?? null
@@ -281,6 +330,9 @@ export default function Home() {
   return (
     <div className="home-page">
 
+      {showAuthModal && (
+        <AuthModal onDismiss={() => setShowAuthModal(false)} />
+      )}
 
       <main className="home-content">
 

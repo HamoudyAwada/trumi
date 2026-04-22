@@ -1,6 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { hasCompletedOnboarding } from './services/supabase'
 
 import GlobalHeader      from './components/ui/GlobalHeader'
 import BackgroundPattern from './components/ui/BackgroundPattern'
@@ -27,28 +25,12 @@ import BadgeWall         from './pages/BadgeWall'
 import Journey           from './pages/Journey'
 import NotFound          from './pages/NotFound'
 
-// Checks Supabase (with localStorage as a fast-path cache) before rendering home
-function HomeGuard() {
-  const [status, setStatus] = useState(
-    localStorage.getItem('trumi_onboarded') ? 'done' : 'checking'
-  )
-
-  useEffect(() => {
-    if (status !== 'checking') return
-    hasCompletedOnboarding()
-      .then(completed => {
-        if (completed) localStorage.setItem('trumi_onboarded', 'true')
-        setStatus(completed ? 'done' : 'redirect')
-      })
-      .catch(() => {
-        // If Supabase is unreachable, fall back to localStorage flag
-        setStatus(localStorage.getItem('trumi_onboarded') ? 'done' : 'redirect')
-      })
-  }, [status])
-
-  if (status === 'checking') return null  // brief blank while we check
-  if (status === 'redirect') return <Navigate to="/onboarding" replace />
-  return <Home />
+// Guards /add-goal: first-time users go through onboarding before creating a goal
+function AddGoalGuard() {
+  if (!localStorage.getItem('trumi_onboarded')) {
+    return <Navigate to="/onboarding" replace />
+  }
+  return <AddGoal />
 }
 
 // Renders GlobalHeader above all app pages except Chat and Onboarding
@@ -80,14 +62,14 @@ export default function App() {
         {/* All other pages get the GlobalHeader via AppShell */}
         <Route element={<AppShell />}>
           {/* Standalone pages (no bottom nav) */}
-          <Route path="/add-goal"      element={<AddGoal />} />
+          <Route path="/add-goal"      element={<AddGoalGuard />} />
           <Route path="/log-entry/:id" element={<LogEntry />} />
           <Route path="/badges"        element={<BadgeWall />} />
           <Route path="/journey"       element={<Journey />} />
 
           {/* Main app pages (bottom nav via MainLayout) */}
           <Route element={<MainLayout />}>
-            <Route path="/"             element={<HomeGuard />} />
+            <Route path="/"             element={<Home />} />
             <Route path="/goals"        element={<Goals />} />
             <Route path="/goal/:id"     element={<GoalDetail />} />
             <Route path="/values"       element={<Values />} />

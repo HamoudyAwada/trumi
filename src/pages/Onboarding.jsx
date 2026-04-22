@@ -46,6 +46,13 @@ export default function Onboarding() {
         >
           Get Started
         </button>
+        <button
+          className="ob-intro__skip-btn"
+          disabled={!agreed}
+          onClick={() => navigate('/onboarding/step/1', { state: { skipDeep: true } })}
+        >
+          Skip — just choose my values
+        </button>
         <p className="ob-intro__disclaimer">
           *Answers will not be saved if you back out of the questionnaire before it's completed.*
         </p>

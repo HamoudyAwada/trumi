@@ -2,6 +2,113 @@
    Home Page
 ───────────────────────────────────────────── */
 
+/* ── Auth Modal ───────────────────────────────────────────────────────────── */
+
+.auth-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 28, 63, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 300;
+  padding: 0 0 env(safe-area-inset-bottom, 0);
+  animation: auth-modal-fade-in 220ms var(--easing-out, ease-out) both;
+}
+
+@keyframes auth-modal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.auth-modal__card {
+  background: var(--color-cloud, #fffcfa);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 430px;
+  padding: 32px 28px 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: auth-modal-slide-up 260ms var(--easing-out, ease-out) both;
+}
+
+@keyframes auth-modal-slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.auth-modal__title {
+  font-family: var(--font-primary);
+  font-size: 26px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-tranquil-night, #0f1c3f);
+  text-align: center;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.auth-modal__body {
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-weight: var(--font-weight-book);
+  color: var(--color-fogstone, #66747f);
+  text-align: center;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 300px;
+}
+
+.auth-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.auth-modal__btn {
+  width: 100%;
+  height: 52px;
+  border-radius: var(--radius-full, 512px);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: opacity 200ms ease;
+  border: none;
+}
+
+.auth-modal__btn:hover { opacity: 0.85; }
+
+.auth-modal__btn--primary {
+  background-color: var(--color-horizon-violet, #6666cc);
+  color: var(--color-cloud, #fffcfa);
+}
+
+.auth-modal__btn--secondary {
+  background: none;
+  border: 2px solid var(--color-horizon-violet, #6666cc);
+  color: var(--color-horizon-violet, #6666cc);
+}
+
+.auth-modal__explore {
+  background: none;
+  border: none;
+  font-family: var(--font-primary);
+  font-size: 13px;
+  font-weight: var(--font-weight-book);
+  color: var(--color-fogstone, #66747f);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: opacity 200ms ease;
+}
+
+.auth-modal__explore:hover { opacity: 0.6; }
+
 .home-page {
   display: flex;
   flex-direction: column;

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate }          from 'react-router-dom'
+import BackgroundPattern        from '../components/ui/BackgroundPattern'
 import TrumiCharacter           from '../components/character/TrumiCharacter'
 import CategorySelector         from '../components/character/CategorySelector'
 import { DEFAULT_CHARACTER, SKIN_TONES, FEATURE_COLORS, ASSETS } from '../components/character/characterAssets'
@@ -100,6 +101,7 @@ export default function Character() {
 
   return (
     <div className="char-page">
+      <BackgroundPattern />
       <div className="char-body">
 
         {!isEditing ? (

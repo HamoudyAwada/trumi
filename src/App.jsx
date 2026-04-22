@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 
 import GlobalHeader      from './components/ui/GlobalHeader'
-import BackgroundPattern from './components/ui/BackgroundPattern'
 import MainLayout        from './components/ui/MainLayout'
 import Home              from './pages/Home'
 import Character         from './pages/Character'
@@ -47,7 +46,6 @@ function AppShell() {
 export default function App() {
   return (
     <BrowserRouter>
-      <BackgroundPattern />
       <Routes>
         {/* No GlobalHeader — Chat and Onboarding are self-contained */}
         <Route path="/onboarding"        element={<Onboarding />} />

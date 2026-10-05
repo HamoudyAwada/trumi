@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { signUp } from '../services/supabase'
 import './AccountCreation.css'
 
-// Figma asset — Trumi character illustration (valid for 7 days from Apr 17 2026)
-const CHARACTER_IMG = 'https://www.figma.com/api/mcp/asset/8185d439-0e59-4e27-95ab-4e70e801814c'
+// Trumi mark — Figma node 562:5183
+const CHARACTER_IMG = '/assets/figma/account/trumi-mark.svg'
 
 const REQUIREMENTS = [
   { label: 'At least 8 characters long',       test: p => p.length >= 8 },

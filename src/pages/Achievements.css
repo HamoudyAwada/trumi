@@ -171,6 +171,11 @@
   left: 0;
 }
 
+/* Flattened badges (Gym Enthusiast, Inactive) fill the full 90×115 frame */
+.ach-badge__outer-wrap--full {
+  inset: 0;
+}
+
 /* Inner badge shell
    Figma: left-[13px] top-[12.5px] w-[63px] h-[88px]
           inner inset: 0.87% top / 0.98% bottom
@@ -225,44 +230,6 @@
   width: 100%;
   height: 100%;
   display: block;
-}
-
-/* Flame inner ellipse
-   Figma: inset-[32.17%_18.58%_10.43%_20.93%] of 34×40
-   top: 12.87px  right: 6.32px  bottom: 4.17px  left: 7.12px */
-.ach-badge__flame-ellipse {
-  position: absolute;
-  top: 12.87px;
-  right: 6.32px;
-  bottom: 4.17px;
-  left: 7.12px;
-}
-
-.ach-badge__flame-ellipse img {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Dumbbell icon (Gym Enthusiast)
-   Figma: left-[8px] top-[33px] w-[74.6px] h-[43.1px]
-          rotation: 3.92deg */
-.ach-badge__icon--dumbbell {
-  position: absolute;
-  left: 8px;
-  top: 33px;
-  width: 74.6px;
-  height: 43.1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ach-badge__icon--dumbbell img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  transform: rotate(3.92deg);
 }
 
 /* ── Count pill ──────────────────────────────── */

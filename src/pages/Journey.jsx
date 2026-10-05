@@ -1,36 +1,35 @@
 import { useNavigate } from 'react-router-dom'
 import './Journey.css'
 
-/* ── Assets (Figma node 652:5057 + 670:8980) ──────────────────────────── */
+/* ── Assets (Figma node 652:5057 + 670:8980), saved in /public/assets/figma ── */
 
 // Plain coin images (used for locked/star states)
-const MAP_STAR  = 'https://www.figma.com/api/mcp/asset/49f42fe6-49f4-42f3-837d-fbb5ca7cc1fd'
-const MAP_HEX_A = 'https://www.figma.com/api/mcp/asset/e51f36ec-41b9-4de1-a627-748c9859d33d'
-const MAP_HEX_B = 'https://www.figma.com/api/mcp/asset/1d798633-d922-4498-aa7e-27cef9718458'
-const MAP_HEX_C = 'https://www.figma.com/api/mcp/asset/c4420389-6c0f-4b7e-b9ae-fffce2a20173'
-const MAP_HEX_D = 'https://www.figma.com/api/mcp/asset/1615d8d5-18a8-406e-a64e-0975e43daa95'
-const MAP_HEX_E = 'https://www.figma.com/api/mcp/asset/57dc0dc0-b032-4c92-ab21-8a3e4d75bd61'
+const MAP_STAR  = '/assets/figma/journey/map-star.svg'
+const MAP_HEX_A = '/assets/figma/journey/map-hex-a.svg'
+const MAP_HEX_B = '/assets/figma/journey/map-hex-b.svg'
+const MAP_HEX_C = '/assets/figma/journey/map-hex-c.svg'
+const MAP_HEX_D = '/assets/figma/journey/map-hex-d.svg'
+const MAP_HEX_E = '/assets/figma/journey/map-hex-e.svg'
 
 // Achieved badge layers (Figma node 670:8980)
 // BADGE_BASE is the default hex coin used in the badge; node 0 passes MAP_STAR instead
-const BADGE_BASE  = 'https://www.figma.com/api/mcp/asset/b6810304-6c11-475f-a98b-4675c66cd8dc'
-const BADGE_OUTER = 'https://www.figma.com/api/mcp/asset/32ad750e-9716-453d-b4ba-1f41a7731c8b'
-const BADGE_INNER = 'https://www.figma.com/api/mcp/asset/d66105e7-ee08-4f40-8dc3-53eadabe151c'
-const BADGE_FIRE  = 'https://www.figma.com/api/mcp/asset/09239b55-f773-4996-94ed-cb024b6165eb'
-const BADGE_GLOW  = 'https://www.figma.com/api/mcp/asset/bffc7776-2a74-42b2-ab39-32fea6ad4135'
+const BADGE_BASE  = '/assets/figma/journey/map-hex-b.svg'
+const BADGE_OUTER = '/assets/figma/badges/outer-orange.svg'
+const BADGE_INNER = '/assets/figma/badges/inner-orange.svg'
+const BADGE_FIRE  = '/assets/figma/badges/icon-fire.svg'
 
 // Connector path images (ordered top → bottom = path 0→1, 1→2 … 5→6)
-const CONN_A = 'https://www.figma.com/api/mcp/asset/c37dd538-e3c8-45ab-99ac-b7613b303c48'
-const CONN_B = 'https://www.figma.com/api/mcp/asset/422bfd7a-b2d4-4086-9a48-3d7800c8f507'
-const CONN_C = 'https://www.figma.com/api/mcp/asset/8e9f932b-959f-40b6-884b-82c5f812787b'
-const CONN_D = 'https://www.figma.com/api/mcp/asset/570b38bb-da51-47da-bd05-17101e77dc07'
-const CONN_E = 'https://www.figma.com/api/mcp/asset/c0338ec6-9b66-432b-8c9c-9d05aca4fbce'
-const CONN_F = 'https://www.figma.com/api/mcp/asset/71bb04ba-f376-4442-8a7d-51a797576378'
+const CONN_A = '/assets/figma/journey/conn-a.svg'
+const CONN_B = '/assets/figma/journey/conn-b.svg'
+const CONN_C = '/assets/figma/journey/conn-c.svg'
+const CONN_D = '/assets/figma/journey/conn-d.svg'
+const CONN_E = '/assets/figma/journey/conn-e.svg'
+const CONN_F = '/assets/figma/journey/conn-f.svg'
 
 // Character illustrations
-const CHAR_LEFT      = 'https://www.figma.com/api/mcp/asset/632f9c7f-892c-4838-a3d9-dad7abc92571'
-const CHAR_TOP_RIGHT = 'https://www.figma.com/api/mcp/asset/eae13101-56a7-486e-a1f2-a49bf54f9590'
-const CHAR_MID_RIGHT = 'https://www.figma.com/api/mcp/asset/6f9b6302-3e8f-4cc0-9f87-5a34487a1c36'
+const CHAR_LEFT      = '/assets/figma/journey/char-left.svg'
+const CHAR_TOP_RIGHT = '/assets/figma/journey/char-top-right.svg'
+const CHAR_MID_RIGHT = '/assets/figma/journey/char-mid-right.svg'
 
 /* ── Badge progression ─────────────────────────────────────────────────── */
 
@@ -103,9 +102,6 @@ function AchievedBadge({ count, coinSrc = BADGE_BASE }) {
         {/* Flame icon */}
         <div style={{ position: 'absolute', top: '26.09%', left: '30%', width: '37.78%', height: '34.78%' }}>
           <img src={BADGE_FIRE} alt="" aria-hidden="true" className="jn-fill-img" />
-          <div style={{ position: 'absolute', inset: '32.17% 18.58% 10.43% 20.93%' }}>
-            <img src={BADGE_GLOW} alt="" aria-hidden="true" className="jn-fill-img" />
-          </div>
         </div>
 
         {/* Count pill — only shown when count is a number */}

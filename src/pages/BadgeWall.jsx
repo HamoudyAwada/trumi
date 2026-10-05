@@ -2,19 +2,17 @@ import { useNavigate } from 'react-router-dom'
 import FlameIcon from '../components/ui/FlameIcon'
 import './BadgeWall.css'
 
-/* ── Badge image assets ──────────────────────────────────────────────────── */
+/* ── Badge image assets (Figma node 400:2977, saved in /public/assets/figma) ── */
 
-const BG_OUTER_BLUE     = 'https://www.figma.com/api/mcp/asset/71123275-abcc-4d81-9c40-5e7ab882634c'
-const BG_INNER_BLUE     = 'https://www.figma.com/api/mcp/asset/7ed3d33f-4db3-4e67-94a4-ccbe87ff62d2'
-const BG_OUTER_ORANGE   = 'https://www.figma.com/api/mcp/asset/070a6585-28ef-4dd2-958c-66d58d24664a'
-const BG_INNER_ORANGE   = 'https://www.figma.com/api/mcp/asset/8b9522c5-ef92-4566-b742-a8f498200c5d'
-const BG_OUTER_PURPLE   = 'https://www.figma.com/api/mcp/asset/a7304804-3159-4e39-aa47-47c9e40597d6'
-const BG_INNER_PURPLE   = 'https://www.figma.com/api/mcp/asset/69654cd1-c49b-4048-b76a-341d7fe447dd'
-const BG_OUTER_INACTIVE = 'https://www.figma.com/api/mcp/asset/4e7d36ac-aad7-4d4a-9843-88066fd3d199'
-const ICON_TARGET        = 'https://www.figma.com/api/mcp/asset/ac0b099d-5857-4d41-b8f2-7288a4b17c21'
-const ICON_FLAME         = 'https://www.figma.com/api/mcp/asset/24d15f61-e545-4616-a029-840992387580'
-const ICON_FLAME_ELLIPSE = 'https://www.figma.com/api/mcp/asset/ee074580-5dbf-4844-bf57-82aa4e58c0ed'
-const ICON_DUMBBELL      = 'https://www.figma.com/api/mcp/asset/262f77b2-62cf-4ae5-9099-1702487cf564'
+const BG_OUTER_BLUE     = '/assets/figma/badges/outer-blue.svg'
+const BG_INNER_BLUE     = '/assets/figma/badges/inner-blue.svg'
+const BG_OUTER_ORANGE   = '/assets/figma/badges/outer-orange.svg'
+const BG_INNER_ORANGE   = '/assets/figma/badges/inner-orange.svg'
+// Gym Enthusiast and Inactive are single flattened badges in Figma (shell + icon)
+const BADGE_GYM         = '/assets/figma/badges/gym-enthusiast.svg'
+const BADGE_INACTIVE    = '/assets/figma/badges/inactive.svg'
+const ICON_TARGET       = '/assets/figma/badges/icon-target.svg'
+const ICON_FLAME        = '/assets/figma/badges/icon-fire.svg'
 
 /* ── Data ────────────────────────────────────────────────────────────────── */
 
@@ -149,8 +147,8 @@ function BadgeTile({ def, stats }) {
   const shells = {
     blue:   { outer: BG_OUTER_BLUE,   inner: BG_INNER_BLUE   },
     orange: { outer: BG_OUTER_ORANGE, inner: BG_INNER_ORANGE },
-    purple: { outer: BG_OUTER_PURPLE, inner: BG_INNER_PURPLE },
-    locked: { outer: BG_OUTER_INACTIVE, inner: null          },
+    purple: { outer: BADGE_GYM,       inner: null, full: true },
+    locked: { outer: BADGE_INACTIVE,  inner: null, full: true },
   }
   const shell = isEarned ? shells[def.shell] : shells.locked
 
@@ -158,7 +156,7 @@ function BadgeTile({ def, stats }) {
     <div className={`bw-tile${isEarned ? ' bw-tile--earned' : ' bw-tile--locked'}`}>
       <div className="bw-tile__badge">
 
-        <div className="bw-tile__outer-wrap">
+        <div className={`bw-tile__outer-wrap${shell.full ? ' bw-tile__outer-wrap--full' : ''}`}>
           <img src={shell.outer} alt="" aria-hidden="true" className="bw-tile__bg-img" />
         </div>
 
@@ -177,15 +175,6 @@ function BadgeTile({ def, stats }) {
         {isEarned && def.icon === 'flame' && (
           <div className="bw-tile__icon bw-tile__icon--flame">
             <img src={ICON_FLAME} alt="" aria-hidden="true" className="bw-tile__flame-body" />
-            <div className="bw-tile__flame-ellipse">
-              <img src={ICON_FLAME_ELLIPSE} alt="" aria-hidden="true" />
-            </div>
-          </div>
-        )}
-
-        {isEarned && def.icon === 'dumbbell' && (
-          <div className="bw-tile__icon bw-tile__icon--dumbbell">
-            <img src={ICON_DUMBBELL} alt="" aria-hidden="true" />
           </div>
         )}
 

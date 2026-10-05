@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import './Values.css'
 
 /* ── Figma assets (node 667:8575) ─────────────────────────────────────── */
-const IMG_DIAMOND    = 'https://www.figma.com/api/mcp/asset/d9fe6dff-9882-4ac7-8bb7-77f4b642abb3'
-const IMG_SPARKLE_R  = 'https://www.figma.com/api/mcp/asset/7620e9c7-ed1a-4325-81e6-2f7096dd8acb'
-const IMG_SPARKLE_L  = 'https://www.figma.com/api/mcp/asset/63201f76-42e6-40fd-a5f6-5976b4b96a83'
-const IMG_SPARKLE_I1 = 'https://www.figma.com/api/mcp/asset/2cf5af8e-a830-44a1-8c28-194a985aab1c'
-const IMG_SPARKLE_I2 = 'https://www.figma.com/api/mcp/asset/8e2b176b-e502-41c1-be50-9376841d1745'
-const IMG_SPARKLE_I3 = 'https://www.figma.com/api/mcp/asset/b835b573-5a26-4477-8292-5dc5a396c617'
-const IMG_TARGET     = 'https://www.figma.com/api/mcp/asset/090d5093-1e66-4362-95bf-91b6be8cf71e'
+const IMG_DIAMOND    = '/assets/figma/values/diamond.svg'
+const IMG_SPARKLE_R  = '/assets/figma/values/sparkle-right.svg'
+const IMG_SPARKLE_L  = '/assets/figma/values/sparkle-left.svg'
+const IMG_SPARKLE_I1 = '/assets/figma/values/sparkle-inner-1.svg'
+const IMG_SPARKLE_I2 = '/assets/figma/values/sparkle-inner-2.svg'
+const IMG_SPARKLE_I3 = '/assets/figma/values/sparkle-inner-3.svg'
+const IMG_TARGET     = '/assets/figma/values/target.svg'
 
 /* ── Data ─────────────────────────────────────────────────────────────── */
 function loadValues() {
